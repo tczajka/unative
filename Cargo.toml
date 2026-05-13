@@ -2,7 +2,9 @@
 name = "unative"
 version = "0.1.0"
 edition = "2024"
-description = "TODO"
+description = "Platform-native integer types."
 license = "MIT OR Apache-2.0"
+authors = ["Tomek Czajka <tczajka@gmail.com>"]
+repository = "https://github.com/tczajka/unative"
 
 [dependencies]
