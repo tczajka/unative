@@ -1,9 +1,20 @@
 /// Native unsigned integer type.
-///
-/// Temporarily aliased to [`u64`]. This will become platform-specific in a future release.
-pub type UNative = u64;
+pub struct UNative(UNativeInner);
 
 /// Native signed integer type.
-///
-/// Temporarily aliased to [`i64`]. This will become platform-specific in a future release.
-pub type INative = i64;
+pub struct INative(INativeInner);
+
+cfg_select! {
+    target_pointer_width = "16" => {
+        type UNativeInner = u16;
+        type INativeInner = i16;
+    }
+    target_pointer_width = "32" => {
+        type UNativeInner = u32;
+        type INativeInner = i32;
+    }
+    _ => {
+        type UNativeInner = u64;
+        type INativeInner = i64;
+    }
+}
