@@ -61,11 +61,11 @@ macro_rules! delegate_unary_op {
 }
 
 macro_rules! delegate_from {
-    ($name:ident, $inner:ident, $from:ty) => {
+    ($name:ident, $from:ty) => {
         impl ::core::convert::From<$from> for $name {
             #[inline]
             fn from(value: $from) -> Self {
-                Self(<$inner>::from(value))
+                Self(From::from(value))
             }
         }
     };
@@ -76,7 +76,48 @@ macro_rules! delegate_into {
         impl ::core::convert::From<$name> for $into {
             #[inline]
             fn from(value: $name) -> Self {
-                <$into>::from(value.0)
+                From::from(value.0)
+            }
+        }
+    };
+}
+
+macro_rules! delegate_try_from {
+    ($name:ident, $from:ty) => {
+        impl ::core::convert::TryFrom<$from> for $name {
+            type Error = ::core::num::TryFromIntError;
+
+            #[inline]
+            fn try_from(value: $from) -> ::core::result::Result<Self, Self::Error> {
+                TryFrom::try_from(value)
+                    .map(Self)
+                    .map_err(::core::convert::Into::into)
+            }
+        }
+    };
+}
+
+macro_rules! delegate_try_from_native {
+    ($name:ident, $from:ident) => {
+        impl ::core::convert::TryFrom<$from> for $name {
+            type Error = ::core::num::TryFromIntError;
+
+            #[inline]
+            fn try_from(value: $from) -> ::core::result::Result<Self, Self::Error> {
+                TryFrom::try_from(value.0).map(Self)
+            }
+        }
+    };
+}
+
+macro_rules! delegate_try_into {
+    ($name:ident, $into:ty) => {
+        impl ::core::convert::TryFrom<$name> for $into {
+            type Error = ::core::num::TryFromIntError;
+
+            #[inline]
+            fn try_from(value: $name) -> ::core::result::Result<Self, Self::Error> {
+                TryFrom::try_from(value.0).map_err(::core::convert::Into::into)
             }
         }
     };
@@ -115,7 +156,7 @@ macro_rules! define_native {
     ($(#[$attr:meta])* pub struct $name:ident($inner:ident);) => {
         $(#[$attr])*
         #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
-        pub struct $name($inner);
+        pub struct $name(pub(crate) $inner);
 
         impl $name {
             pub const MIN: $name = $name(<$inner>::MIN);
@@ -153,6 +194,6 @@ macro_rules! define_native {
 }
 
 pub(crate) use {
-    define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_from,
-    delegate_into, delegate_unary_op,
+    define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_from, delegate_into,
+    delegate_try_from, delegate_try_from_native, delegate_try_into, delegate_unary_op,
 };
