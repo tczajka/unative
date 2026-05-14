@@ -1,4 +1,9 @@
 use crate::inner::INativeInner;
+use crate::native::{define_native, delegate_unary_op};
 
-/// Native signed integer type.
-pub struct INative(INativeInner);
+define_native! {
+    /// Native signed integer type.
+    pub struct INative(INativeInner);
+}
+
+delegate_unary_op!(INative, Neg, neg, -);
