@@ -95,6 +95,12 @@ macro_rules! define_native {
         #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
         pub struct $name($inner);
 
+        impl $name {
+            pub const MIN: $name = $name(<$inner>::MIN);
+            pub const MAX: $name = $name(<$inner>::MAX);
+            pub const BITS: u32 = <$inner>::BITS;
+        }
+
         $crate::native::delegate_binop!($name, Add, add, +);
         $crate::native::delegate_binop!($name, Sub, sub, -);
         $crate::native::delegate_binop!($name, Mul, mul, *);
