@@ -6,9 +6,9 @@
 
 #![no_std]
 
+pub use inative::INative;
+pub use unative::UNative;
+
 mod inative;
 mod inner;
 mod unative;
-
-pub use inative::INative;
-pub use unative::UNative;
