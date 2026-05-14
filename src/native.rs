@@ -60,6 +60,28 @@ macro_rules! delegate_unary_op {
     };
 }
 
+macro_rules! delegate_from {
+    ($name:ident, $inner:ident, $from:ty) => {
+        impl ::core::convert::From<$from> for $name {
+            #[inline]
+            fn from(value: $from) -> Self {
+                Self(<$inner>::from(value))
+            }
+        }
+    };
+}
+
+macro_rules! delegate_into {
+    ($name:ident, $into:ty) => {
+        impl ::core::convert::From<$name> for $into {
+            #[inline]
+            fn from(value: $name) -> Self {
+                <$into>::from(value.0)
+            }
+        }
+    };
+}
+
 macro_rules! delegate_fmt {
     ($name:ident, $trait:ident) => {
         impl ::core::fmt::$trait for $name {
@@ -131,5 +153,6 @@ macro_rules! define_native {
 }
 
 pub(crate) use {
-    define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_unary_op,
+    define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_from,
+    delegate_into, delegate_unary_op,
 };
