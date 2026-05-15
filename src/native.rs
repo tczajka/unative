@@ -156,6 +156,7 @@ macro_rules! define_native {
     ($(#[$attr:meta])* pub struct $name:ident($inner:ident);) => {
         $(#[$attr])*
         #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[repr(transparent)]
         pub struct $name(pub(crate) $inner);
 
         impl $name {
