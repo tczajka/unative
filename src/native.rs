@@ -1,20 +1,20 @@
 macro_rules! delegate_binop {
     ($name:ident, $trait:ident, $method:ident, $op:tt) => {
         impl ::core::ops::$trait<$name> for $name {
-            type Output = $name;
+            type Output = Self;
 
             #[inline]
-            fn $method(self, rhs: $name) -> $name {
-                $name(self.0 $op rhs.0)
+            fn $method(self, rhs: Self) -> Self {
+                Self(self.0 $op rhs.0)
             }
         }
 
         impl ::core::ops::$trait<&$name> for $name {
-            type Output = $name;
+            type Output = Self;
 
             #[inline]
-            fn $method(self, rhs: &$name) -> $name {
-                $name(self.0 $op rhs.0)
+            fn $method(self, rhs: &Self) -> Self {
+                Self(self.0 $op rhs.0)
             }
         }
 
@@ -42,14 +42,14 @@ macro_rules! delegate_assign_op {
     ($name:ident, $trait:ident, $method:ident, $op:tt) => {
         impl ::core::ops::$trait<$name> for $name {
             #[inline]
-            fn $method(&mut self, rhs: $name) {
+            fn $method(&mut self, rhs: Self) {
                 self.0 $op rhs.0;
             }
         }
 
         impl ::core::ops::$trait<&$name> for $name {
             #[inline]
-            fn $method(&mut self, rhs: &$name) {
+            fn $method(&mut self, rhs: &Self) {
                 self.0 $op rhs.0;
             }
         }
@@ -59,11 +59,11 @@ macro_rules! delegate_assign_op {
 macro_rules! delegate_unary_op {
     ($name:ident, $trait:ident, $method:ident, $op:tt) => {
         impl ::core::ops::$trait for $name {
-            type Output = $name;
+            type Output = Self;
 
             #[inline]
-            fn $method(self) -> $name {
-                $name($op self.0)
+            fn $method(self) -> Self {
+                Self($op self.0)
             }
         }
 
@@ -159,13 +159,13 @@ macro_rules! define_native {
 
         impl $name {
             /// The smallest value that can be represented by this integer type.
-            pub const MIN: $name = $name(<$inner>::MIN);
+            pub const MIN: Self = Self(<$inner>::MIN);
 
             /// The largest value that can be represented by this integer type.
-            pub const MAX: $name = $name(<$inner>::MAX);
+            pub const MAX: Self = Self(<$inner>::MAX);
 
             /// The zero value of this integer type.
-            pub const ZERO: $name = $name(0);
+            pub const ZERO: Self = Self(0);
 
             /// The size of this integer type in bits.
             pub const BITS: u32 = <$inner>::BITS;
