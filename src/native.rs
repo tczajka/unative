@@ -191,6 +191,15 @@ macro_rules! define_native {
         $crate::native::delegate_fmt!($name, Octal);
         $crate::native::delegate_fmt!($name, LowerHex);
         $crate::native::delegate_fmt!($name, UpperHex);
+
+        impl ::core::str::FromStr for $name {
+            type Err = ::core::num::ParseIntError;
+
+            #[inline]
+            fn from_str(s: &str) -> ::core::result::Result<Self, Self::Err> {
+                ::core::str::FromStr::from_str(s).map(Self)
+            }
+        }
     };
 }
 
