@@ -158,8 +158,13 @@ macro_rules! define_native {
         pub struct $name(pub(crate) $inner);
 
         impl $name {
+            /// The smallest value that can be represented by this integer type.
             pub const MIN: $name = $name(<$inner>::MIN);
+
+            /// The largest value that can be represented by this integer type.
             pub const MAX: $name = $name(<$inner>::MAX);
+
+            /// The size of this integer type in bits.
             pub const BITS: u32 = <$inner>::BITS;
         }
 
