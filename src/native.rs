@@ -285,6 +285,24 @@ macro_rules! delegate_shifts_prim_native {
     };
 }
 
+macro_rules! delegate_iter_op {
+    ($t:ident, $trait:ident, $method:ident) => {
+        impl ::core::iter::$trait for $t {
+            #[inline]
+            fn $method<I: Iterator<Item = Self>>(iter: I) -> Self {
+                Self(iter.map(|x| x.0).$method())
+            }
+        }
+
+        impl<'a> ::core::iter::$trait<&'a $t> for $t {
+            #[inline]
+            fn $method<I: Iterator<Item = &'a Self>>(iter: I) -> Self {
+                Self(iter.map(|x| x.0).$method())
+            }
+        }
+    };
+}
+
 macro_rules! delegate_from_native_prim {
     ($into:ident, $from:ty) => {
         impl From<$from> for $into {
@@ -427,6 +445,9 @@ macro_rules! define_native {
         $crate::native::delegate_shifts_native_native!($t, $crate::UNative);
         $crate::native::delegate_shifts_native_native!($t, $crate::INative);
 
+        $crate::native::delegate_iter_op!($t, Sum, sum);
+        $crate::native::delegate_iter_op!($t, Product, product);
+
         $crate::native::delegate_fmt!($t, Debug);
         $crate::native::delegate_fmt!($t, Display);
         $crate::native::delegate_fmt!($t, Binary);
@@ -447,7 +468,7 @@ macro_rules! define_native {
 
 pub(crate) use {
     define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_from_native_prim,
-    delegate_from_prim_native, delegate_shift_assign_op_native_native,
+    delegate_from_prim_native, delegate_iter_op, delegate_shift_assign_op_native_native,
     delegate_shift_assign_op_native_prim, delegate_shift_assign_op_prim_native,
     delegate_shift_op_native_native, delegate_shift_op_native_prim, delegate_shift_op_prim_native,
     delegate_shifts_native_native, delegate_shifts_native_prim, delegate_shifts_prim_native,
