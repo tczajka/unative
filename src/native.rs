@@ -164,6 +164,9 @@ macro_rules! define_native {
             /// The largest value that can be represented by this integer type.
             pub const MAX: $name = $name(<$inner>::MAX);
 
+            /// The zero value of this integer type.
+            pub const ZERO: $name = $name(0);
+
             /// The size of this integer type in bits.
             pub const BITS: u32 = <$inner>::BITS;
         }
