@@ -38,6 +38,24 @@ macro_rules! delegate_binop {
     };
 }
 
+macro_rules! delegate_assign_op {
+    ($name:ident, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$name> for $name {
+            #[inline]
+            fn $method(&mut self, rhs: $name) {
+                self.0 $op rhs.0;
+            }
+        }
+
+        impl ::core::ops::$trait<&$name> for $name {
+            #[inline]
+            fn $method(&mut self, rhs: &$name) {
+                self.0 $op rhs.0;
+            }
+        }
+    };
+}
+
 macro_rules! delegate_unary_op {
     ($name:ident, $trait:ident, $method:ident, $op:tt) => {
         impl ::core::ops::$trait for $name {
@@ -89,9 +107,7 @@ macro_rules! delegate_try_from {
 
             #[inline]
             fn try_from(value: $from) -> Result<Self, Self::Error> {
-                TryFrom::try_from(value)
-                    .map(Self)
-                    .map_err(Into::into)
+                TryFrom::try_from(value).map(Self).map_err(Into::into)
             }
         }
     };
@@ -129,24 +145,6 @@ macro_rules! delegate_fmt {
             #[inline]
             fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                 ::core::fmt::$trait::fmt(&self.0, f)
-            }
-        }
-    };
-}
-
-macro_rules! delegate_assign_op {
-    ($name:ident, $trait:ident, $method:ident, $op:tt) => {
-        impl ::core::ops::$trait<$name> for $name {
-            #[inline]
-            fn $method(&mut self, rhs: $name) {
-                self.0 $op rhs.0;
-            }
-        }
-
-        impl ::core::ops::$trait<&$name> for $name {
-            #[inline]
-            fn $method(&mut self, rhs: &$name) {
-                self.0 $op rhs.0;
             }
         }
     };
