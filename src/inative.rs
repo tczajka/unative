@@ -1,8 +1,9 @@
 use crate::UNative;
 use crate::inner::INativeInner;
 use crate::native::{
-    define_native, delegate_from, delegate_into, delegate_try_from, delegate_try_from_native,
-    delegate_try_into, delegate_unary_op,
+    define_native, delegate_from_native_prim, delegate_from_prim_native,
+    delegate_try_from_native_native, delegate_try_from_native_prim, delegate_try_from_prim_native,
+    delegate_unary_op,
 };
 
 define_native! {
@@ -12,33 +13,33 @@ define_native! {
 
 delegate_unary_op!(INative, Neg, neg, -);
 
-delegate_from!(INative, bool);
-delegate_from!(INative, i8);
-delegate_from!(INative, i16);
-delegate_from!(INative, u8);
+delegate_from_native_prim!(INative, bool);
+delegate_from_native_prim!(INative, u8);
+delegate_from_native_prim!(INative, i8);
+delegate_from_native_prim!(INative, i16);
 
-delegate_into!(INative, i128);
+delegate_from_prim_native!(i128, INative);
 
-delegate_try_from!(INative, u16);
-delegate_try_from!(INative, u32);
-delegate_try_from!(INative, i32);
-delegate_try_from!(INative, u64);
-delegate_try_from!(INative, i64);
-delegate_try_from!(INative, u128);
-delegate_try_from!(INative, i128);
-delegate_try_from!(INative, usize);
-delegate_try_from!(INative, isize);
+delegate_try_from_native_prim!(INative, u16);
+delegate_try_from_native_prim!(INative, u32);
+delegate_try_from_native_prim!(INative, u64);
+delegate_try_from_native_prim!(INative, u128);
+delegate_try_from_native_prim!(INative, usize);
+delegate_try_from_native_prim!(INative, i32);
+delegate_try_from_native_prim!(INative, i64);
+delegate_try_from_native_prim!(INative, i128);
+delegate_try_from_native_prim!(INative, isize);
 
-delegate_try_into!(INative, u8);
-delegate_try_into!(INative, i8);
-delegate_try_into!(INative, u16);
-delegate_try_into!(INative, i16);
-delegate_try_into!(INative, u32);
-delegate_try_into!(INative, i32);
-delegate_try_into!(INative, u64);
-delegate_try_into!(INative, i64);
-delegate_try_into!(INative, u128);
-delegate_try_into!(INative, usize);
-delegate_try_into!(INative, isize);
+delegate_try_from_prim_native!(u8, INative);
+delegate_try_from_prim_native!(u16, INative);
+delegate_try_from_prim_native!(u32, INative);
+delegate_try_from_prim_native!(u64, INative);
+delegate_try_from_prim_native!(u128, INative);
+delegate_try_from_prim_native!(usize, INative);
+delegate_try_from_prim_native!(i8, INative);
+delegate_try_from_prim_native!(i16, INative);
+delegate_try_from_prim_native!(i32, INative);
+delegate_try_from_prim_native!(i64, INative);
+delegate_try_from_prim_native!(isize, INative);
 
-delegate_try_from_native!(INative, UNative);
+delegate_try_from_native_native!(INative, UNative);

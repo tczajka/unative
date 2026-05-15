@@ -1,6 +1,6 @@
 macro_rules! delegate_binop {
-    ($name:ident, $trait:ident, $method:ident, $op:tt) => {
-        impl ::core::ops::$trait<$name> for $name {
+    ($t:ident, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$t> for $t {
             type Output = Self;
 
             #[inline]
@@ -9,7 +9,7 @@ macro_rules! delegate_binop {
             }
         }
 
-        impl ::core::ops::$trait<&$name> for $name {
+        impl ::core::ops::$trait<&$t> for $t {
             type Output = Self;
 
             #[inline]
@@ -18,36 +18,36 @@ macro_rules! delegate_binop {
             }
         }
 
-        impl ::core::ops::$trait<$name> for &$name {
-            type Output = $name;
+        impl ::core::ops::$trait<$t> for &$t {
+            type Output = $t;
 
             #[inline]
-            fn $method(self, rhs: $name) -> $name {
-                $name(self.0 $op rhs.0)
+            fn $method(self, rhs: $t) -> $t {
+                $t(self.0 $op rhs.0)
             }
         }
 
-        impl ::core::ops::$trait<&$name> for &$name {
-            type Output = $name;
+        impl ::core::ops::$trait<&$t> for &$t {
+            type Output = $t;
 
             #[inline]
-            fn $method(self, rhs: &$name) -> $name {
-                $name(self.0 $op rhs.0)
+            fn $method(self, rhs: &$t) -> $t {
+                $t(self.0 $op rhs.0)
             }
         }
     };
 }
 
 macro_rules! delegate_assign_op {
-    ($name:ident, $trait:ident, $method:ident, $op:tt) => {
-        impl ::core::ops::$trait<$name> for $name {
+    ($t:ident, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$t> for $t {
             #[inline]
             fn $method(&mut self, rhs: Self) {
                 self.0 $op rhs.0;
             }
         }
 
-        impl ::core::ops::$trait<&$name> for $name {
+        impl ::core::ops::$trait<&$t> for $t {
             #[inline]
             fn $method(&mut self, rhs: &Self) {
                 self.0 $op rhs.0;
@@ -57,8 +57,8 @@ macro_rules! delegate_assign_op {
 }
 
 macro_rules! delegate_unary_op {
-    ($name:ident, $trait:ident, $method:ident, $op:tt) => {
-        impl ::core::ops::$trait for $name {
+    ($t:ident, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait for $t {
             type Output = Self;
 
             #[inline]
@@ -67,20 +67,227 @@ macro_rules! delegate_unary_op {
             }
         }
 
-        impl ::core::ops::$trait for &$name {
-            type Output = $name;
+        impl ::core::ops::$trait for &$t {
+            type Output = $t;
 
             #[inline]
-            fn $method(self) -> $name {
-                $name($op self.0)
+            fn $method(self) -> $t {
+                $t($op self.0)
             }
         }
     };
 }
 
-macro_rules! delegate_from {
-    ($name:ident, $from:ty) => {
-        impl From<$from> for $name {
+macro_rules! delegate_shift_op_native_prim {
+    ($lhs:ident, $rhs:ty, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$rhs> for $lhs {
+            type Output = Self;
+
+            #[inline]
+            fn $method(self, rhs: $rhs) -> Self {
+                Self(self.0 $op rhs)
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for $lhs {
+            type Output = Self;
+
+            #[inline]
+            fn $method(self, rhs: &$rhs) -> Self {
+                Self(self.0 $op rhs)
+            }
+        }
+
+        impl ::core::ops::$trait<$rhs> for &$lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: $rhs) -> $lhs {
+                $lhs(self.0 $op rhs)
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for &$lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: &$rhs) -> $lhs {
+                $lhs(self.0 $op rhs)
+            }
+        }
+    };
+}
+
+macro_rules! delegate_shift_assign_op_native_prim {
+    ($lhs:ty, $rhs:ty, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$rhs> for $lhs {
+            #[inline]
+            fn $method(&mut self, rhs: $rhs) {
+                self.0 $op rhs;
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for $lhs {
+            #[inline]
+            fn $method(&mut self, rhs: &$rhs) {
+                self.0 $op rhs;
+            }
+        }
+    };
+}
+
+macro_rules! delegate_shift_op_native_native {
+    ($lhs:ident, $rhs:ty, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$rhs> for $lhs {
+            type Output = Self;
+
+            #[inline]
+            fn $method(self, rhs: $rhs) -> Self {
+                Self(self.0 $op rhs.0)
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for $lhs {
+            type Output = Self;
+
+            #[inline]
+            fn $method(self, rhs: &$rhs) -> Self {
+                Self(self.0 $op rhs.0)
+            }
+        }
+
+        impl ::core::ops::$trait<$rhs> for &$lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: $rhs) -> $lhs {
+                $lhs(self.0 $op rhs.0)
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for &$lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: &$rhs) -> $lhs {
+                $lhs(self.0 $op rhs.0)
+            }
+        }
+    };
+}
+
+macro_rules! delegate_shift_assign_op_native_native {
+    ($lhs:ty, $rhs:ty, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$rhs> for $lhs {
+            #[inline]
+            fn $method(&mut self, rhs: $rhs) {
+                self.0 $op rhs.0;
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for $lhs {
+            #[inline]
+            fn $method(&mut self, rhs: &$rhs) {
+                self.0 $op rhs.0;
+            }
+        }
+    };
+}
+
+macro_rules! delegate_shift_op_prim_native {
+    ($lhs:ty, $rhs:ty, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$rhs> for $lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: $rhs) -> $lhs {
+                self $op rhs.0
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for $lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: &$rhs) -> $lhs {
+                self $op rhs.0
+            }
+        }
+
+        impl ::core::ops::$trait<$rhs> for &$lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: $rhs) -> $lhs {
+                *self $op rhs.0
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for &$lhs {
+            type Output = $lhs;
+
+            #[inline]
+            fn $method(self, rhs: &$rhs) -> $lhs {
+                *self $op rhs.0
+            }
+        }
+    };
+}
+
+macro_rules! delegate_shift_assign_op_prim_native {
+    ($lhs:ty, $rhs:ty, $trait:ident, $method:ident, $op:tt) => {
+        impl ::core::ops::$trait<$rhs> for $lhs {
+            #[inline]
+            fn $method(&mut self, rhs: $rhs) {
+                *self $op rhs.0;
+            }
+        }
+
+        impl ::core::ops::$trait<&$rhs> for $lhs {
+            #[inline]
+            fn $method(&mut self, rhs: &$rhs) {
+                *self $op rhs.0;
+            }
+        }
+    };
+}
+
+macro_rules! delegate_shifts_native_prim {
+    ($lhs:ident, $rhs:ty) => {
+        $crate::native::delegate_shift_op_native_prim!($lhs, $rhs, Shl, shl, <<);
+        $crate::native::delegate_shift_op_native_prim!($lhs, $rhs, Shr, shr, >>);
+        $crate::native::delegate_shift_assign_op_native_prim!(
+            $lhs, $rhs, ShlAssign, shl_assign, <<=);
+        $crate::native::delegate_shift_assign_op_native_prim!(
+            $lhs, $rhs, ShrAssign, shr_assign, >>=);
+    };
+}
+
+macro_rules! delegate_shifts_native_native {
+    ($lhs:ident, $rhs:ty) => {
+        $crate::native::delegate_shift_op_native_native!($lhs, $rhs, Shl, shl, <<);
+        $crate::native::delegate_shift_op_native_native!($lhs, $rhs, Shr, shr, >>);
+        $crate::native::delegate_shift_assign_op_native_native!(
+            $lhs, $rhs, ShlAssign, shl_assign, <<=);
+        $crate::native::delegate_shift_assign_op_native_native!(
+            $lhs, $rhs, ShrAssign, shr_assign, >>=);
+    };
+}
+
+macro_rules! delegate_shifts_prim_native {
+    ($lhs:ty, $rhs:ty) => {
+        $crate::native::delegate_shift_op_prim_native!($lhs, $rhs, Shl, shl, <<);
+        $crate::native::delegate_shift_op_prim_native!($lhs, $rhs, Shr, shr, >>);
+        $crate::native::delegate_shift_assign_op_prim_native!(
+            $lhs, $rhs, ShlAssign, shl_assign, <<=);
+        $crate::native::delegate_shift_assign_op_prim_native!(
+            $lhs, $rhs, ShrAssign, shr_assign, >>=);
+    };
+}
+
+macro_rules! delegate_from_native_prim {
+    ($into:ident, $from:ty) => {
+        impl From<$from> for $into {
             #[inline]
             fn from(value: $from) -> Self {
                 Self(From::from(value))
@@ -89,20 +296,20 @@ macro_rules! delegate_from {
     };
 }
 
-macro_rules! delegate_into {
-    ($name:ident, $into:ty) => {
-        impl From<$name> for $into {
+macro_rules! delegate_from_prim_native {
+    ($into:ty, $from:ty) => {
+        impl From<$from> for $into {
             #[inline]
-            fn from(value: $name) -> Self {
+            fn from(value: $from) -> Self {
                 From::from(value.0)
             }
         }
     };
 }
 
-macro_rules! delegate_try_from {
-    ($name:ident, $from:ty) => {
-        impl TryFrom<$from> for $name {
+macro_rules! delegate_try_from_native_prim {
+    ($into:ty, $from:ty) => {
+        impl TryFrom<$from> for $into {
             type Error = ::core::num::TryFromIntError;
 
             #[inline]
@@ -113,9 +320,9 @@ macro_rules! delegate_try_from {
     };
 }
 
-macro_rules! delegate_try_from_native {
-    ($name:ident, $from:ident) => {
-        impl TryFrom<$from> for $name {
+macro_rules! delegate_try_from_native_native {
+    ($into:ty, $from:ty) => {
+        impl TryFrom<$from> for $into {
             type Error = ::core::num::TryFromIntError;
 
             #[inline]
@@ -126,13 +333,13 @@ macro_rules! delegate_try_from_native {
     };
 }
 
-macro_rules! delegate_try_into {
-    ($name:ident, $into:ty) => {
-        impl TryFrom<$name> for $into {
+macro_rules! delegate_try_from_prim_native {
+    ($into:ty, $from:ty) => {
+        impl TryFrom<$from> for $into {
             type Error = ::core::num::TryFromIntError;
 
             #[inline]
-            fn try_from(value: $name) -> Result<Self, Self::Error> {
+            fn try_from(value: $from) -> Result<Self, Self::Error> {
                 TryFrom::try_from(value.0).map_err(Into::into)
             }
         }
@@ -140,8 +347,8 @@ macro_rules! delegate_try_into {
 }
 
 macro_rules! delegate_fmt {
-    ($name:ident, $trait:ident) => {
-        impl ::core::fmt::$trait for $name {
+    ($t:ident, $trait:ident) => {
+        impl ::core::fmt::$trait for $t {
             #[inline]
             fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                 ::core::fmt::$trait::fmt(&self.0, f)
@@ -151,13 +358,13 @@ macro_rules! delegate_fmt {
 }
 
 macro_rules! define_native {
-    ($(#[$attr:meta])* pub struct $name:ident($inner:ident);) => {
+    ($(#[$attr:meta])* pub struct $t:ident($inner:ident);) => {
         $(#[$attr])*
         #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[repr(transparent)]
-        pub struct $name(pub(crate) $inner);
+        pub struct $t(pub(crate) $inner);
 
-        impl $name {
+        impl $t {
             /// The smallest value that can be represented by this integer type.
             pub const MIN: Self = Self(<$inner>::MIN);
 
@@ -171,34 +378,63 @@ macro_rules! define_native {
             pub const BITS: u32 = <$inner>::BITS;
         }
 
-        $crate::native::delegate_binop!($name, Add, add, +);
-        $crate::native::delegate_binop!($name, Sub, sub, -);
-        $crate::native::delegate_binop!($name, Mul, mul, *);
-        $crate::native::delegate_binop!($name, Div, div, /);
-        $crate::native::delegate_binop!($name, Rem, rem, %);
-        $crate::native::delegate_binop!($name, BitAnd, bitand, &);
-        $crate::native::delegate_binop!($name, BitOr, bitor, |);
-        $crate::native::delegate_binop!($name, BitXor, bitxor, ^);
+        $crate::native::delegate_binop!($t, Add, add, +);
+        $crate::native::delegate_binop!($t, Sub, sub, -);
+        $crate::native::delegate_binop!($t, Mul, mul, *);
+        $crate::native::delegate_binop!($t, Div, div, /);
+        $crate::native::delegate_binop!($t, Rem, rem, %);
+        $crate::native::delegate_binop!($t, BitAnd, bitand, &);
+        $crate::native::delegate_binop!($t, BitOr, bitor, |);
+        $crate::native::delegate_binop!($t, BitXor, bitxor, ^);
 
-        $crate::native::delegate_assign_op!($name, AddAssign, add_assign, +=);
-        $crate::native::delegate_assign_op!($name, SubAssign, sub_assign, -=);
-        $crate::native::delegate_assign_op!($name, MulAssign, mul_assign, *=);
-        $crate::native::delegate_assign_op!($name, DivAssign, div_assign, /=);
-        $crate::native::delegate_assign_op!($name, RemAssign, rem_assign, %=);
-        $crate::native::delegate_assign_op!($name, BitAndAssign, bitand_assign, &=);
-        $crate::native::delegate_assign_op!($name, BitOrAssign, bitor_assign, |=);
-        $crate::native::delegate_assign_op!($name, BitXorAssign, bitxor_assign, ^=);
+        $crate::native::delegate_assign_op!($t, AddAssign, add_assign, +=);
+        $crate::native::delegate_assign_op!($t, SubAssign, sub_assign, -=);
+        $crate::native::delegate_assign_op!($t, MulAssign, mul_assign, *=);
+        $crate::native::delegate_assign_op!($t, DivAssign, div_assign, /=);
+        $crate::native::delegate_assign_op!($t, RemAssign, rem_assign, %=);
+        $crate::native::delegate_assign_op!($t, BitAndAssign, bitand_assign, &=);
+        $crate::native::delegate_assign_op!($t, BitOrAssign, bitor_assign, |=);
+        $crate::native::delegate_assign_op!($t, BitXorAssign, bitxor_assign, ^=);
 
-        $crate::native::delegate_unary_op!($name, Not, not, !);
+        $crate::native::delegate_unary_op!($t, Not, not, !);
 
-        $crate::native::delegate_fmt!($name, Debug);
-        $crate::native::delegate_fmt!($name, Display);
-        $crate::native::delegate_fmt!($name, Binary);
-        $crate::native::delegate_fmt!($name, Octal);
-        $crate::native::delegate_fmt!($name, LowerHex);
-        $crate::native::delegate_fmt!($name, UpperHex);
+        $crate::native::delegate_shifts_native_prim!($t, u8);
+        $crate::native::delegate_shifts_native_prim!($t, u16);
+        $crate::native::delegate_shifts_native_prim!($t, u32);
+        $crate::native::delegate_shifts_native_prim!($t, u64);
+        $crate::native::delegate_shifts_native_prim!($t, u128);
+        $crate::native::delegate_shifts_native_prim!($t, usize);
+        $crate::native::delegate_shifts_native_prim!($t, i8);
+        $crate::native::delegate_shifts_native_prim!($t, i16);
+        $crate::native::delegate_shifts_native_prim!($t, i32);
+        $crate::native::delegate_shifts_native_prim!($t, i64);
+        $crate::native::delegate_shifts_native_prim!($t, i128);
+        $crate::native::delegate_shifts_native_prim!($t, isize);
 
-        impl ::core::str::FromStr for $name {
+        $crate::native::delegate_shifts_prim_native!(u8, $t);
+        $crate::native::delegate_shifts_prim_native!(u16, $t);
+        $crate::native::delegate_shifts_prim_native!(u32, $t);
+        $crate::native::delegate_shifts_prim_native!(u64, $t);
+        $crate::native::delegate_shifts_prim_native!(u128, $t);
+        $crate::native::delegate_shifts_prim_native!(usize, $t);
+        $crate::native::delegate_shifts_prim_native!(i8, $t);
+        $crate::native::delegate_shifts_prim_native!(i16, $t);
+        $crate::native::delegate_shifts_prim_native!(i32, $t);
+        $crate::native::delegate_shifts_prim_native!(i64, $t);
+        $crate::native::delegate_shifts_prim_native!(i128, $t);
+        $crate::native::delegate_shifts_prim_native!(isize, $t);
+
+        $crate::native::delegate_shifts_native_native!($t, $crate::UNative);
+        $crate::native::delegate_shifts_native_native!($t, $crate::INative);
+
+        $crate::native::delegate_fmt!($t, Debug);
+        $crate::native::delegate_fmt!($t, Display);
+        $crate::native::delegate_fmt!($t, Binary);
+        $crate::native::delegate_fmt!($t, Octal);
+        $crate::native::delegate_fmt!($t, LowerHex);
+        $crate::native::delegate_fmt!($t, UpperHex);
+
+        impl ::core::str::FromStr for $t {
             type Err = ::core::num::ParseIntError;
 
             #[inline]
@@ -210,6 +446,11 @@ macro_rules! define_native {
 }
 
 pub(crate) use {
-    define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_from, delegate_into,
-    delegate_try_from, delegate_try_from_native, delegate_try_into, delegate_unary_op,
+    define_native, delegate_assign_op, delegate_binop, delegate_fmt, delegate_from_native_prim,
+    delegate_from_prim_native, delegate_shift_assign_op_native_native,
+    delegate_shift_assign_op_native_prim, delegate_shift_assign_op_prim_native,
+    delegate_shift_op_native_native, delegate_shift_op_native_prim, delegate_shift_op_prim_native,
+    delegate_shifts_native_native, delegate_shifts_native_prim, delegate_shifts_prim_native,
+    delegate_try_from_native_native, delegate_try_from_native_prim, delegate_try_from_prim_native,
+    delegate_unary_op,
 };
