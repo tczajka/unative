@@ -62,7 +62,7 @@ macro_rules! delegate_unary_op {
 
 macro_rules! delegate_from {
     ($name:ident, $from:ty) => {
-        impl ::core::convert::From<$from> for $name {
+        impl From<$from> for $name {
             #[inline]
             fn from(value: $from) -> Self {
                 Self(From::from(value))
@@ -73,7 +73,7 @@ macro_rules! delegate_from {
 
 macro_rules! delegate_into {
     ($name:ident, $into:ty) => {
-        impl ::core::convert::From<$name> for $into {
+        impl From<$name> for $into {
             #[inline]
             fn from(value: $name) -> Self {
                 From::from(value.0)
@@ -84,14 +84,14 @@ macro_rules! delegate_into {
 
 macro_rules! delegate_try_from {
     ($name:ident, $from:ty) => {
-        impl ::core::convert::TryFrom<$from> for $name {
+        impl TryFrom<$from> for $name {
             type Error = ::core::num::TryFromIntError;
 
             #[inline]
-            fn try_from(value: $from) -> ::core::result::Result<Self, Self::Error> {
+            fn try_from(value: $from) -> Result<Self, Self::Error> {
                 TryFrom::try_from(value)
                     .map(Self)
-                    .map_err(::core::convert::Into::into)
+                    .map_err(Into::into)
             }
         }
     };
@@ -99,11 +99,11 @@ macro_rules! delegate_try_from {
 
 macro_rules! delegate_try_from_native {
     ($name:ident, $from:ident) => {
-        impl ::core::convert::TryFrom<$from> for $name {
+        impl TryFrom<$from> for $name {
             type Error = ::core::num::TryFromIntError;
 
             #[inline]
-            fn try_from(value: $from) -> ::core::result::Result<Self, Self::Error> {
+            fn try_from(value: $from) -> Result<Self, Self::Error> {
                 TryFrom::try_from(value.0).map(Self)
             }
         }
@@ -112,12 +112,12 @@ macro_rules! delegate_try_from_native {
 
 macro_rules! delegate_try_into {
     ($name:ident, $into:ty) => {
-        impl ::core::convert::TryFrom<$name> for $into {
+        impl TryFrom<$name> for $into {
             type Error = ::core::num::TryFromIntError;
 
             #[inline]
-            fn try_from(value: $name) -> ::core::result::Result<Self, Self::Error> {
-                TryFrom::try_from(value.0).map_err(::core::convert::Into::into)
+            fn try_from(value: $name) -> Result<Self, Self::Error> {
+                TryFrom::try_from(value.0).map_err(Into::into)
             }
         }
     };
@@ -196,7 +196,7 @@ macro_rules! define_native {
             type Err = ::core::num::ParseIntError;
 
             #[inline]
-            fn from_str(s: &str) -> ::core::result::Result<Self, Self::Err> {
+            fn from_str(s: &str) -> Result<Self, Self::Err> {
                 ::core::str::FromStr::from_str(s).map(Self)
             }
         }
