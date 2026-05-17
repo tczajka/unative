@@ -38,6 +38,11 @@ fn try_from() {
 }
 
 #[test]
+fn default() {
+    assert_eq!(INative::default(), INative::ZERO);
+}
+
+#[test]
 fn equality() {
     let x = INative::from(-42i8);
     assert_eq!(x, x);

@@ -35,6 +35,11 @@ fn try_from() {
 }
 
 #[test]
+fn default() {
+    assert_eq!(UNative::default(), UNative::ZERO);
+}
+
+#[test]
 fn equality() {
     let x = UNative::from(42u8);
     assert_eq!(x, x);
