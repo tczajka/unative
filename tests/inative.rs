@@ -97,6 +97,19 @@ fn trailing_ones() {
 }
 
 #[test]
+fn cast_unsigned() {
+    assert_eq!(INative::ZERO.cast_unsigned(), UNative::ZERO);
+    assert_eq!(INative::from(-1i8).cast_unsigned(), UNative::MAX);
+    assert_eq!(INative::from(1i8).cast_unsigned(), UNative::from(1u8));
+    assert_eq!(
+        INative::MIN.cast_unsigned(),
+        UNative::from(1u8) << (UNative::BITS - 1),
+    );
+    let x = INative::from(-42i8);
+    assert_eq!(x.cast_unsigned().cast_signed(), x);
+}
+
+#[test]
 fn equality() {
     let x = INative::from(-42i8);
     assert_eq!(x, x);

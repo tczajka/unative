@@ -10,6 +10,14 @@ define_native! {
     pub struct UNative(UNativeInner);
 }
 
+impl UNative {
+    /// Returns the bit pattern of `self` reinterpreted as a signed integer of the same size.
+    #[inline]
+    pub const fn cast_signed(self) -> INative {
+        INative(self.0.cast_signed())
+    }
+}
+
 delegate_from_native_prim!(UNative, bool);
 delegate_from_native_prim!(UNative, u8);
 delegate_from_native_prim!(UNative, u16);

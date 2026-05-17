@@ -11,6 +11,14 @@ define_native! {
     pub struct INative(INativeInner);
 }
 
+impl INative {
+    /// Returns the bit pattern of `self` reinterpreted as an unsigned integer of the same size.
+    #[inline]
+    pub const fn cast_unsigned(self) -> UNative {
+        UNative(self.0.cast_unsigned())
+    }
+}
+
 delegate_unary_op!(INative, Neg, neg, -);
 
 delegate_from_native_prim!(INative, bool);
