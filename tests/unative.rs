@@ -570,10 +570,7 @@ fn checked_rem_euclid() {
 
 #[test]
 fn checked_shl() {
-    assert_eq!(
-        UNative::from(1u8).checked_shl(3),
-        Some(UNative::from(8u8)),
-    );
+    assert_eq!(UNative::from(1u8).checked_shl(3), Some(UNative::from(8u8)),);
     assert_eq!(
         UNative::from(1u8).checked_shl(UNative::BITS - 1),
         Some(UNative::from(1u8) << (UNative::BITS - 1)),
@@ -583,10 +580,7 @@ fn checked_shl() {
 
 #[test]
 fn checked_shr() {
-    assert_eq!(
-        UNative::from(8u8).checked_shr(3),
-        Some(UNative::from(1u8)),
-    );
+    assert_eq!(UNative::from(8u8).checked_shr(3), Some(UNative::from(1u8)),);
     assert_eq!(UNative::from(8u8).checked_shr(UNative::BITS), None);
 }
 
@@ -749,10 +743,7 @@ fn strict_rem_euclid_by_zero() {
 
 #[test]
 fn strict_shl() {
-    assert_eq!(
-        UNative::from(1u8).strict_shl(3),
-        UNative::from(8u8),
-    );
+    assert_eq!(UNative::from(1u8).strict_shl(3), UNative::from(8u8),);
 }
 
 #[test]
@@ -763,10 +754,7 @@ fn strict_shl_overflow() {
 
 #[test]
 fn strict_shr() {
-    assert_eq!(
-        UNative::from(8u8).strict_shr(3),
-        UNative::from(1u8),
-    );
+    assert_eq!(UNative::from(8u8).strict_shr(3), UNative::from(1u8),);
 }
 
 #[test]
@@ -813,7 +801,10 @@ fn unchecked_shr() {
 #[test]
 fn unbounded_shl() {
     assert_eq!(UNative::from(1u8).unbounded_shl(3), UNative::from(8u8));
-    assert_eq!(UNative::from(1u8).unbounded_shl(UNative::BITS), UNative::ZERO);
+    assert_eq!(
+        UNative::from(1u8).unbounded_shl(UNative::BITS),
+        UNative::ZERO
+    );
     assert_eq!(
         UNative::from(1u8).unbounded_shl(UNative::BITS + 100),
         UNative::ZERO,
@@ -824,5 +815,8 @@ fn unbounded_shl() {
 fn unbounded_shr() {
     assert_eq!(UNative::from(8u8).unbounded_shr(3), UNative::from(1u8));
     assert_eq!(UNative::MAX.unbounded_shr(UNative::BITS), UNative::ZERO);
-    assert_eq!(UNative::MAX.unbounded_shr(UNative::BITS + 100), UNative::ZERO);
+    assert_eq!(
+        UNative::MAX.unbounded_shr(UNative::BITS + 100),
+        UNative::ZERO
+    );
 }

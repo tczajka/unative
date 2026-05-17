@@ -594,10 +594,7 @@ fn checked_rem_euclid() {
 
 #[test]
 fn checked_shl() {
-    assert_eq!(
-        INative::from(1i8).checked_shl(3),
-        Some(INative::from(8i8)),
-    );
+    assert_eq!(INative::from(1i8).checked_shl(3), Some(INative::from(8i8)),);
     assert_eq!(INative::from(1i8).checked_shl(INative::BITS), None);
 }
 
@@ -797,10 +794,7 @@ fn strict_rem_euclid_overflow() {
 
 #[test]
 fn strict_shl() {
-    assert_eq!(
-        INative::from(1i8).strict_shl(3),
-        INative::from(8i8),
-    );
+    assert_eq!(INative::from(1i8).strict_shl(3), INative::from(8i8),);
 }
 
 #[test]
@@ -811,10 +805,7 @@ fn strict_shl_overflow() {
 
 #[test]
 fn strict_shr() {
-    assert_eq!(
-        INative::from(-16i8).strict_shr(3),
-        INative::from(-2i8),
-    );
+    assert_eq!(INative::from(-16i8).strict_shr(3), INative::from(-2i8),);
 }
 
 #[test]
@@ -868,7 +859,10 @@ fn unchecked_shr() {
 #[test]
 fn unbounded_shl() {
     assert_eq!(INative::from(1i8).unbounded_shl(3), INative::from(8i8));
-    assert_eq!(INative::from(1i8).unbounded_shl(INative::BITS), INative::ZERO);
+    assert_eq!(
+        INative::from(1i8).unbounded_shl(INative::BITS),
+        INative::ZERO
+    );
     assert_eq!(
         INative::from(1i8).unbounded_shl(INative::BITS + 100),
         INative::ZERO,
@@ -878,7 +872,10 @@ fn unbounded_shl() {
 #[test]
 fn unbounded_shr() {
     assert_eq!(INative::from(8i8).unbounded_shr(3), INative::from(1i8));
-    assert_eq!(INative::from(8i8).unbounded_shr(INative::BITS), INative::ZERO);
+    assert_eq!(
+        INative::from(8i8).unbounded_shr(INative::BITS),
+        INative::ZERO
+    );
     assert_eq!(
         INative::from(-1i8).unbounded_shr(INative::BITS),
         INative::from(-1i8),
