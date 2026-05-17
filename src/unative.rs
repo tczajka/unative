@@ -60,6 +60,16 @@ impl UNative {
     pub const fn strict_sub_signed(self, rhs: INative) -> Self {
         Self(self.0.strict_sub_signed(rhs.0))
     }
+
+    /// Computes the signed difference `self - rhs`, returning `None` if the result does not
+    /// fit in [`INative`].
+    #[inline]
+    pub const fn checked_signed_diff(self, rhs: UNative) -> Option<INative> {
+        match self.0.checked_signed_diff(rhs.0) {
+            Some(x) => Some(INative(x)),
+            None => None,
+        }
+    }
 }
 
 delegate_from_native_prim!(UNative, bool);

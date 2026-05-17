@@ -582,3 +582,21 @@ fn strict_sub_signed_overflow_below() {
 fn strict_sub_signed_overflow_above() {
     let _ = UNative::MAX.strict_sub_signed(INative::from(-1i8));
 }
+
+#[test]
+fn checked_signed_diff() {
+    assert_eq!(
+        UNative::from(5u8).checked_signed_diff(UNative::from(3u8)),
+        Some(INative::from(2i8)),
+    );
+    assert_eq!(
+        UNative::from(3u8).checked_signed_diff(UNative::from(5u8)),
+        Some(INative::from(-2i8)),
+    );
+    assert_eq!(
+        UNative::ZERO.checked_signed_diff(UNative::ZERO),
+        Some(INative::ZERO),
+    );
+    assert_eq!(UNative::MAX.checked_signed_diff(UNative::ZERO), None);
+    assert_eq!(UNative::ZERO.checked_signed_diff(UNative::MAX), None);
+}
