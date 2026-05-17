@@ -727,3 +727,21 @@ fn strict_rem_euclid() {
 fn strict_rem_euclid_by_zero() {
     let _ = UNative::from(5u8).strict_rem_euclid(UNative::ZERO);
 }
+
+#[test]
+fn checked_neg() {
+    assert_eq!(UNative::ZERO.checked_neg(), Some(UNative::ZERO));
+    assert_eq!(UNative::from(1u8).checked_neg(), None);
+    assert_eq!(UNative::MAX.checked_neg(), None);
+}
+
+#[test]
+fn strict_neg() {
+    assert_eq!(UNative::ZERO.strict_neg(), UNative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn strict_neg_overflow() {
+    let _ = UNative::from(1u8).strict_neg();
+}

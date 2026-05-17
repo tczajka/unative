@@ -61,6 +61,18 @@ impl INative {
     pub const fn strict_sub_unsigned(self, rhs: UNative) -> Self {
         Self(self.0.strict_sub_unsigned(rhs.0))
     }
+
+    /// Unchecked negation. Computes `-self`, assuming overflow cannot occur.
+    ///
+    /// # Safety
+    ///
+    /// This results in undefined behavior when the result would overflow, i.e. when
+    /// [`checked_neg`](Self::checked_neg) would return `None`.
+    #[inline]
+    pub const unsafe fn unchecked_neg(self) -> Self {
+        // SAFETY: Caller guarantees no overflow.
+        Self(unsafe { self.0.unchecked_neg() })
+    }
 }
 
 delegate_unary_op!(INative, Neg, neg, -);

@@ -776,3 +776,37 @@ fn strict_rem_euclid_by_zero() {
 fn strict_rem_euclid_overflow() {
     let _ = INative::MIN.strict_rem_euclid(INative::from(-1i8));
 }
+
+#[test]
+fn checked_neg() {
+    assert_eq!(INative::ZERO.checked_neg(), Some(INative::ZERO));
+    assert_eq!(
+        INative::from(5i8).checked_neg(),
+        Some(INative::from(-5i8)),
+    );
+    assert_eq!(
+        INative::from(-5i8).checked_neg(),
+        Some(INative::from(5i8)),
+    );
+    assert_eq!(INative::MIN.checked_neg(), None);
+}
+
+#[test]
+fn strict_neg() {
+    assert_eq!(INative::ZERO.strict_neg(), INative::ZERO);
+    assert_eq!(INative::from(5i8).strict_neg(), INative::from(-5i8));
+    assert_eq!(INative::from(-5i8).strict_neg(), INative::from(5i8));
+}
+
+#[test]
+#[should_panic]
+fn strict_neg_overflow() {
+    let _ = INative::MIN.strict_neg();
+}
+
+#[test]
+fn unchecked_neg() {
+    // SAFETY: -5 doesn't overflow.
+    let result = unsafe { INative::from(5i8).unchecked_neg() };
+    assert_eq!(result, INative::from(-5i8));
+}

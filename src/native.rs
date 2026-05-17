@@ -668,6 +668,27 @@ macro_rules! define_native {
             pub const fn strict_rem_euclid(self, rhs: Self) -> Self {
                 Self(self.0.strict_rem_euclid(rhs.0))
             }
+
+            /// Checked negation. Computes `-self`, returning `None` if overflow occurred.
+            #[inline]
+            pub const fn checked_neg(self) -> Option<Self> {
+                match self.0.checked_neg() {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict negation. Computes `-self`, panicking if overflow occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
+            #[inline]
+            pub const fn strict_neg(self) -> Self {
+                Self(self.0.strict_neg())
+            }
+
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);
