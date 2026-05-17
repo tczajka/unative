@@ -560,6 +560,26 @@ macro_rules! define_native {
                 }
             }
 
+            /// Checked left shift. Computes `self << rhs`, returning `None` if `rhs` is
+            /// larger than or equal to the number of bits in `self`.
+            #[inline]
+            pub const fn checked_shl(self, rhs: u32) -> Option<Self> {
+                match self.0.checked_shl(rhs) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked right shift. Computes `self >> rhs`, returning `None` if `rhs` is
+            /// larger than or equal to the number of bits in `self`.
+            #[inline]
+            pub const fn checked_shr(self, rhs: u32) -> Option<Self> {
+                match self.0.checked_shr(rhs) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.
             ///
             /// # Panics
@@ -650,6 +670,28 @@ macro_rules! define_native {
                 Self(self.0.strict_rem_euclid(rhs.0))
             }
 
+            /// Strict left shift. Computes `self << rhs`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is larger than or equal to the number of
+            /// bits in `self`.
+            #[inline]
+            pub const fn strict_shl(self, rhs: u32) -> Self {
+                Self(self.0.strict_shl(rhs))
+            }
+
+            /// Strict right shift. Computes `self >> rhs`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is larger than or equal to the number of
+            /// bits in `self`.
+            #[inline]
+            pub const fn strict_shr(self, rhs: u32) -> Self {
+                Self(self.0.strict_shr(rhs))
+            }
+
             /// Unchecked integer addition. Computes `self + rhs`, assuming overflow cannot
             /// occur.
             ///
@@ -687,6 +729,51 @@ macro_rules! define_native {
             pub const unsafe fn unchecked_mul(self, rhs: Self) -> Self {
                 // SAFETY: Caller guarantees no overflow.
                 Self(unsafe { self.0.unchecked_mul(rhs.0) })
+            }
+
+            /// Unchecked left shift. Computes `self << rhs`, assuming `rhs` is less than the
+            /// number of bits in `self`.
+            ///
+            /// # Safety
+            ///
+            /// This results in undefined behavior if `rhs` is larger than or equal to the
+            /// number of bits in `self`, i.e. when [`checked_shl`](Self::checked_shl) would
+            /// return `None`.
+            #[inline]
+            pub const unsafe fn unchecked_shl(self, rhs: u32) -> Self {
+                // SAFETY: Caller guarantees `rhs` is less than `Self::BITS`.
+                Self(unsafe { self.0.unchecked_shl(rhs) })
+            }
+
+            /// Unchecked right shift. Computes `self >> rhs`, assuming `rhs` is less than the
+            /// number of bits in `self`.
+            ///
+            /// # Safety
+            ///
+            /// This results in undefined behavior if `rhs` is larger than or equal to the
+            /// number of bits in `self`, i.e. when [`checked_shr`](Self::checked_shr) would
+            /// return `None`.
+            #[inline]
+            pub const unsafe fn unchecked_shr(self, rhs: u32) -> Self {
+                // SAFETY: Caller guarantees `rhs` is less than `Self::BITS`.
+                Self(unsafe { self.0.unchecked_shr(rhs) })
+            }
+
+            /// Unbounded left shift. Computes `self << rhs`, treating `self` as if it had
+            /// infinitely many high bits, so that shifts by `rhs` greater than or equal to
+            /// the number of bits in `self` return zero.
+            #[inline]
+            pub const fn unbounded_shl(self, rhs: u32) -> Self {
+                Self(self.0.unbounded_shl(rhs))
+            }
+
+            /// Unbounded right shift. Computes `self >> rhs`, treating `self` as if it had
+            /// infinitely many high bits, so that shifts by `rhs` greater than or equal to
+            /// the number of bits in `self` return zero (for `UNative` and non-negative
+            /// `INative`) or `-1` (for negative `INative`).
+            #[inline]
+            pub const fn unbounded_shr(self, rhs: u32) -> Self {
+                Self(self.0.unbounded_shr(rhs))
             }
         }
 
