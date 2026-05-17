@@ -568,3 +568,34 @@ fn unchecked_sub() {
     let result = unsafe { INative::from(5i8).unchecked_sub(INative::from(3i8)) };
     assert_eq!(result, INative::from(2i8));
 }
+
+#[test]
+fn checked_sub_unsigned() {
+    assert_eq!(
+        INative::from(5i8).checked_sub_unsigned(UNative::from(3u8)),
+        Some(INative::from(2i8)),
+    );
+    assert_eq!(
+        INative::from(-5i8).checked_sub_unsigned(UNative::from(3u8)),
+        Some(INative::from(-8i8)),
+    );
+    assert_eq!(INative::MIN.checked_sub_unsigned(UNative::from(1u8)), None);
+}
+
+#[test]
+fn strict_sub_unsigned() {
+    assert_eq!(
+        INative::from(5i8).strict_sub_unsigned(UNative::from(3u8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(-5i8).strict_sub_unsigned(UNative::from(3u8)),
+        INative::from(-8i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_sub_unsigned_overflow() {
+    let _ = INative::MIN.strict_sub_unsigned(UNative::from(1u8));
+}

@@ -501,13 +501,13 @@ fn strict_add_signed() {
 
 #[test]
 #[should_panic]
-fn strict_add_signed_overflow() {
+fn strict_add_signed_overflow_above() {
     let _ = UNative::MAX.strict_add_signed(INative::from(1i8));
 }
 
 #[test]
 #[should_panic]
-fn strict_add_signed_overflow_zero() {
+fn strict_add_signed_overflow_below() {
     let _ = UNative::from(5u8).strict_add_signed(INative::from(-10i8));
 }
 
@@ -540,4 +540,45 @@ fn unchecked_sub() {
     // SAFETY: 5 - 3 doesn't overflow.
     let result = unsafe { UNative::from(5u8).unchecked_sub(UNative::from(3u8)) };
     assert_eq!(result, UNative::from(2u8));
+}
+
+#[test]
+fn checked_sub_signed() {
+    assert_eq!(
+        UNative::from(5u8).checked_sub_signed(INative::from(3i8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_sub_signed(INative::from(-3i8)),
+        Some(UNative::from(8u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_sub_signed(INative::from(10i8)),
+        None,
+    );
+    assert_eq!(UNative::MAX.checked_sub_signed(INative::from(-1i8)), None);
+}
+
+#[test]
+fn strict_sub_signed() {
+    assert_eq!(
+        UNative::from(5u8).strict_sub_signed(INative::from(3i8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).strict_sub_signed(INative::from(-3i8)),
+        UNative::from(8u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_sub_signed_overflow_below() {
+    let _ = UNative::from(5u8).strict_sub_signed(INative::from(10i8));
+}
+
+#[test]
+#[should_panic]
+fn strict_sub_signed_overflow_above() {
+    let _ = UNative::MAX.strict_sub_signed(INative::from(-1i8));
 }

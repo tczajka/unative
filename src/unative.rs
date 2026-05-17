@@ -33,6 +33,23 @@ impl UNative {
     pub const fn strict_add_signed(self, rhs: INative) -> Self {
         Self(self.0.strict_add_signed(rhs.0))
     }
+
+    /// Checked subtraction of a signed integer. Computes `self - rhs`, returning `None` if
+    /// overflow occurred.
+    #[inline]
+    pub const fn checked_sub_signed(self, rhs: INative) -> Option<Self> {
+        match self.0.checked_sub_signed(rhs.0) {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
+    /// Strict subtraction of a signed integer. Computes `self - rhs`, panicking if overflow
+    /// occurred.
+    #[inline]
+    pub const fn strict_sub_signed(self, rhs: INative) -> Self {
+        Self(self.0.strict_sub_signed(rhs.0))
+    }
 }
 
 delegate_from_native_prim!(UNative, bool);
