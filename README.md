@@ -1,5 +1,9 @@
 # unative
 
+[![CI](https://github.com/tczajka/unative/actions/workflows/ci.yml/badge.svg)](https://github.com/tczajka/unative/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/unative.svg)](https://crates.io/crates/unative)
+[![docs.rs](https://docs.rs/unative/badge.svg)](https://docs.rs/unative)
+
 Platform-native integer types.
 
 This crate provides `UNative` and `INative`, unsigned and signed integer types
