@@ -394,6 +394,42 @@ macro_rules! define_native {
 
             /// The size of this integer type in bits.
             pub const BITS: u32 = <$inner>::BITS;
+
+            /// Returns the number of ones in the binary representation of `self`.
+            #[inline]
+            pub const fn count_ones(self) -> u32 {
+                self.0.count_ones()
+            }
+
+            /// Returns the number of zeros in the binary representation of `self`.
+            #[inline]
+            pub const fn count_zeros(self) -> u32 {
+                self.0.count_zeros()
+            }
+
+            /// Returns the number of leading zeros in the binary representation of `self`.
+            #[inline]
+            pub const fn leading_zeros(self) -> u32 {
+                self.0.leading_zeros()
+            }
+
+            /// Returns the number of trailing zeros in the binary representation of `self`.
+            #[inline]
+            pub const fn trailing_zeros(self) -> u32 {
+                self.0.trailing_zeros()
+            }
+
+            /// Returns the number of leading ones in the binary representation of `self`.
+            #[inline]
+            pub const fn leading_ones(self) -> u32 {
+                self.0.leading_ones()
+            }
+
+            /// Returns the number of trailing ones in the binary representation of `self`.
+            #[inline]
+            pub const fn trailing_ones(self) -> u32 {
+                self.0.trailing_ones()
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

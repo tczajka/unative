@@ -49,6 +49,54 @@ fn bits() {
 }
 
 #[test]
+fn count_ones() {
+    assert_eq!(INative::ZERO.count_ones(), 0);
+    assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);
+    assert_eq!(INative::from(-1i8).count_ones(), INative::BITS);
+    assert_eq!(INative::from(0b10110i8).count_ones(), 3);
+}
+
+#[test]
+fn count_zeros() {
+    assert_eq!(INative::ZERO.count_zeros(), INative::BITS);
+    assert_eq!(INative::MAX.count_zeros(), 1);
+    assert_eq!(INative::from(-1i8).count_zeros(), 0);
+    let x = INative::from(0b10110i8);
+    assert_eq!(x.count_ones() + x.count_zeros(), INative::BITS);
+}
+
+#[test]
+fn leading_zeros() {
+    assert_eq!(INative::ZERO.leading_zeros(), INative::BITS);
+    assert_eq!(INative::MAX.leading_zeros(), 1);
+    assert_eq!(INative::from(-1i8).leading_zeros(), 0);
+    assert_eq!(INative::from(1i8).leading_zeros(), INative::BITS - 1);
+}
+
+#[test]
+fn trailing_zeros() {
+    assert_eq!(INative::ZERO.trailing_zeros(), INative::BITS);
+    assert_eq!(INative::MIN.trailing_zeros(), INative::BITS - 1);
+    assert_eq!(INative::from(-1i8).trailing_zeros(), 0);
+    assert_eq!(INative::from(0b1000i8).trailing_zeros(), 3);
+}
+
+#[test]
+fn leading_ones() {
+    assert_eq!(INative::ZERO.leading_ones(), 0);
+    assert_eq!(INative::MAX.leading_ones(), 0);
+    assert_eq!(INative::from(-1i8).leading_ones(), INative::BITS);
+    assert_eq!(INative::MIN.leading_ones(), 1);
+}
+
+#[test]
+fn trailing_ones() {
+    assert_eq!(INative::ZERO.trailing_ones(), 0);
+    assert_eq!(INative::from(-1i8).trailing_ones(), INative::BITS);
+    assert_eq!(INative::from(0b1011i8).trailing_ones(), 2);
+}
+
+#[test]
 fn equality() {
     let x = INative::from(-42i8);
     assert_eq!(x, x);
