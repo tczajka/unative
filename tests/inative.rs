@@ -638,3 +638,69 @@ fn unchecked_mul() {
     let result = unsafe { INative::from(4i8).unchecked_mul(INative::from(3i8)) };
     assert_eq!(result, INative::from(12i8));
 }
+
+#[test]
+fn checked_div() {
+    assert_eq!(
+        INative::from(23i8).checked_div(INative::from(10i8)),
+        Some(INative::from(2i8)),
+    );
+    assert_eq!(
+        INative::from(-23i8).checked_div(INative::from(10i8)),
+        Some(INative::from(-2i8)),
+    );
+    assert_eq!(INative::from(5i8).checked_div(INative::ZERO), None);
+    assert_eq!(INative::MIN.checked_div(INative::from(-1i8)), None);
+}
+
+#[test]
+fn strict_div() {
+    assert_eq!(
+        INative::from(23i8).strict_div(INative::from(10i8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(-23i8).strict_div(INative::from(10i8)),
+        INative::from(-2i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_div_by_zero() {
+    let _ = INative::from(5i8).strict_div(INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn strict_div_overflow() {
+    let _ = INative::MIN.strict_div(INative::from(-1i8));
+}
+
+#[test]
+fn checked_div_euclid() {
+    assert_eq!(
+        INative::from(23i8).checked_div_euclid(INative::from(10i8)),
+        Some(INative::from(2i8)),
+    );
+    assert_eq!(
+        INative::from(-23i8).checked_div_euclid(INative::from(10i8)),
+        Some(INative::from(-3i8)),
+    );
+    assert_eq!(INative::from(5i8).checked_div_euclid(INative::ZERO), None);
+    assert_eq!(INative::MIN.checked_div_euclid(INative::from(-1i8)), None);
+}
+
+#[test]
+fn strict_div_euclid() {
+    assert_eq!(
+        INative::from(-23i8).strict_div_euclid(INative::from(10i8)),
+        INative::from(-3i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_div_euclid_by_zero() {
+    let _ = INative::from(5i8).strict_div_euclid(INative::ZERO);
+}

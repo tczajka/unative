@@ -584,6 +584,48 @@ macro_rules! define_native {
                 // SAFETY: Caller guarantees no overflow.
                 Self(unsafe { self.0.unchecked_mul(rhs.0) })
             }
+
+            /// Checked integer division. Computes `self / rhs`, returning `None` if `rhs` is
+            /// zero or the division overflows.
+            #[inline]
+            pub const fn checked_div(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_div(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict integer division. Computes `self / rhs`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_div(self, rhs: Self) -> Self {
+                Self(self.0.strict_div(rhs.0))
+            }
+
+            /// Checked Euclidean division. Computes `self.div_euclid(rhs)`, returning `None`
+            /// if `rhs` is zero or the division overflows.
+            #[inline]
+            pub const fn checked_div_euclid(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_div_euclid(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict Euclidean division. Computes `self.div_euclid(rhs)`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_div_euclid(self, rhs: Self) -> Self {
+                Self(self.0.strict_div_euclid(rhs.0))
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

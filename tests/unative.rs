@@ -631,3 +631,53 @@ fn unchecked_mul() {
     let result = unsafe { UNative::from(4u8).unchecked_mul(UNative::from(3u8)) };
     assert_eq!(result, UNative::from(12u8));
 }
+
+#[test]
+fn checked_div() {
+    assert_eq!(
+        UNative::from(23u8).checked_div(UNative::from(10u8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(
+        UNative::ZERO.checked_div(UNative::from(5u8)),
+        Some(UNative::ZERO)
+    );
+    assert_eq!(UNative::from(5u8).checked_div(UNative::ZERO), None);
+}
+
+#[test]
+fn strict_div() {
+    assert_eq!(
+        UNative::from(23u8).strict_div(UNative::from(10u8)),
+        UNative::from(2u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_div_by_zero() {
+    let _ = UNative::from(5u8).strict_div(UNative::ZERO);
+}
+
+#[test]
+fn checked_div_euclid() {
+    assert_eq!(
+        UNative::from(23u8).checked_div_euclid(UNative::from(10u8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(UNative::from(5u8).checked_div_euclid(UNative::ZERO), None);
+}
+
+#[test]
+fn strict_div_euclid() {
+    assert_eq!(
+        UNative::from(23u8).strict_div_euclid(UNative::from(10u8)),
+        UNative::from(2u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_div_euclid_by_zero() {
+    let _ = UNative::from(5u8).strict_div_euclid(UNative::ZERO);
+}
