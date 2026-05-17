@@ -456,6 +456,30 @@ macro_rules! define_native {
             pub const fn reverse_bits(self) -> Self {
                 Self(self.0.reverse_bits())
             }
+
+            /// Converts an integer from big endian to the target's endianness.
+            #[inline]
+            pub const fn from_be(x: Self) -> Self {
+                Self(<$inner>::from_be(x.0))
+            }
+
+            /// Converts an integer from little endian to the target's endianness.
+            #[inline]
+            pub const fn from_le(x: Self) -> Self {
+                Self(<$inner>::from_le(x.0))
+            }
+
+            /// Converts `self` to big endian from the target's endianness.
+            #[inline]
+            pub const fn to_be(self) -> Self {
+                Self(self.0.to_be())
+            }
+
+            /// Converts `self` to little endian from the target's endianness.
+            #[inline]
+            pub const fn to_le(self) -> Self {
+                Self(self.0.to_le())
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

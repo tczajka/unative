@@ -139,6 +139,24 @@ fn reverse_bits() {
 }
 
 #[test]
+fn big_endian() {
+    let x = UNative::from(42u8);
+    assert_eq!(UNative::from_be(x.to_be()), x);
+    assert_eq!(UNative::ZERO.to_be(), UNative::ZERO);
+    assert_eq!(UNative::MAX.to_be(), UNative::MAX);
+    assert_eq!(UNative::from_be(UNative::MAX), UNative::MAX);
+}
+
+#[test]
+fn little_endian() {
+    let x = UNative::from(42u8);
+    assert_eq!(UNative::from_le(x.to_le()), x);
+    assert_eq!(UNative::ZERO.to_le(), UNative::ZERO);
+    assert_eq!(UNative::MAX.to_le(), UNative::MAX);
+    assert_eq!(UNative::from_le(UNative::MAX), UNative::MAX);
+}
+
+#[test]
 fn cast_signed() {
     assert_eq!(UNative::ZERO.cast_signed(), INative::ZERO);
     assert_eq!(UNative::MAX.cast_signed(), INative::from(-1i8));
