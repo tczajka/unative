@@ -529,3 +529,42 @@ fn strict_add_unsigned() {
 fn strict_add_unsigned_overflow() {
     let _ = INative::MAX.strict_add_unsigned(UNative::from(1u8));
 }
+
+#[test]
+fn checked_sub() {
+    assert_eq!(
+        INative::from(5i8).checked_sub(INative::from(3i8)),
+        Some(INative::from(2i8)),
+    );
+    assert_eq!(
+        INative::from(3i8).checked_sub(INative::from(5i8)),
+        Some(INative::from(-2i8)),
+    );
+    assert_eq!(INative::MIN.checked_sub(INative::from(1i8)), None);
+    assert_eq!(INative::MAX.checked_sub(INative::from(-1i8)), None);
+}
+
+#[test]
+fn strict_sub() {
+    assert_eq!(
+        INative::from(5i8).strict_sub(INative::from(3i8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(3i8).strict_sub(INative::from(5i8)),
+        INative::from(-2i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_sub_overflow() {
+    let _ = INative::MIN.strict_sub(INative::from(1i8));
+}
+
+#[test]
+fn unchecked_sub() {
+    // SAFETY: 5 - 3 doesn't overflow.
+    let result = unsafe { INative::from(5i8).unchecked_sub(INative::from(3i8)) };
+    assert_eq!(result, INative::from(2i8));
+}

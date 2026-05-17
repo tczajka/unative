@@ -510,3 +510,34 @@ fn strict_add_signed_overflow() {
 fn strict_add_signed_overflow_zero() {
     let _ = UNative::from(5u8).strict_add_signed(INative::from(-10i8));
 }
+
+#[test]
+fn checked_sub() {
+    assert_eq!(
+        UNative::from(5u8).checked_sub(UNative::from(3u8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(UNative::ZERO.checked_sub(UNative::from(1u8)), None);
+    assert_eq!(UNative::MAX.checked_sub(UNative::ZERO), Some(UNative::MAX));
+}
+
+#[test]
+fn strict_sub() {
+    assert_eq!(
+        UNative::from(5u8).strict_sub(UNative::from(3u8)),
+        UNative::from(2u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_sub_overflow() {
+    let _ = UNative::ZERO.strict_sub(UNative::from(1u8));
+}
+
+#[test]
+fn unchecked_sub() {
+    // SAFETY: 5 - 3 doesn't overflow.
+    let result = unsafe { UNative::from(5u8).unchecked_sub(UNative::from(3u8)) };
+    assert_eq!(result, UNative::from(2u8));
+}

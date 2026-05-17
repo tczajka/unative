@@ -509,6 +509,36 @@ macro_rules! define_native {
                 // SAFETY: Caller guarantees no overflow.
                 Self(unsafe { self.0.unchecked_add(rhs.0) })
             }
+
+            /// Checked integer subtraction. Computes `self - rhs`, returning `None` if overflow
+            /// occurred.
+            #[inline]
+            pub const fn checked_sub(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_sub(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict integer subtraction. Computes `self - rhs`, panicking if overflow
+            /// occurred.
+            #[inline]
+            pub const fn strict_sub(self, rhs: Self) -> Self {
+                Self(self.0.strict_sub(rhs.0))
+            }
+
+            /// Unchecked integer subtraction. Computes `self - rhs`, assuming overflow cannot
+            /// occur.
+            ///
+            /// # Safety
+            ///
+            /// This results in undefined behavior when the result would overflow, i.e. when
+            /// [`checked_sub`](Self::checked_sub) would return `None`.
+            #[inline]
+            pub const unsafe fn unchecked_sub(self, rhs: Self) -> Self {
+                // SAFETY: Caller guarantees no overflow.
+                Self(unsafe { self.0.unchecked_sub(rhs.0) })
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);
