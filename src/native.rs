@@ -491,6 +491,75 @@ macro_rules! define_native {
                 }
             }
 
+            /// Checked integer subtraction. Computes `self - rhs`, returning `None` if overflow
+            /// occurred.
+            #[inline]
+            pub const fn checked_sub(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_sub(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked negation. Computes `-self`, returning `None` if overflow occurred.
+            #[inline]
+            pub const fn checked_neg(self) -> Option<Self> {
+                match self.0.checked_neg() {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked integer multiplication. Computes `self * rhs`, returning `None` if
+            /// overflow occurred.
+            #[inline]
+            pub const fn checked_mul(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_mul(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked integer division. Computes `self / rhs`, returning `None` if `rhs` is
+            /// zero or the division overflows.
+            #[inline]
+            pub const fn checked_div(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_div(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked Euclidean division. Computes `self.div_euclid(rhs)`, returning `None`
+            /// if `rhs` is zero or the division overflows.
+            #[inline]
+            pub const fn checked_div_euclid(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_div_euclid(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked integer remainder. Computes `self % rhs`, returning `None` if `rhs` is
+            /// zero or the division overflows.
+            #[inline]
+            pub const fn checked_rem(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_rem(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Checked Euclidean remainder. Computes `self.rem_euclid(rhs)`, returning `None`
+            /// if `rhs` is zero or the division overflows.
+            #[inline]
+            pub const fn checked_rem_euclid(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_rem_euclid(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.
             ///
             /// # Panics
@@ -500,6 +569,85 @@ macro_rules! define_native {
             #[inline]
             pub const fn strict_add(self, rhs: Self) -> Self {
                 Self(self.0.strict_add(rhs.0))
+            }
+
+            /// Strict integer subtraction. Computes `self - rhs`, panicking if overflow
+            /// occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
+            #[inline]
+            pub const fn strict_sub(self, rhs: Self) -> Self {
+                Self(self.0.strict_sub(rhs.0))
+            }
+
+            /// Strict negation. Computes `-self`, panicking if overflow occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
+            #[inline]
+            pub const fn strict_neg(self) -> Self {
+                Self(self.0.strict_neg())
+            }
+
+            /// Strict integer multiplication. Computes `self * rhs`, panicking if overflow
+            /// occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
+            #[inline]
+            pub const fn strict_mul(self, rhs: Self) -> Self {
+                Self(self.0.strict_mul(rhs.0))
+            }
+
+            /// Strict integer division. Computes `self / rhs`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_div(self, rhs: Self) -> Self {
+                Self(self.0.strict_div(rhs.0))
+            }
+
+            /// Strict Euclidean division. Computes `self.div_euclid(rhs)`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_div_euclid(self, rhs: Self) -> Self {
+                Self(self.0.strict_div_euclid(rhs.0))
+            }
+
+            /// Strict integer remainder. Computes `self % rhs`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_rem(self, rhs: Self) -> Self {
+                Self(self.0.strict_rem(rhs.0))
+            }
+
+            /// Strict Euclidean remainder. Computes `self.rem_euclid(rhs)`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_rem_euclid(self, rhs: Self) -> Self {
+                Self(self.0.strict_rem_euclid(rhs.0))
             }
 
             /// Unchecked integer addition. Computes `self + rhs`, assuming overflow cannot
@@ -515,28 +663,6 @@ macro_rules! define_native {
                 Self(unsafe { self.0.unchecked_add(rhs.0) })
             }
 
-            /// Checked integer subtraction. Computes `self - rhs`, returning `None` if overflow
-            /// occurred.
-            #[inline]
-            pub const fn checked_sub(self, rhs: Self) -> Option<Self> {
-                match self.0.checked_sub(rhs.0) {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict integer subtraction. Computes `self - rhs`, panicking if overflow
-            /// occurred.
-            ///
-            /// # Panics
-            ///
-            /// This function will always panic on overflow, regardless of whether overflow
-            /// checks are enabled.
-            #[inline]
-            pub const fn strict_sub(self, rhs: Self) -> Self {
-                Self(self.0.strict_sub(rhs.0))
-            }
-
             /// Unchecked integer subtraction. Computes `self - rhs`, assuming overflow cannot
             /// occur.
             ///
@@ -548,28 +674,6 @@ macro_rules! define_native {
             pub const unsafe fn unchecked_sub(self, rhs: Self) -> Self {
                 // SAFETY: Caller guarantees no overflow.
                 Self(unsafe { self.0.unchecked_sub(rhs.0) })
-            }
-
-            /// Checked integer multiplication. Computes `self * rhs`, returning `None` if
-            /// overflow occurred.
-            #[inline]
-            pub const fn checked_mul(self, rhs: Self) -> Option<Self> {
-                match self.0.checked_mul(rhs.0) {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict integer multiplication. Computes `self * rhs`, panicking if overflow
-            /// occurred.
-            ///
-            /// # Panics
-            ///
-            /// This function will always panic on overflow, regardless of whether overflow
-            /// checks are enabled.
-            #[inline]
-            pub const fn strict_mul(self, rhs: Self) -> Self {
-                Self(self.0.strict_mul(rhs.0))
             }
 
             /// Unchecked integer multiplication. Computes `self * rhs`, assuming overflow
@@ -584,111 +688,6 @@ macro_rules! define_native {
                 // SAFETY: Caller guarantees no overflow.
                 Self(unsafe { self.0.unchecked_mul(rhs.0) })
             }
-
-            /// Checked integer division. Computes `self / rhs`, returning `None` if `rhs` is
-            /// zero or the division overflows.
-            #[inline]
-            pub const fn checked_div(self, rhs: Self) -> Option<Self> {
-                match self.0.checked_div(rhs.0) {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict integer division. Computes `self / rhs`.
-            ///
-            /// # Panics
-            ///
-            /// This function will panic if `rhs` is zero, or if the division overflows
-            /// regardless of whether overflow checks are enabled.
-            #[inline]
-            pub const fn strict_div(self, rhs: Self) -> Self {
-                Self(self.0.strict_div(rhs.0))
-            }
-
-            /// Checked Euclidean division. Computes `self.div_euclid(rhs)`, returning `None`
-            /// if `rhs` is zero or the division overflows.
-            #[inline]
-            pub const fn checked_div_euclid(self, rhs: Self) -> Option<Self> {
-                match self.0.checked_div_euclid(rhs.0) {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict Euclidean division. Computes `self.div_euclid(rhs)`.
-            ///
-            /// # Panics
-            ///
-            /// This function will panic if `rhs` is zero, or if the division overflows
-            /// regardless of whether overflow checks are enabled.
-            #[inline]
-            pub const fn strict_div_euclid(self, rhs: Self) -> Self {
-                Self(self.0.strict_div_euclid(rhs.0))
-            }
-
-            /// Checked integer remainder. Computes `self % rhs`, returning `None` if `rhs` is
-            /// zero or the division overflows.
-            #[inline]
-            pub const fn checked_rem(self, rhs: Self) -> Option<Self> {
-                match self.0.checked_rem(rhs.0) {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict integer remainder. Computes `self % rhs`.
-            ///
-            /// # Panics
-            ///
-            /// This function will panic if `rhs` is zero, or if the division overflows
-            /// regardless of whether overflow checks are enabled.
-            #[inline]
-            pub const fn strict_rem(self, rhs: Self) -> Self {
-                Self(self.0.strict_rem(rhs.0))
-            }
-
-            /// Checked Euclidean remainder. Computes `self.rem_euclid(rhs)`, returning `None`
-            /// if `rhs` is zero or the division overflows.
-            #[inline]
-            pub const fn checked_rem_euclid(self, rhs: Self) -> Option<Self> {
-                match self.0.checked_rem_euclid(rhs.0) {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict Euclidean remainder. Computes `self.rem_euclid(rhs)`.
-            ///
-            /// # Panics
-            ///
-            /// This function will panic if `rhs` is zero, or if the division overflows
-            /// regardless of whether overflow checks are enabled.
-            #[inline]
-            pub const fn strict_rem_euclid(self, rhs: Self) -> Self {
-                Self(self.0.strict_rem_euclid(rhs.0))
-            }
-
-            /// Checked negation. Computes `-self`, returning `None` if overflow occurred.
-            #[inline]
-            pub const fn checked_neg(self) -> Option<Self> {
-                match self.0.checked_neg() {
-                    Some(x) => Some(Self(x)),
-                    None => None,
-                }
-            }
-
-            /// Strict negation. Computes `-self`, panicking if overflow occurred.
-            ///
-            /// # Panics
-            ///
-            /// This function will always panic on overflow, regardless of whether overflow
-            /// checks are enabled.
-            #[inline]
-            pub const fn strict_neg(self) -> Self {
-                Self(self.0.strict_neg())
-            }
-
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

@@ -450,27 +450,6 @@ fn checked_add() {
 }
 
 #[test]
-fn strict_add() {
-    assert_eq!(
-        UNative::from(2u8).strict_add(UNative::from(3u8)),
-        UNative::from(5u8),
-    );
-}
-
-#[test]
-#[should_panic]
-fn strict_add_overflow() {
-    let _ = UNative::MAX.strict_add(UNative::from(1u8));
-}
-
-#[test]
-fn unchecked_add() {
-    // SAFETY: 2 + 3 doesn't overflow.
-    let result = unsafe { UNative::from(2u8).unchecked_add(UNative::from(3u8)) };
-    assert_eq!(result, UNative::from(5u8));
-}
-
-#[test]
 fn checked_add_signed() {
     assert_eq!(
         UNative::from(5u8).checked_add_signed(INative::from(3i8)),
@@ -485,6 +464,122 @@ fn checked_add_signed() {
         None,
     );
     assert_eq!(UNative::MAX.checked_add_signed(INative::from(1i8)), None);
+}
+
+#[test]
+fn checked_sub() {
+    assert_eq!(
+        UNative::from(5u8).checked_sub(UNative::from(3u8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(UNative::ZERO.checked_sub(UNative::from(1u8)), None);
+    assert_eq!(UNative::MAX.checked_sub(UNative::ZERO), Some(UNative::MAX));
+}
+
+#[test]
+fn checked_sub_signed() {
+    assert_eq!(
+        UNative::from(5u8).checked_sub_signed(INative::from(3i8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_sub_signed(INative::from(-3i8)),
+        Some(UNative::from(8u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_sub_signed(INative::from(10i8)),
+        None,
+    );
+    assert_eq!(UNative::MAX.checked_sub_signed(INative::from(-1i8)), None);
+}
+
+#[test]
+fn checked_signed_diff() {
+    assert_eq!(
+        UNative::from(5u8).checked_signed_diff(UNative::from(3u8)),
+        Some(INative::from(2i8)),
+    );
+    assert_eq!(
+        UNative::from(3u8).checked_signed_diff(UNative::from(5u8)),
+        Some(INative::from(-2i8)),
+    );
+    assert_eq!(
+        UNative::ZERO.checked_signed_diff(UNative::ZERO),
+        Some(INative::ZERO),
+    );
+    assert_eq!(UNative::MAX.checked_signed_diff(UNative::ZERO), None);
+    assert_eq!(UNative::ZERO.checked_signed_diff(UNative::MAX), None);
+}
+
+#[test]
+fn checked_neg() {
+    assert_eq!(UNative::ZERO.checked_neg(), Some(UNative::ZERO));
+    assert_eq!(UNative::from(1u8).checked_neg(), None);
+    assert_eq!(UNative::MAX.checked_neg(), None);
+}
+
+#[test]
+fn checked_mul() {
+    assert_eq!(
+        UNative::from(4u8).checked_mul(UNative::from(3u8)),
+        Some(UNative::from(12u8)),
+    );
+    assert_eq!(UNative::MAX.checked_mul(UNative::from(2u8)), None);
+    assert_eq!(UNative::ZERO.checked_mul(UNative::MAX), Some(UNative::ZERO));
+}
+
+#[test]
+fn checked_div() {
+    assert_eq!(
+        UNative::from(23u8).checked_div(UNative::from(10u8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(
+        UNative::ZERO.checked_div(UNative::from(5u8)),
+        Some(UNative::ZERO)
+    );
+    assert_eq!(UNative::from(5u8).checked_div(UNative::ZERO), None);
+}
+
+#[test]
+fn checked_div_euclid() {
+    assert_eq!(
+        UNative::from(23u8).checked_div_euclid(UNative::from(10u8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(UNative::from(5u8).checked_div_euclid(UNative::ZERO), None);
+}
+
+#[test]
+fn checked_rem() {
+    assert_eq!(
+        UNative::from(23u8).checked_rem(UNative::from(10u8)),
+        Some(UNative::from(3u8)),
+    );
+    assert_eq!(UNative::from(5u8).checked_rem(UNative::ZERO), None);
+}
+
+#[test]
+fn checked_rem_euclid() {
+    assert_eq!(
+        UNative::from(23u8).checked_rem_euclid(UNative::from(10u8)),
+        Some(UNative::from(3u8)),
+    );
+    assert_eq!(UNative::from(5u8).checked_rem_euclid(UNative::ZERO), None);
+}
+
+#[test]
+fn strict_add() {
+    assert_eq!(
+        UNative::from(2u8).strict_add(UNative::from(3u8)),
+        UNative::from(5u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_add_overflow() {
+    let _ = UNative::MAX.strict_add(UNative::from(1u8));
 }
 
 #[test]
@@ -512,16 +607,6 @@ fn strict_add_signed_overflow_below() {
 }
 
 #[test]
-fn checked_sub() {
-    assert_eq!(
-        UNative::from(5u8).checked_sub(UNative::from(3u8)),
-        Some(UNative::from(2u8)),
-    );
-    assert_eq!(UNative::ZERO.checked_sub(UNative::from(1u8)), None);
-    assert_eq!(UNative::MAX.checked_sub(UNative::ZERO), Some(UNative::MAX));
-}
-
-#[test]
 fn strict_sub() {
     assert_eq!(
         UNative::from(5u8).strict_sub(UNative::from(3u8)),
@@ -533,30 +618,6 @@ fn strict_sub() {
 #[should_panic]
 fn strict_sub_overflow() {
     let _ = UNative::ZERO.strict_sub(UNative::from(1u8));
-}
-
-#[test]
-fn unchecked_sub() {
-    // SAFETY: 5 - 3 doesn't overflow.
-    let result = unsafe { UNative::from(5u8).unchecked_sub(UNative::from(3u8)) };
-    assert_eq!(result, UNative::from(2u8));
-}
-
-#[test]
-fn checked_sub_signed() {
-    assert_eq!(
-        UNative::from(5u8).checked_sub_signed(INative::from(3i8)),
-        Some(UNative::from(2u8)),
-    );
-    assert_eq!(
-        UNative::from(5u8).checked_sub_signed(INative::from(-3i8)),
-        Some(UNative::from(8u8)),
-    );
-    assert_eq!(
-        UNative::from(5u8).checked_sub_signed(INative::from(10i8)),
-        None,
-    );
-    assert_eq!(UNative::MAX.checked_sub_signed(INative::from(-1i8)), None);
 }
 
 #[test]
@@ -584,31 +645,14 @@ fn strict_sub_signed_overflow_above() {
 }
 
 #[test]
-fn checked_signed_diff() {
-    assert_eq!(
-        UNative::from(5u8).checked_signed_diff(UNative::from(3u8)),
-        Some(INative::from(2i8)),
-    );
-    assert_eq!(
-        UNative::from(3u8).checked_signed_diff(UNative::from(5u8)),
-        Some(INative::from(-2i8)),
-    );
-    assert_eq!(
-        UNative::ZERO.checked_signed_diff(UNative::ZERO),
-        Some(INative::ZERO),
-    );
-    assert_eq!(UNative::MAX.checked_signed_diff(UNative::ZERO), None);
-    assert_eq!(UNative::ZERO.checked_signed_diff(UNative::MAX), None);
+fn strict_neg() {
+    assert_eq!(UNative::ZERO.strict_neg(), UNative::ZERO);
 }
 
 #[test]
-fn checked_mul() {
-    assert_eq!(
-        UNative::from(4u8).checked_mul(UNative::from(3u8)),
-        Some(UNative::from(12u8)),
-    );
-    assert_eq!(UNative::MAX.checked_mul(UNative::from(2u8)), None);
-    assert_eq!(UNative::ZERO.checked_mul(UNative::MAX), Some(UNative::ZERO));
+#[should_panic]
+fn strict_neg_overflow() {
+    let _ = UNative::from(1u8).strict_neg();
 }
 
 #[test]
@@ -626,26 +670,6 @@ fn strict_mul_overflow() {
 }
 
 #[test]
-fn unchecked_mul() {
-    // SAFETY: 4 * 3 doesn't overflow.
-    let result = unsafe { UNative::from(4u8).unchecked_mul(UNative::from(3u8)) };
-    assert_eq!(result, UNative::from(12u8));
-}
-
-#[test]
-fn checked_div() {
-    assert_eq!(
-        UNative::from(23u8).checked_div(UNative::from(10u8)),
-        Some(UNative::from(2u8)),
-    );
-    assert_eq!(
-        UNative::ZERO.checked_div(UNative::from(5u8)),
-        Some(UNative::ZERO)
-    );
-    assert_eq!(UNative::from(5u8).checked_div(UNative::ZERO), None);
-}
-
-#[test]
 fn strict_div() {
     assert_eq!(
         UNative::from(23u8).strict_div(UNative::from(10u8)),
@@ -657,15 +681,6 @@ fn strict_div() {
 #[should_panic]
 fn strict_div_by_zero() {
     let _ = UNative::from(5u8).strict_div(UNative::ZERO);
-}
-
-#[test]
-fn checked_div_euclid() {
-    assert_eq!(
-        UNative::from(23u8).checked_div_euclid(UNative::from(10u8)),
-        Some(UNative::from(2u8)),
-    );
-    assert_eq!(UNative::from(5u8).checked_div_euclid(UNative::ZERO), None);
 }
 
 #[test]
@@ -683,15 +698,6 @@ fn strict_div_euclid_by_zero() {
 }
 
 #[test]
-fn checked_rem() {
-    assert_eq!(
-        UNative::from(23u8).checked_rem(UNative::from(10u8)),
-        Some(UNative::from(3u8)),
-    );
-    assert_eq!(UNative::from(5u8).checked_rem(UNative::ZERO), None);
-}
-
-#[test]
 fn strict_rem() {
     assert_eq!(
         UNative::from(23u8).strict_rem(UNative::from(10u8)),
@@ -703,15 +709,6 @@ fn strict_rem() {
 #[should_panic]
 fn strict_rem_by_zero() {
     let _ = UNative::from(5u8).strict_rem(UNative::ZERO);
-}
-
-#[test]
-fn checked_rem_euclid() {
-    assert_eq!(
-        UNative::from(23u8).checked_rem_euclid(UNative::from(10u8)),
-        Some(UNative::from(3u8)),
-    );
-    assert_eq!(UNative::from(5u8).checked_rem_euclid(UNative::ZERO), None);
 }
 
 #[test]
@@ -729,19 +726,22 @@ fn strict_rem_euclid_by_zero() {
 }
 
 #[test]
-fn checked_neg() {
-    assert_eq!(UNative::ZERO.checked_neg(), Some(UNative::ZERO));
-    assert_eq!(UNative::from(1u8).checked_neg(), None);
-    assert_eq!(UNative::MAX.checked_neg(), None);
+fn unchecked_add() {
+    // SAFETY: 2 + 3 doesn't overflow.
+    let result = unsafe { UNative::from(2u8).unchecked_add(UNative::from(3u8)) };
+    assert_eq!(result, UNative::from(5u8));
 }
 
 #[test]
-fn strict_neg() {
-    assert_eq!(UNative::ZERO.strict_neg(), UNative::ZERO);
+fn unchecked_sub() {
+    // SAFETY: 5 - 3 doesn't overflow.
+    let result = unsafe { UNative::from(5u8).unchecked_sub(UNative::from(3u8)) };
+    assert_eq!(result, UNative::from(2u8));
 }
 
 #[test]
-#[should_panic]
-fn strict_neg_overflow() {
-    let _ = UNative::from(1u8).strict_neg();
+fn unchecked_mul() {
+    // SAFETY: 4 * 3 doesn't overflow.
+    let result = unsafe { UNative::from(4u8).unchecked_mul(UNative::from(3u8)) };
+    assert_eq!(result, UNative::from(12u8));
 }

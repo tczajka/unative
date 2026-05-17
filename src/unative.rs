@@ -27,6 +27,26 @@ impl UNative {
         }
     }
 
+    /// Checked subtraction of a signed integer. Computes `self - rhs`, returning `None` if
+    /// overflow occurred.
+    #[inline]
+    pub const fn checked_sub_signed(self, rhs: INative) -> Option<Self> {
+        match self.0.checked_sub_signed(rhs.0) {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
+    /// Computes the signed difference `self - rhs`, returning `None` if the result does not
+    /// fit in [`INative`].
+    #[inline]
+    pub const fn checked_signed_diff(self, rhs: UNative) -> Option<INative> {
+        match self.0.checked_signed_diff(rhs.0) {
+            Some(x) => Some(INative(x)),
+            None => None,
+        }
+    }
+
     /// Strict addition of a signed integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///
@@ -39,16 +59,6 @@ impl UNative {
         Self(self.0.strict_add_signed(rhs.0))
     }
 
-    /// Checked subtraction of a signed integer. Computes `self - rhs`, returning `None` if
-    /// overflow occurred.
-    #[inline]
-    pub const fn checked_sub_signed(self, rhs: INative) -> Option<Self> {
-        match self.0.checked_sub_signed(rhs.0) {
-            Some(x) => Some(Self(x)),
-            None => None,
-        }
-    }
-
     /// Strict subtraction of a signed integer. Computes `self - rhs`, panicking if overflow
     /// occurred.
     ///
@@ -59,16 +69,6 @@ impl UNative {
     #[inline]
     pub const fn strict_sub_signed(self, rhs: INative) -> Self {
         Self(self.0.strict_sub_signed(rhs.0))
-    }
-
-    /// Computes the signed difference `self - rhs`, returning `None` if the result does not
-    /// fit in [`INative`].
-    #[inline]
-    pub const fn checked_signed_diff(self, rhs: UNative) -> Option<INative> {
-        match self.0.checked_signed_diff(rhs.0) {
-            Some(x) => Some(INative(x)),
-            None => None,
-        }
     }
 }
 
