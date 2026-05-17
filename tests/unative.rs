@@ -438,3 +438,34 @@ fn from_str() {
     assert!("-1".parse::<UNative>().is_err());
     assert!("".parse::<UNative>().is_err());
 }
+
+#[test]
+fn checked_add() {
+    assert_eq!(
+        UNative::from(2u8).checked_add(UNative::from(3u8)),
+        Some(UNative::from(5u8)),
+    );
+    assert_eq!(UNative::MAX.checked_add(UNative::from(1u8)), None);
+    assert_eq!(UNative::MAX.checked_add(UNative::ZERO), Some(UNative::MAX));
+}
+
+#[test]
+fn strict_add() {
+    assert_eq!(
+        UNative::from(2u8).strict_add(UNative::from(3u8)),
+        UNative::from(5u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_add_overflow() {
+    let _ = UNative::MAX.strict_add(UNative::from(1u8));
+}
+
+#[test]
+fn unchecked_add() {
+    // SAFETY: 2 + 3 doesn't overflow.
+    let result = unsafe { UNative::from(2u8).unchecked_add(UNative::from(3u8)) };
+    assert_eq!(result, UNative::from(5u8));
+}

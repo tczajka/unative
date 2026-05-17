@@ -459,3 +459,42 @@ fn from_str() {
     assert!("abc".parse::<INative>().is_err());
     assert!("".parse::<INative>().is_err());
 }
+
+#[test]
+fn checked_add() {
+    assert_eq!(
+        INative::from(2i8).checked_add(INative::from(3i8)),
+        Some(INative::from(5i8)),
+    );
+    assert_eq!(INative::MAX.checked_add(INative::from(1i8)), None);
+    assert_eq!(INative::MIN.checked_add(INative::from(-1i8)), None);
+    assert_eq!(
+        INative::from(-1i8).checked_add(INative::from(1i8)),
+        Some(INative::ZERO),
+    );
+}
+
+#[test]
+fn strict_add() {
+    assert_eq!(
+        INative::from(2i8).strict_add(INative::from(3i8)),
+        INative::from(5i8),
+    );
+    assert_eq!(
+        INative::from(-1i8).strict_add(INative::from(1i8)),
+        INative::ZERO,
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_add_overflow() {
+    let _ = INative::MAX.strict_add(INative::from(1i8));
+}
+
+#[test]
+fn unchecked_add() {
+    // SAFETY: 2 + 3 doesn't overflow.
+    let result = unsafe { INative::from(2i8).unchecked_add(INative::from(3i8)) };
+    assert_eq!(result, INative::from(5i8));
+}
