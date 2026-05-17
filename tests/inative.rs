@@ -704,3 +704,75 @@ fn strict_div_euclid() {
 fn strict_div_euclid_by_zero() {
     let _ = INative::from(5i8).strict_div_euclid(INative::ZERO);
 }
+
+#[test]
+fn checked_rem() {
+    assert_eq!(
+        INative::from(23i8).checked_rem(INative::from(10i8)),
+        Some(INative::from(3i8)),
+    );
+    assert_eq!(
+        INative::from(-23i8).checked_rem(INative::from(10i8)),
+        Some(INative::from(-3i8)),
+    );
+    assert_eq!(INative::from(5i8).checked_rem(INative::ZERO), None);
+    assert_eq!(INative::MIN.checked_rem(INative::from(-1i8)), None);
+}
+
+#[test]
+fn strict_rem() {
+    assert_eq!(
+        INative::from(23i8).strict_rem(INative::from(10i8)),
+        INative::from(3i8),
+    );
+    assert_eq!(
+        INative::from(-23i8).strict_rem(INative::from(10i8)),
+        INative::from(-3i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_rem_by_zero() {
+    let _ = INative::from(5i8).strict_rem(INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn strict_rem_overflow() {
+    let _ = INative::MIN.strict_rem(INative::from(-1i8));
+}
+
+#[test]
+fn checked_rem_euclid() {
+    assert_eq!(
+        INative::from(23i8).checked_rem_euclid(INative::from(10i8)),
+        Some(INative::from(3i8)),
+    );
+    assert_eq!(
+        INative::from(-23i8).checked_rem_euclid(INative::from(10i8)),
+        Some(INative::from(7i8)),
+    );
+    assert_eq!(INative::from(5i8).checked_rem_euclid(INative::ZERO), None);
+    assert_eq!(INative::MIN.checked_rem_euclid(INative::from(-1i8)), None);
+}
+
+#[test]
+fn strict_rem_euclid() {
+    assert_eq!(
+        INative::from(-23i8).strict_rem_euclid(INative::from(10i8)),
+        INative::from(7i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_rem_euclid_by_zero() {
+    let _ = INative::from(5i8).strict_rem_euclid(INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn strict_rem_euclid_overflow() {
+    let _ = INative::MIN.strict_rem_euclid(INative::from(-1i8));
+}

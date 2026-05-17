@@ -681,3 +681,49 @@ fn strict_div_euclid() {
 fn strict_div_euclid_by_zero() {
     let _ = UNative::from(5u8).strict_div_euclid(UNative::ZERO);
 }
+
+#[test]
+fn checked_rem() {
+    assert_eq!(
+        UNative::from(23u8).checked_rem(UNative::from(10u8)),
+        Some(UNative::from(3u8)),
+    );
+    assert_eq!(UNative::from(5u8).checked_rem(UNative::ZERO), None);
+}
+
+#[test]
+fn strict_rem() {
+    assert_eq!(
+        UNative::from(23u8).strict_rem(UNative::from(10u8)),
+        UNative::from(3u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_rem_by_zero() {
+    let _ = UNative::from(5u8).strict_rem(UNative::ZERO);
+}
+
+#[test]
+fn checked_rem_euclid() {
+    assert_eq!(
+        UNative::from(23u8).checked_rem_euclid(UNative::from(10u8)),
+        Some(UNative::from(3u8)),
+    );
+    assert_eq!(UNative::from(5u8).checked_rem_euclid(UNative::ZERO), None);
+}
+
+#[test]
+fn strict_rem_euclid() {
+    assert_eq!(
+        UNative::from(23u8).strict_rem_euclid(UNative::from(10u8)),
+        UNative::from(3u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_rem_euclid_by_zero() {
+    let _ = UNative::from(5u8).strict_rem_euclid(UNative::ZERO);
+}

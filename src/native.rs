@@ -626,6 +626,48 @@ macro_rules! define_native {
             pub const fn strict_div_euclid(self, rhs: Self) -> Self {
                 Self(self.0.strict_div_euclid(rhs.0))
             }
+
+            /// Checked integer remainder. Computes `self % rhs`, returning `None` if `rhs` is
+            /// zero or the division overflows.
+            #[inline]
+            pub const fn checked_rem(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_rem(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict integer remainder. Computes `self % rhs`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_rem(self, rhs: Self) -> Self {
+                Self(self.0.strict_rem(rhs.0))
+            }
+
+            /// Checked Euclidean remainder. Computes `self.rem_euclid(rhs)`, returning `None`
+            /// if `rhs` is zero or the division overflows.
+            #[inline]
+            pub const fn checked_rem_euclid(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_rem_euclid(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict Euclidean remainder. Computes `self.rem_euclid(rhs)`.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows
+            /// regardless of whether overflow checks are enabled.
+            #[inline]
+            pub const fn strict_rem_euclid(self, rhs: Self) -> Self {
+                Self(self.0.strict_rem_euclid(rhs.0))
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);
