@@ -498,3 +498,34 @@ fn unchecked_add() {
     let result = unsafe { INative::from(2i8).unchecked_add(INative::from(3i8)) };
     assert_eq!(result, INative::from(5i8));
 }
+
+#[test]
+fn checked_add_unsigned() {
+    assert_eq!(
+        INative::from(5i8).checked_add_unsigned(UNative::from(3u8)),
+        Some(INative::from(8i8)),
+    );
+    assert_eq!(
+        INative::from(-5i8).checked_add_unsigned(UNative::from(3u8)),
+        Some(INative::from(-2i8)),
+    );
+    assert_eq!(INative::MAX.checked_add_unsigned(UNative::from(1u8)), None);
+}
+
+#[test]
+fn strict_add_unsigned() {
+    assert_eq!(
+        INative::from(5i8).strict_add_unsigned(UNative::from(3u8)),
+        INative::from(8i8),
+    );
+    assert_eq!(
+        INative::from(-5i8).strict_add_unsigned(UNative::from(3u8)),
+        INative::from(-2i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_add_unsigned_overflow() {
+    let _ = INative::MAX.strict_add_unsigned(UNative::from(1u8));
+}

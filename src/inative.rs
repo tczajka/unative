@@ -17,6 +17,23 @@ impl INative {
     pub const fn cast_unsigned(self) -> UNative {
         UNative(self.0.cast_unsigned())
     }
+
+    /// Checked addition of an unsigned integer. Computes `self + rhs`, returning `None` if
+    /// overflow occurred.
+    #[inline]
+    pub const fn checked_add_unsigned(self, rhs: UNative) -> Option<Self> {
+        match self.0.checked_add_unsigned(rhs.0) {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
+    /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
+    /// occurred.
+    #[inline]
+    pub const fn strict_add_unsigned(self, rhs: UNative) -> Self {
+        Self(self.0.strict_add_unsigned(rhs.0))
+    }
 }
 
 delegate_unary_op!(INative, Neg, neg, -);

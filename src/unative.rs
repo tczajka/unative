@@ -16,6 +16,23 @@ impl UNative {
     pub const fn cast_signed(self) -> INative {
         INative(self.0.cast_signed())
     }
+
+    /// Checked addition of a signed integer. Computes `self + rhs`, returning `None` if
+    /// overflow occurred.
+    #[inline]
+    pub const fn checked_add_signed(self, rhs: INative) -> Option<Self> {
+        match self.0.checked_add_signed(rhs.0) {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
+    /// Strict addition of a signed integer. Computes `self + rhs`, panicking if overflow
+    /// occurred.
+    #[inline]
+    pub const fn strict_add_signed(self, rhs: INative) -> Self {
+        Self(self.0.strict_add_signed(rhs.0))
+    }
 }
 
 delegate_from_native_prim!(UNative, bool);

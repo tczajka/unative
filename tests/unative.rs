@@ -469,3 +469,44 @@ fn unchecked_add() {
     let result = unsafe { UNative::from(2u8).unchecked_add(UNative::from(3u8)) };
     assert_eq!(result, UNative::from(5u8));
 }
+
+#[test]
+fn checked_add_signed() {
+    assert_eq!(
+        UNative::from(5u8).checked_add_signed(INative::from(3i8)),
+        Some(UNative::from(8u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_add_signed(INative::from(-3i8)),
+        Some(UNative::from(2u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_add_signed(INative::from(-10i8)),
+        None,
+    );
+    assert_eq!(UNative::MAX.checked_add_signed(INative::from(1i8)), None);
+}
+
+#[test]
+fn strict_add_signed() {
+    assert_eq!(
+        UNative::from(5u8).strict_add_signed(INative::from(3i8)),
+        UNative::from(8u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).strict_add_signed(INative::from(-3i8)),
+        UNative::from(2u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_add_signed_overflow() {
+    let _ = UNative::MAX.strict_add_signed(INative::from(1i8));
+}
+
+#[test]
+#[should_panic]
+fn strict_add_signed_overflow_zero() {
+    let _ = UNative::from(5u8).strict_add_signed(INative::from(-10i8));
+}
