@@ -40,6 +40,12 @@ fn default() {
 }
 
 #[test]
+fn bits() {
+    assert_eq!(UNative::BITS, INative::BITS);
+    assert_eq!(UNative::MAX >> (UNative::BITS - 1), UNative::from(1u8));
+}
+
+#[test]
 fn equality() {
     let x = UNative::from(42u8);
     assert_eq!(x, x);

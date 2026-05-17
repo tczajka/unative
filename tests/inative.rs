@@ -43,6 +43,12 @@ fn default() {
 }
 
 #[test]
+fn bits() {
+    assert_eq!(INative::BITS, UNative::BITS);
+    assert_eq!(INative::MAX >> (INative::BITS - 2), INative::from(1i8));
+}
+
+#[test]
 fn equality() {
     let x = INative::from(-42i8);
     assert_eq!(x, x);
