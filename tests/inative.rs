@@ -599,3 +599,42 @@ fn strict_sub_unsigned() {
 fn strict_sub_unsigned_overflow() {
     let _ = INative::MIN.strict_sub_unsigned(UNative::from(1u8));
 }
+
+#[test]
+fn checked_mul() {
+    assert_eq!(
+        INative::from(4i8).checked_mul(INative::from(3i8)),
+        Some(INative::from(12i8)),
+    );
+    assert_eq!(
+        INative::from(-4i8).checked_mul(INative::from(3i8)),
+        Some(INative::from(-12i8)),
+    );
+    assert_eq!(INative::MAX.checked_mul(INative::from(2i8)), None);
+    assert_eq!(INative::MIN.checked_mul(INative::from(2i8)), None);
+}
+
+#[test]
+fn strict_mul() {
+    assert_eq!(
+        INative::from(4i8).strict_mul(INative::from(3i8)),
+        INative::from(12i8),
+    );
+    assert_eq!(
+        INative::from(-4i8).strict_mul(INative::from(3i8)),
+        INative::from(-12i8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_mul_overflow() {
+    let _ = INative::MAX.strict_mul(INative::from(2i8));
+}
+
+#[test]
+fn unchecked_mul() {
+    // SAFETY: 4 * 3 doesn't overflow.
+    let result = unsafe { INative::from(4i8).unchecked_mul(INative::from(3i8)) };
+    assert_eq!(result, INative::from(12i8));
+}

@@ -549,6 +549,41 @@ macro_rules! define_native {
                 // SAFETY: Caller guarantees no overflow.
                 Self(unsafe { self.0.unchecked_sub(rhs.0) })
             }
+
+            /// Checked integer multiplication. Computes `self * rhs`, returning `None` if
+            /// overflow occurred.
+            #[inline]
+            pub const fn checked_mul(self, rhs: Self) -> Option<Self> {
+                match self.0.checked_mul(rhs.0) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
+            /// Strict integer multiplication. Computes `self * rhs`, panicking if overflow
+            /// occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
+            #[inline]
+            pub const fn strict_mul(self, rhs: Self) -> Self {
+                Self(self.0.strict_mul(rhs.0))
+            }
+
+            /// Unchecked integer multiplication. Computes `self * rhs`, assuming overflow
+            /// cannot occur.
+            ///
+            /// # Safety
+            ///
+            /// This results in undefined behavior when the result would overflow, i.e. when
+            /// [`checked_mul`](Self::checked_mul) would return `None`.
+            #[inline]
+            pub const unsafe fn unchecked_mul(self, rhs: Self) -> Self {
+                // SAFETY: Caller guarantees no overflow.
+                Self(unsafe { self.0.unchecked_mul(rhs.0) })
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

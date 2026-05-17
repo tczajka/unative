@@ -600,3 +600,34 @@ fn checked_signed_diff() {
     assert_eq!(UNative::MAX.checked_signed_diff(UNative::ZERO), None);
     assert_eq!(UNative::ZERO.checked_signed_diff(UNative::MAX), None);
 }
+
+#[test]
+fn checked_mul() {
+    assert_eq!(
+        UNative::from(4u8).checked_mul(UNative::from(3u8)),
+        Some(UNative::from(12u8)),
+    );
+    assert_eq!(UNative::MAX.checked_mul(UNative::from(2u8)), None);
+    assert_eq!(UNative::ZERO.checked_mul(UNative::MAX), Some(UNative::ZERO));
+}
+
+#[test]
+fn strict_mul() {
+    assert_eq!(
+        UNative::from(4u8).strict_mul(UNative::from(3u8)),
+        UNative::from(12u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn strict_mul_overflow() {
+    let _ = UNative::MAX.strict_mul(UNative::from(2u8));
+}
+
+#[test]
+fn unchecked_mul() {
+    // SAFETY: 4 * 3 doesn't overflow.
+    let result = unsafe { UNative::from(4u8).unchecked_mul(UNative::from(3u8)) };
+    assert_eq!(result, UNative::from(12u8));
+}
