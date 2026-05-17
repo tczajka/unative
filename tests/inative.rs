@@ -118,6 +118,27 @@ fn rotate_right() {
 }
 
 #[test]
+fn swap_bytes() {
+    assert_eq!(INative::ZERO.swap_bytes(), INative::ZERO);
+    assert_eq!(INative::from(-1i8).swap_bytes(), INative::from(-1i8));
+    assert_eq!(
+        INative::from(1i8).swap_bytes(),
+        INative::from(1i8) << (INative::BITS - 8),
+    );
+    let x = INative::from(42i8);
+    assert_eq!(x.swap_bytes().swap_bytes(), x);
+}
+
+#[test]
+fn reverse_bits() {
+    assert_eq!(INative::ZERO.reverse_bits(), INative::ZERO);
+    assert_eq!(INative::from(-1i8).reverse_bits(), INative::from(-1i8));
+    assert_eq!(INative::from(1i8).reverse_bits(), INative::MIN);
+    let x = INative::from(42i8);
+    assert_eq!(x.reverse_bits().reverse_bits(), x);
+}
+
+#[test]
 fn cast_unsigned() {
     assert_eq!(INative::ZERO.cast_unsigned(), UNative::ZERO);
     assert_eq!(INative::from(-1i8).cast_unsigned(), UNative::MAX);

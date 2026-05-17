@@ -444,6 +444,18 @@ macro_rules! define_native {
             pub const fn rotate_right(self, n: u32) -> Self {
                 Self(self.0.rotate_right(n))
             }
+
+            /// Reverses the byte order of `self`.
+            #[inline]
+            pub const fn swap_bytes(self) -> Self {
+                Self(self.0.swap_bytes())
+            }
+
+            /// Reverses the order of bits in `self`.
+            #[inline]
+            pub const fn reverse_bits(self) -> Self {
+                Self(self.0.reverse_bits())
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);
