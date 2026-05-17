@@ -30,6 +30,11 @@ impl INative {
 
     /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
+    ///
+    /// # Panics
+    ///
+    /// This function will always panic on overflow, regardless of whether overflow checks are
+    /// enabled.
     #[inline]
     pub const fn strict_add_unsigned(self, rhs: UNative) -> Self {
         Self(self.0.strict_add_unsigned(rhs.0))
@@ -47,6 +52,11 @@ impl INative {
 
     /// Strict subtraction of an unsigned integer. Computes `self - rhs`, panicking if
     /// overflow occurred.
+    ///
+    /// # Panics
+    ///
+    /// This function will always panic on overflow, regardless of whether overflow checks are
+    /// enabled.
     #[inline]
     pub const fn strict_sub_unsigned(self, rhs: UNative) -> Self {
         Self(self.0.strict_sub_unsigned(rhs.0))

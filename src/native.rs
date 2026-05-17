@@ -492,6 +492,11 @@ macro_rules! define_native {
             }
 
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
             #[inline]
             pub const fn strict_add(self, rhs: Self) -> Self {
                 Self(self.0.strict_add(rhs.0))
@@ -522,6 +527,11 @@ macro_rules! define_native {
 
             /// Strict integer subtraction. Computes `self - rhs`, panicking if overflow
             /// occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
             #[inline]
             pub const fn strict_sub(self, rhs: Self) -> Self {
                 Self(self.0.strict_sub(rhs.0))

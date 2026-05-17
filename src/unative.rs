@@ -29,6 +29,11 @@ impl UNative {
 
     /// Strict addition of a signed integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
+    ///
+    /// # Panics
+    ///
+    /// This function will always panic on overflow, regardless of whether overflow checks are
+    /// enabled.
     #[inline]
     pub const fn strict_add_signed(self, rhs: INative) -> Self {
         Self(self.0.strict_add_signed(rhs.0))
@@ -46,6 +51,11 @@ impl UNative {
 
     /// Strict subtraction of a signed integer. Computes `self - rhs`, panicking if overflow
     /// occurred.
+    ///
+    /// # Panics
+    ///
+    /// This function will always panic on overflow, regardless of whether overflow checks are
+    /// enabled.
     #[inline]
     pub const fn strict_sub_signed(self, rhs: INative) -> Self {
         Self(self.0.strict_sub_signed(rhs.0))
