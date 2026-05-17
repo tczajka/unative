@@ -430,6 +430,20 @@ macro_rules! define_native {
             pub const fn trailing_ones(self) -> u32 {
                 self.0.trailing_ones()
             }
+
+            /// Shifts the bits to the left by a specified amount, `n`, wrapping the truncated
+            /// bits to the end of the resulting integer.
+            #[inline]
+            pub const fn rotate_left(self, n: u32) -> Self {
+                Self(self.0.rotate_left(n))
+            }
+
+            /// Shifts the bits to the right by a specified amount, `n`, wrapping the truncated
+            /// bits to the beginning of the resulting integer.
+            #[inline]
+            pub const fn rotate_right(self, n: u32) -> Self {
+                Self(self.0.rotate_right(n))
+            }
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

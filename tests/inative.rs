@@ -97,6 +97,27 @@ fn trailing_ones() {
 }
 
 #[test]
+fn rotate_left() {
+    assert_eq!(INative::ZERO.rotate_left(3), INative::ZERO);
+    assert_eq!(INative::from(-1i8).rotate_left(3), INative::from(-1i8));
+    assert_eq!(INative::from(42i8).rotate_left(0), INative::from(42i8));
+    assert_eq!(INative::from(1i8).rotate_left(3), INative::from(8i8));
+    let x = INative::from(42i8);
+    assert_eq!(x.rotate_left(INative::BITS), x);
+}
+
+#[test]
+fn rotate_right() {
+    assert_eq!(INative::ZERO.rotate_right(3), INative::ZERO);
+    assert_eq!(INative::from(-1i8).rotate_right(3), INative::from(-1i8));
+    assert_eq!(INative::from(42i8).rotate_right(0), INative::from(42i8));
+    assert_eq!(INative::from(8i8).rotate_right(3), INative::from(1i8));
+    let x = INative::from(42i8);
+    assert_eq!(x.rotate_right(INative::BITS), x);
+    assert_eq!(x.rotate_left(5).rotate_right(5), x);
+}
+
+#[test]
 fn cast_unsigned() {
     assert_eq!(INative::ZERO.cast_unsigned(), UNative::ZERO);
     assert_eq!(INative::from(-1i8).cast_unsigned(), UNative::MAX);
