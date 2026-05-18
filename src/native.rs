@@ -570,6 +570,16 @@ macro_rules! define_native {
                 Self(self.0.pow(exp))
             }
 
+            /// Returns the square root of `self`, rounded down.
+            ///
+            /// # Panics
+            ///
+            /// For signed types, this function will panic if `self` is negative.
+            #[inline]
+            pub const fn isqrt(self) -> Self {
+                Self(self.0.isqrt())
+            }
+
             /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow
             /// occurred.
             #[inline]

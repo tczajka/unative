@@ -150,6 +150,16 @@ fn pow() {
 }
 
 #[test]
+fn isqrt() {
+    assert_eq!(UNative::ZERO.isqrt(), UNative::ZERO);
+    assert_eq!(UNative::from(1u8).isqrt(), UNative::from(1u8));
+    assert_eq!(UNative::from(4u8).isqrt(), UNative::from(2u8));
+    assert_eq!(UNative::from(8u8).isqrt(), UNative::from(2u8));
+    assert_eq!(UNative::from(9u8).isqrt(), UNative::from(3u8));
+    assert_eq!(UNative::from(100u8).isqrt(), UNative::from(10u8));
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(UNative::ZERO.count_ones(), 0);
     assert_eq!(UNative::MAX.count_ones(), UNative::BITS);

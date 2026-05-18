@@ -38,6 +38,15 @@ impl INative {
         }
     }
 
+    /// Returns the square root of `self`, rounded down. Returns `None` if `self` is negative.
+    #[inline]
+    pub const fn checked_isqrt(self) -> Option<Self> {
+        match self.0.checked_isqrt() {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
     /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///

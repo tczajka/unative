@@ -178,6 +178,21 @@ fn pow() {
 }
 
 #[test]
+fn isqrt() {
+    assert_eq!(INative::ZERO.isqrt(), INative::ZERO);
+    assert_eq!(INative::from(1i8).isqrt(), INative::from(1i8));
+    assert_eq!(INative::from(4i8).isqrt(), INative::from(2i8));
+    assert_eq!(INative::from(8i8).isqrt(), INative::from(2i8));
+    assert_eq!(INative::from(100i8).isqrt(), INative::from(10i8));
+}
+
+#[test]
+#[should_panic]
+fn isqrt_of_negative() {
+    let _ = INative::from(-1i8).isqrt();
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(INative::ZERO.count_ones(), 0);
     assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);
@@ -773,6 +788,17 @@ fn checked_pow() {
     );
     assert_eq!(INative::MAX.checked_pow(2), None);
     assert_eq!(INative::MIN.checked_pow(2), None);
+}
+
+#[test]
+fn checked_isqrt() {
+    assert_eq!(INative::ZERO.checked_isqrt(), Some(INative::ZERO));
+    assert_eq!(
+        INative::from(100i8).checked_isqrt(),
+        Some(INative::from(10i8)),
+    );
+    assert_eq!(INative::from(-1i8).checked_isqrt(), None);
+    assert_eq!(INative::MIN.checked_isqrt(), None);
 }
 
 #[test]
