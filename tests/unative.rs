@@ -266,6 +266,25 @@ fn division() {
 }
 
 #[test]
+fn div_ceil() {
+    assert_eq!(
+        UNative::from(10u8).div_ceil(UNative::from(3u8)),
+        UNative::from(4u8),
+    );
+    assert_eq!(
+        UNative::from(9u8).div_ceil(UNative::from(3u8)),
+        UNative::from(3u8),
+    );
+    assert_eq!(UNative::ZERO.div_ceil(UNative::from(5u8)), UNative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn div_ceil_by_zero() {
+    let _ = UNative::from(5u8).div_ceil(UNative::ZERO);
+}
+
+#[test]
 fn remainder() {
     let a = UNative::from(23u8);
     let b = UNative::from(5u8);

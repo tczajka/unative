@@ -17,6 +17,16 @@ impl UNative {
         INative(self.0.cast_signed())
     }
 
+    /// Calculates the quotient of `self` and `rhs`, rounded up toward positive infinity.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if `rhs` is zero.
+    #[inline]
+    pub const fn div_ceil(self, rhs: Self) -> Self {
+        Self(self.0.div_ceil(rhs.0))
+    }
+
     /// Checked addition of a signed integer. Computes `self + rhs`, returning `None` if
     /// overflow occurred.
     #[inline]
