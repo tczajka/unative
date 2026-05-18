@@ -370,6 +370,33 @@ fn unsigned_abs() {
 }
 
 #[test]
+fn signum() {
+    assert_eq!(INative::from(5i8).signum(), INative::from(1i8));
+    assert_eq!(INative::from(-5i8).signum(), INative::from(-1i8));
+    assert_eq!(INative::ZERO.signum(), INative::ZERO);
+    assert_eq!(INative::MAX.signum(), INative::from(1i8));
+    assert_eq!(INative::MIN.signum(), INative::from(-1i8));
+}
+
+#[test]
+fn is_positive() {
+    assert!(INative::from(5i8).is_positive());
+    assert!(INative::MAX.is_positive());
+    assert!(!INative::ZERO.is_positive());
+    assert!(!INative::from(-5i8).is_positive());
+    assert!(!INative::MIN.is_positive());
+}
+
+#[test]
+fn is_negative() {
+    assert!(INative::from(-5i8).is_negative());
+    assert!(INative::MIN.is_negative());
+    assert!(!INative::ZERO.is_negative());
+    assert!(!INative::from(5i8).is_negative());
+    assert!(!INative::MAX.is_negative());
+}
+
+#[test]
 fn abs_diff() {
     assert_eq!(
         INative::from(7i8).abs_diff(INative::from(3i8)),

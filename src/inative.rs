@@ -36,6 +36,27 @@ impl INative {
         UNative(self.0.unsigned_abs())
     }
 
+    /// Returns a number representing the sign of `self`: `0` if zero, `1` if positive, and
+    /// `-1` if negative.
+    #[inline]
+    pub const fn signum(self) -> Self {
+        Self(self.0.signum())
+    }
+
+    /// Returns `true` if `self` is positive (greater than zero) and `false` if it is zero
+    /// or negative.
+    #[inline]
+    pub const fn is_positive(self) -> bool {
+        self.0.is_positive()
+    }
+
+    /// Returns `true` if `self` is negative (less than zero) and `false` if it is zero or
+    /// positive.
+    #[inline]
+    pub const fn is_negative(self) -> bool {
+        self.0.is_negative()
+    }
+
     /// Checked addition of an unsigned integer. Computes `self + rhs`, returning `None` if
     /// overflow occurred.
     #[inline]
