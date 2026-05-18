@@ -285,6 +285,37 @@ fn div_ceil_by_zero() {
 }
 
 #[test]
+fn next_multiple_of() {
+    assert_eq!(
+        UNative::from(7u8).next_multiple_of(UNative::from(3u8)),
+        UNative::from(9u8),
+    );
+    assert_eq!(
+        UNative::from(6u8).next_multiple_of(UNative::from(3u8)),
+        UNative::from(6u8),
+    );
+    assert_eq!(
+        UNative::ZERO.next_multiple_of(UNative::from(3u8)),
+        UNative::ZERO,
+    );
+}
+
+#[test]
+#[should_panic]
+fn next_multiple_of_by_zero() {
+    let _ = UNative::from(5u8).next_multiple_of(UNative::ZERO);
+}
+
+#[test]
+fn is_multiple_of() {
+    assert!(UNative::from(6u8).is_multiple_of(UNative::from(3u8)));
+    assert!(!UNative::from(7u8).is_multiple_of(UNative::from(3u8)));
+    assert!(UNative::ZERO.is_multiple_of(UNative::from(3u8)));
+    assert!(UNative::ZERO.is_multiple_of(UNative::ZERO));
+    assert!(!UNative::from(5u8).is_multiple_of(UNative::ZERO));
+}
+
+#[test]
 fn remainder() {
     let a = UNative::from(23u8);
     let b = UNative::from(5u8);
@@ -528,6 +559,23 @@ fn checked_signed_diff() {
     );
     assert_eq!(UNative::MAX.checked_signed_diff(UNative::ZERO), None);
     assert_eq!(UNative::ZERO.checked_signed_diff(UNative::MAX), None);
+}
+
+#[test]
+fn checked_next_multiple_of() {
+    assert_eq!(
+        UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),
+        Some(UNative::from(9u8)),
+    );
+    assert_eq!(
+        UNative::from(6u8).checked_next_multiple_of(UNative::from(3u8)),
+        Some(UNative::from(6u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_next_multiple_of(UNative::ZERO),
+        None,
+    );
+    assert_eq!(UNative::MAX.checked_next_multiple_of(UNative::from(2u8)), None);
 }
 
 #[test]

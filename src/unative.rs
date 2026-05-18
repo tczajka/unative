@@ -27,6 +27,27 @@ impl UNative {
         Self(self.0.div_ceil(rhs.0))
     }
 
+    /// Calculates the smallest value greater than or equal to `self` that is a multiple of
+    /// `rhs`.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if `rhs` is zero, or if the result overflows.
+    #[inline]
+    pub const fn next_multiple_of(self, rhs: Self) -> Self {
+        Self(self.0.next_multiple_of(rhs.0))
+    }
+
+    /// Returns `true` if `self` is an integer multiple of `rhs`, and `false` otherwise.
+    ///
+    /// This function is equivalent to `self % rhs == 0`, except that it will not panic for
+    /// `rhs == 0`. Instead, `0.is_multiple_of(0) == true`, and for any non-zero `n`,
+    /// `n.is_multiple_of(0) == false`.
+    #[inline]
+    pub const fn is_multiple_of(self, rhs: Self) -> bool {
+        self.0.is_multiple_of(rhs.0)
+    }
+
     /// Checked addition of a signed integer. Computes `self + rhs`, returning `None` if
     /// overflow occurred.
     #[inline]
@@ -53,6 +74,16 @@ impl UNative {
     pub const fn checked_signed_diff(self, rhs: UNative) -> Option<INative> {
         match self.0.checked_signed_diff(rhs.0) {
             Some(x) => Some(INative(x)),
+            None => None,
+        }
+    }
+
+    /// Calculates the smallest value greater than or equal to `self` that is a multiple of
+    /// `rhs`, returning `None` if `rhs` is zero or the result overflows.
+    #[inline]
+    pub const fn checked_next_multiple_of(self, rhs: Self) -> Option<Self> {
+        match self.0.checked_next_multiple_of(rhs.0) {
+            Some(x) => Some(Self(x)),
             None => None,
         }
     }
