@@ -526,6 +526,12 @@ macro_rules! define_native {
                 self.0.to_ne_bytes()
             }
 
+            /// Calculates the midpoint of `self` and `rhs`, rounded toward zero.
+            #[inline]
+            pub const fn midpoint(self, rhs: Self) -> Self {
+                Self(self.0.midpoint(rhs.0))
+            }
+
             /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow
             /// occurred.
             #[inline]

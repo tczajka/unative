@@ -83,6 +83,31 @@ fn ne_bytes() {
 }
 
 #[test]
+fn midpoint() {
+    assert_eq!(
+        INative::from(4i8).midpoint(INative::from(10i8)),
+        INative::from(7i8),
+    );
+    assert_eq!(
+        INative::from(-4i8).midpoint(INative::from(-10i8)),
+        INative::from(-7i8),
+    );
+    // For signed midpoint, non-exact results round toward zero.
+    assert_eq!(
+        INative::from(-1i8).midpoint(INative::from(2i8)),
+        INative::ZERO,
+    );
+    assert_eq!(
+        INative::from(-2i8).midpoint(INative::from(1i8)),
+        INative::ZERO,
+    );
+    assert_eq!(INative::ZERO.midpoint(INative::ZERO), INative::ZERO);
+    // No overflow even at the extremes.
+    assert_eq!(INative::MAX.midpoint(INative::MAX), INative::MAX);
+    assert_eq!(INative::MIN.midpoint(INative::MIN), INative::MIN);
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(INative::ZERO.count_ones(), 0);
     assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);

@@ -78,6 +78,21 @@ fn ne_bytes() {
 }
 
 #[test]
+fn midpoint() {
+    assert_eq!(
+        UNative::from(4u8).midpoint(UNative::from(10u8)),
+        UNative::from(7u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).midpoint(UNative::from(10u8)),
+        UNative::from(7u8),
+    );
+    assert_eq!(UNative::ZERO.midpoint(UNative::ZERO), UNative::ZERO);
+    // No overflow even for very large operands.
+    assert_eq!(UNative::MAX.midpoint(UNative::MAX), UNative::MAX);
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(UNative::ZERO.count_ones(), 0);
     assert_eq!(UNative::MAX.count_ones(), UNative::BITS);
