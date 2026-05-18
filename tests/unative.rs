@@ -316,6 +316,29 @@ fn is_multiple_of() {
 }
 
 #[test]
+fn next_power_of_two() {
+    assert_eq!(UNative::ZERO.next_power_of_two(), UNative::from(1u8));
+    assert_eq!(UNative::from(1u8).next_power_of_two(), UNative::from(1u8));
+    assert_eq!(UNative::from(5u8).next_power_of_two(), UNative::from(8u8));
+    assert_eq!(UNative::from(8u8).next_power_of_two(), UNative::from(8u8));
+}
+
+#[test]
+#[should_panic]
+fn next_power_of_two_overflow() {
+    let _ = UNative::MAX.next_power_of_two();
+}
+
+#[test]
+fn is_power_of_two() {
+    assert!(!UNative::ZERO.is_power_of_two());
+    assert!(UNative::from(1u8).is_power_of_two());
+    assert!(UNative::from(2u8).is_power_of_two());
+    assert!(!UNative::from(3u8).is_power_of_two());
+    assert!(UNative::from(64u8).is_power_of_two());
+}
+
+#[test]
 fn remainder() {
     let a = UNative::from(23u8);
     let b = UNative::from(5u8);
@@ -562,26 +585,6 @@ fn checked_signed_diff() {
 }
 
 #[test]
-fn checked_next_multiple_of() {
-    assert_eq!(
-        UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),
-        Some(UNative::from(9u8)),
-    );
-    assert_eq!(
-        UNative::from(6u8).checked_next_multiple_of(UNative::from(3u8)),
-        Some(UNative::from(6u8)),
-    );
-    assert_eq!(
-        UNative::from(5u8).checked_next_multiple_of(UNative::ZERO),
-        None,
-    );
-    assert_eq!(
-        UNative::MAX.checked_next_multiple_of(UNative::from(2u8)),
-        None
-    );
-}
-
-#[test]
 fn checked_neg() {
     assert_eq!(UNative::ZERO.checked_neg(), Some(UNative::ZERO));
     assert_eq!(UNative::from(1u8).checked_neg(), None);
@@ -652,6 +655,39 @@ fn checked_shl() {
 fn checked_shr() {
     assert_eq!(UNative::from(8u8).checked_shr(3), Some(UNative::from(1u8)),);
     assert_eq!(UNative::from(8u8).checked_shr(UNative::BITS), None);
+}
+
+#[test]
+fn checked_next_multiple_of() {
+    assert_eq!(
+        UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),
+        Some(UNative::from(9u8)),
+    );
+    assert_eq!(
+        UNative::from(6u8).checked_next_multiple_of(UNative::from(3u8)),
+        Some(UNative::from(6u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_next_multiple_of(UNative::ZERO),
+        None,
+    );
+    assert_eq!(
+        UNative::MAX.checked_next_multiple_of(UNative::from(2u8)),
+        None
+    );
+}
+
+#[test]
+fn checked_next_power_of_two() {
+    assert_eq!(
+        UNative::ZERO.checked_next_power_of_two(),
+        Some(UNative::from(1u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_next_power_of_two(),
+        Some(UNative::from(8u8)),
+    );
+    assert_eq!(UNative::MAX.checked_next_power_of_two(), None);
 }
 
 #[test]

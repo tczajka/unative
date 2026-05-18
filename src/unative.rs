@@ -48,6 +48,22 @@ impl UNative {
         self.0.is_multiple_of(rhs.0)
     }
 
+    /// Returns the smallest power of two greater than or equal to `self`.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the next power of two is greater than `Self::MAX`.
+    #[inline]
+    pub const fn next_power_of_two(self) -> Self {
+        Self(self.0.next_power_of_two())
+    }
+
+    /// Returns `true` if and only if `self == 2^k` for some `k`.
+    #[inline]
+    pub const fn is_power_of_two(self) -> bool {
+        self.0.is_power_of_two()
+    }
+
     /// Checked addition of a signed integer. Computes `self + rhs`, returning `None` if
     /// overflow occurred.
     #[inline]
@@ -83,6 +99,16 @@ impl UNative {
     #[inline]
     pub const fn checked_next_multiple_of(self, rhs: Self) -> Option<Self> {
         match self.0.checked_next_multiple_of(rhs.0) {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
+    /// Returns the smallest power of two greater than or equal to `self`, returning `None`
+    /// if the result overflows.
+    #[inline]
+    pub const fn checked_next_power_of_two(self) -> Option<Self> {
+        match self.0.checked_next_power_of_two() {
             Some(x) => Some(Self(x)),
             None => None,
         }
