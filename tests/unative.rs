@@ -575,7 +575,10 @@ fn checked_next_multiple_of() {
         UNative::from(5u8).checked_next_multiple_of(UNative::ZERO),
         None,
     );
-    assert_eq!(UNative::MAX.checked_next_multiple_of(UNative::from(2u8)), None);
+    assert_eq!(
+        UNative::MAX.checked_next_multiple_of(UNative::from(2u8)),
+        None
+    );
 }
 
 #[test]
