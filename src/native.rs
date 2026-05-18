@@ -532,6 +532,12 @@ macro_rules! define_native {
                 Self(self.0.midpoint(rhs.0))
             }
 
+            /// Computes the absolute difference between `self` and `other`.
+            #[inline]
+            pub const fn abs_diff(self, other: Self) -> UNative {
+                UNative(self.0.abs_diff(other.0))
+            }
+
             /// Returns the logarithm of `self` with respect to an arbitrary `base`, rounded
             /// down.
             ///

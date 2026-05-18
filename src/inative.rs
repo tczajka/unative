@@ -18,6 +18,24 @@ impl INative {
         UNative(self.0.cast_unsigned())
     }
 
+    /// Computes the absolute value of `self`.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if `self == INative::MIN`, because the result cannot be
+    /// represented.
+    #[inline]
+    pub const fn abs(self) -> Self {
+        Self(self.0.abs())
+    }
+
+    /// Computes the absolute value of `self` without any wrapping or panicking, returning
+    /// the result as an unsigned integer.
+    #[inline]
+    pub const fn unsigned_abs(self) -> UNative {
+        UNative(self.0.unsigned_abs())
+    }
+
     /// Checked addition of an unsigned integer. Computes `self + rhs`, returning `None` if
     /// overflow occurred.
     #[inline]
@@ -47,6 +65,15 @@ impl INative {
         }
     }
 
+    /// Checked absolute value. Returns `None` if `self == INative::MIN`.
+    #[inline]
+    pub const fn checked_abs(self) -> Option<Self> {
+        match self.0.checked_abs() {
+            Some(x) => Some(Self(x)),
+            None => None,
+        }
+    }
+
     /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///
@@ -69,6 +96,17 @@ impl INative {
     #[inline]
     pub const fn strict_sub_unsigned(self, rhs: UNative) -> Self {
         Self(self.0.strict_sub_unsigned(rhs.0))
+    }
+
+    /// Strict absolute value. Computes `self.abs()`, panicking if `self == INative::MIN`.
+    ///
+    /// # Panics
+    ///
+    /// This function will always panic on overflow, regardless of whether overflow checks
+    /// are enabled.
+    #[inline]
+    pub const fn strict_abs(self) -> Self {
+        Self(self.0.strict_abs())
     }
 
     /// Unchecked negation. Computes `-self`, assuming overflow cannot occur.

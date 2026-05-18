@@ -399,6 +399,21 @@ fn div_ceil_by_zero() {
 }
 
 #[test]
+fn abs_diff() {
+    assert_eq!(
+        UNative::from(7u8).abs_diff(UNative::from(3u8)),
+        UNative::from(4u8),
+    );
+    assert_eq!(
+        UNative::from(3u8).abs_diff(UNative::from(7u8)),
+        UNative::from(4u8),
+    );
+    assert_eq!(UNative::ZERO.abs_diff(UNative::ZERO), UNative::ZERO);
+    assert_eq!(UNative::MAX.abs_diff(UNative::ZERO), UNative::MAX);
+    assert_eq!(UNative::ZERO.abs_diff(UNative::MAX), UNative::MAX);
+}
+
+#[test]
 fn next_multiple_of() {
     assert_eq!(
         UNative::from(7u8).next_multiple_of(UNative::from(3u8)),

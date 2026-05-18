@@ -346,6 +346,48 @@ fn ordering() {
 }
 
 #[test]
+fn abs() {
+    assert_eq!(INative::from(5i8).abs(), INative::from(5i8));
+    assert_eq!(INative::from(-5i8).abs(), INative::from(5i8));
+    assert_eq!(INative::ZERO.abs(), INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn abs_overflow() {
+    let _ = INative::MIN.abs();
+}
+
+#[test]
+fn unsigned_abs() {
+    assert_eq!(INative::from(5i8).unsigned_abs(), UNative::from(5u8));
+    assert_eq!(INative::from(-5i8).unsigned_abs(), UNative::from(5u8));
+    assert_eq!(INative::ZERO.unsigned_abs(), UNative::ZERO);
+    assert_eq!(
+        INative::MIN.unsigned_abs(),
+        UNative::from(1u8) << (UNative::BITS - 1),
+    );
+}
+
+#[test]
+fn abs_diff() {
+    assert_eq!(
+        INative::from(7i8).abs_diff(INative::from(3i8)),
+        UNative::from(4u8),
+    );
+    assert_eq!(
+        INative::from(3i8).abs_diff(INative::from(7i8)),
+        UNative::from(4u8),
+    );
+    assert_eq!(
+        INative::from(-5i8).abs_diff(INative::from(5i8)),
+        UNative::from(10u8),
+    );
+    assert_eq!(INative::ZERO.abs_diff(INative::ZERO), UNative::ZERO);
+    assert_eq!(INative::MIN.abs_diff(INative::MAX), UNative::MAX);
+}
+
+#[test]
 fn addition() {
     let a = INative::from(-2i8);
     let b = INative::from(5i8);
@@ -802,6 +844,14 @@ fn checked_isqrt() {
 }
 
 #[test]
+fn checked_abs() {
+    assert_eq!(INative::from(5i8).checked_abs(), Some(INative::from(5i8)));
+    assert_eq!(INative::from(-5i8).checked_abs(), Some(INative::from(5i8)),);
+    assert_eq!(INative::ZERO.checked_abs(), Some(INative::ZERO));
+    assert_eq!(INative::MIN.checked_abs(), None);
+}
+
+#[test]
 fn strict_add() {
     assert_eq!(
         INative::from(2i8).strict_add(INative::from(3i8)),
@@ -871,6 +921,19 @@ fn strict_sub_unsigned() {
 #[should_panic]
 fn strict_sub_unsigned_overflow() {
     let _ = INative::MIN.strict_sub_unsigned(UNative::from(1u8));
+}
+
+#[test]
+fn strict_abs() {
+    assert_eq!(INative::from(5i8).strict_abs(), INative::from(5i8));
+    assert_eq!(INative::from(-5i8).strict_abs(), INative::from(5i8));
+    assert_eq!(INative::ZERO.strict_abs(), INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn strict_abs_overflow() {
+    let _ = INative::MIN.strict_abs();
 }
 
 #[test]
