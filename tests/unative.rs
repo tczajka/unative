@@ -46,6 +46,38 @@ fn bits() {
 }
 
 #[test]
+fn bytes() {
+    assert_eq!(UNative::BYTES * 8, UNative::BITS as usize);
+    assert_eq!(UNative::BYTES, INative::BYTES);
+}
+
+#[test]
+fn be_bytes() {
+    let x = UNative::from(42u8);
+    assert_eq!(UNative::from_be_bytes(x.to_be_bytes()), x);
+    let zero_bytes = UNative::ZERO.to_be_bytes();
+    assert!(zero_bytes.iter().all(|&b| b == 0));
+    let one_bytes = UNative::from(1u8).to_be_bytes();
+    assert_eq!(one_bytes[UNative::BYTES - 1], 1);
+    assert!(one_bytes[..UNative::BYTES - 1].iter().all(|&b| b == 0));
+}
+
+#[test]
+fn le_bytes() {
+    let x = UNative::from(42u8);
+    assert_eq!(UNative::from_le_bytes(x.to_le_bytes()), x);
+    let one_bytes = UNative::from(1u8).to_le_bytes();
+    assert_eq!(one_bytes[0], 1);
+    assert!(one_bytes[1..].iter().all(|&b| b == 0));
+}
+
+#[test]
+fn ne_bytes() {
+    let x = UNative::from(42u8);
+    assert_eq!(UNative::from_ne_bytes(x.to_ne_bytes()), x);
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(UNative::ZERO.count_ones(), 0);
     assert_eq!(UNative::MAX.count_ones(), UNative::BITS);

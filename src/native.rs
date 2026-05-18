@@ -395,6 +395,9 @@ macro_rules! define_native {
             /// The size of this integer type in bits.
             pub const BITS: u32 = <$inner>::BITS;
 
+            /// The size of this integer type in bytes.
+            pub const BYTES: usize = <$inner>::BITS as usize / 8;
+
             /// Returns the number of ones in the binary representation of `self`.
             #[inline]
             pub const fn count_ones(self) -> u32 {
@@ -479,6 +482,48 @@ macro_rules! define_native {
             #[inline]
             pub const fn to_le(self) -> Self {
                 Self(self.0.to_le())
+            }
+
+            /// Creates an integer value from its representation as a byte array in big
+            /// endian.
+            #[inline]
+            pub const fn from_be_bytes(bytes: [u8; Self::BYTES]) -> Self {
+                Self(<$inner>::from_be_bytes(bytes))
+            }
+
+            /// Creates an integer value from its representation as a byte array in little
+            /// endian.
+            #[inline]
+            pub const fn from_le_bytes(bytes: [u8; Self::BYTES]) -> Self {
+                Self(<$inner>::from_le_bytes(bytes))
+            }
+
+            /// Creates an integer value from its memory representation as a byte array in
+            /// native endianness.
+            #[inline]
+            pub const fn from_ne_bytes(bytes: [u8; Self::BYTES]) -> Self {
+                Self(<$inner>::from_ne_bytes(bytes))
+            }
+
+            /// Returns the memory representation of `self` as a byte array in big-endian
+            /// byte order.
+            #[inline]
+            pub const fn to_be_bytes(self) -> [u8; Self::BYTES] {
+                self.0.to_be_bytes()
+            }
+
+            /// Returns the memory representation of `self` as a byte array in little-endian
+            /// byte order.
+            #[inline]
+            pub const fn to_le_bytes(self) -> [u8; Self::BYTES] {
+                self.0.to_le_bytes()
+            }
+
+            /// Returns the memory representation of `self` as a byte array in native byte
+            /// order.
+            #[inline]
+            pub const fn to_ne_bytes(self) -> [u8; Self::BYTES] {
+                self.0.to_ne_bytes()
             }
 
             /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow

@@ -49,6 +49,40 @@ fn bits() {
 }
 
 #[test]
+fn bytes() {
+    assert_eq!(INative::BYTES * 8, INative::BITS as usize);
+    assert_eq!(INative::BYTES, UNative::BYTES);
+}
+
+#[test]
+fn be_bytes() {
+    let x = INative::from(-42i8);
+    assert_eq!(INative::from_be_bytes(x.to_be_bytes()), x);
+    let zero_bytes = INative::ZERO.to_be_bytes();
+    assert!(zero_bytes.iter().all(|&b| b == 0));
+    let neg_one_bytes = INative::from(-1i8).to_be_bytes();
+    assert!(neg_one_bytes.iter().all(|&b| b == 0xff));
+    let one_bytes = INative::from(1i8).to_be_bytes();
+    assert_eq!(one_bytes[INative::BYTES - 1], 1);
+    assert!(one_bytes[..INative::BYTES - 1].iter().all(|&b| b == 0));
+}
+
+#[test]
+fn le_bytes() {
+    let x = INative::from(-42i8);
+    assert_eq!(INative::from_le_bytes(x.to_le_bytes()), x);
+    let one_bytes = INative::from(1i8).to_le_bytes();
+    assert_eq!(one_bytes[0], 1);
+    assert!(one_bytes[1..].iter().all(|&b| b == 0));
+}
+
+#[test]
+fn ne_bytes() {
+    let x = INative::from(-42i8);
+    assert_eq!(INative::from_ne_bytes(x.to_ne_bytes()), x);
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(INative::ZERO.count_ones(), 0);
     assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);
