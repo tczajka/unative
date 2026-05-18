@@ -564,6 +564,12 @@ macro_rules! define_native {
                 self.0.ilog10()
             }
 
+            /// Raises `self` to the power of `exp`.
+            #[inline]
+            pub const fn pow(self, exp: u32) -> Self {
+                Self(self.0.pow(exp))
+            }
+
             /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow
             /// occurred.
             #[inline]
@@ -684,6 +690,16 @@ macro_rules! define_native {
                 self.0.checked_ilog10()
             }
 
+            /// Checked exponentiation. Raises `self` to the power of `exp`, returning `None`
+            /// if overflow occurred.
+            #[inline]
+            pub const fn checked_pow(self, exp: u32) -> Option<Self> {
+                match self.0.checked_pow(exp) {
+                    Some(x) => Some(Self(x)),
+                    None => None,
+                }
+            }
+
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.
             ///
             /// # Panics
@@ -794,6 +810,18 @@ macro_rules! define_native {
             #[inline]
             pub const fn strict_shr(self, rhs: u32) -> Self {
                 Self(self.0.strict_shr(rhs))
+            }
+
+            /// Strict exponentiation. Raises `self` to the power of `exp`, panicking if
+            /// overflow occurred.
+            ///
+            /// # Panics
+            ///
+            /// This function will always panic on overflow, regardless of whether overflow
+            /// checks are enabled.
+            #[inline]
+            pub const fn strict_pow(self, exp: u32) -> Self {
+                Self(self.0.strict_pow(exp))
             }
 
             /// Unchecked integer addition. Computes `self + rhs`, assuming overflow cannot

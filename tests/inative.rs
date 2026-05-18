@@ -170,6 +170,14 @@ fn ilog10_of_negative() {
 }
 
 #[test]
+fn pow() {
+    assert_eq!(INative::from(2i8).pow(10), INative::from(1024i16));
+    assert_eq!(INative::from(-2i8).pow(3), INative::from(-8i8));
+    assert_eq!(INative::from(-2i8).pow(4), INative::from(16i8));
+    assert_eq!(INative::from(3i8).pow(0), INative::from(1i8));
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(INative::ZERO.count_ones(), 0);
     assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);
@@ -754,6 +762,20 @@ fn checked_ilog10() {
 }
 
 #[test]
+fn checked_pow() {
+    assert_eq!(
+        INative::from(2i8).checked_pow(10),
+        Some(INative::from(1024i16)),
+    );
+    assert_eq!(
+        INative::from(-2i8).checked_pow(3),
+        Some(INative::from(-8i8)),
+    );
+    assert_eq!(INative::MAX.checked_pow(2), None);
+    assert_eq!(INative::MIN.checked_pow(2), None);
+}
+
+#[test]
 fn strict_add() {
     assert_eq!(
         INative::from(2i8).strict_add(INative::from(3i8)),
@@ -958,6 +980,18 @@ fn strict_shr() {
 #[should_panic]
 fn strict_shr_overflow() {
     let _ = INative::from(8i8).strict_shr(INative::BITS);
+}
+
+#[test]
+fn strict_pow() {
+    assert_eq!(INative::from(2i8).strict_pow(10), INative::from(1024i16));
+    assert_eq!(INative::from(-2i8).strict_pow(3), INative::from(-8i8));
+}
+
+#[test]
+#[should_panic]
+fn strict_pow_overflow() {
+    let _ = INative::MAX.strict_pow(2);
 }
 
 #[test]

@@ -142,6 +142,14 @@ fn ilog10_of_zero() {
 }
 
 #[test]
+fn pow() {
+    assert_eq!(UNative::from(2u8).pow(10), UNative::from(1024u16));
+    assert_eq!(UNative::from(3u8).pow(0), UNative::from(1u8));
+    assert_eq!(UNative::ZERO.pow(0), UNative::from(1u8));
+    assert_eq!(UNative::ZERO.pow(5), UNative::ZERO);
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(UNative::ZERO.count_ones(), 0);
     assert_eq!(UNative::MAX.count_ones(), UNative::BITS);
@@ -778,6 +786,16 @@ fn checked_ilog10() {
 }
 
 #[test]
+fn checked_pow() {
+    assert_eq!(
+        UNative::from(2u8).checked_pow(10),
+        Some(UNative::from(1024u16)),
+    );
+    assert_eq!(UNative::from(3u8).checked_pow(0), Some(UNative::from(1u8)));
+    assert_eq!(UNative::MAX.checked_pow(2), None);
+}
+
+#[test]
 fn checked_next_multiple_of() {
     assert_eq!(
         UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),
@@ -987,6 +1005,18 @@ fn strict_shr() {
 #[should_panic]
 fn strict_shr_overflow() {
     let _ = UNative::from(8u8).strict_shr(UNative::BITS);
+}
+
+#[test]
+fn strict_pow() {
+    assert_eq!(UNative::from(2u8).strict_pow(10), UNative::from(1024u16));
+    assert_eq!(UNative::from(3u8).strict_pow(0), UNative::from(1u8));
+}
+
+#[test]
+#[should_panic]
+fn strict_pow_overflow() {
+    let _ = UNative::MAX.strict_pow(2);
 }
 
 #[test]
