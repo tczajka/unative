@@ -532,6 +532,38 @@ macro_rules! define_native {
                 Self(self.0.midpoint(rhs.0))
             }
 
+            /// Returns the logarithm of `self` with respect to an arbitrary `base`, rounded
+            /// down.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `self` is non-positive, or if `base` is less
+            /// than 2.
+            #[inline]
+            pub const fn ilog(self, base: Self) -> u32 {
+                self.0.ilog(base.0)
+            }
+
+            /// Returns the base-2 logarithm of `self`, rounded down.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `self` is non-positive.
+            #[inline]
+            pub const fn ilog2(self) -> u32 {
+                self.0.ilog2()
+            }
+
+            /// Returns the base-10 logarithm of `self`, rounded down.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `self` is non-positive.
+            #[inline]
+            pub const fn ilog10(self) -> u32 {
+                self.0.ilog10()
+            }
+
             /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow
             /// occurred.
             #[inline]
@@ -629,6 +661,27 @@ macro_rules! define_native {
                     Some(x) => Some(Self(x)),
                     None => None,
                 }
+            }
+
+            /// Returns the logarithm of `self` with respect to an arbitrary `base`, rounded
+            /// down. Returns `None` if `self` is non-positive or `base` is less than 2.
+            #[inline]
+            pub const fn checked_ilog(self, base: Self) -> Option<u32> {
+                self.0.checked_ilog(base.0)
+            }
+
+            /// Returns the base-2 logarithm of `self`, rounded down. Returns `None` if
+            /// `self` is non-positive.
+            #[inline]
+            pub const fn checked_ilog2(self) -> Option<u32> {
+                self.0.checked_ilog2()
+            }
+
+            /// Returns the base-10 logarithm of `self`, rounded down. Returns `None` if
+            /// `self` is non-positive.
+            #[inline]
+            pub const fn checked_ilog10(self) -> Option<u32> {
+                self.0.checked_ilog10()
             }
 
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.

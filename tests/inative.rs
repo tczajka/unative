@@ -108,6 +108,68 @@ fn midpoint() {
 }
 
 #[test]
+fn ilog() {
+    assert_eq!(INative::from(100i8).ilog(INative::from(10i8)), 2);
+    assert_eq!(INative::from(99i8).ilog(INative::from(10i8)), 1);
+}
+
+#[test]
+#[should_panic]
+fn ilog_of_zero() {
+    let _ = INative::ZERO.ilog(INative::from(10i8));
+}
+
+#[test]
+#[should_panic]
+fn ilog_of_negative() {
+    let _ = INative::from(-1i8).ilog(INative::from(10i8));
+}
+
+#[test]
+#[should_panic]
+fn ilog_with_base_1() {
+    let _ = INative::from(10i8).ilog(INative::from(1i8));
+}
+
+#[test]
+fn ilog2() {
+    assert_eq!(INative::from(1i8).ilog2(), 0);
+    assert_eq!(INative::from(2i8).ilog2(), 1);
+    assert_eq!(INative::from(4i8).ilog2(), 2);
+    assert_eq!(INative::MAX.ilog2(), INative::BITS - 2);
+}
+
+#[test]
+#[should_panic]
+fn ilog2_of_zero() {
+    let _ = INative::ZERO.ilog2();
+}
+
+#[test]
+#[should_panic]
+fn ilog2_of_negative() {
+    let _ = INative::from(-1i8).ilog2();
+}
+
+#[test]
+fn ilog10() {
+    assert_eq!(INative::from(1i8).ilog10(), 0);
+    assert_eq!(INative::from(100i8).ilog10(), 2);
+}
+
+#[test]
+#[should_panic]
+fn ilog10_of_zero() {
+    let _ = INative::ZERO.ilog10();
+}
+
+#[test]
+#[should_panic]
+fn ilog10_of_negative() {
+    let _ = INative::from(-1i8).ilog10();
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(INative::ZERO.count_ones(), 0);
     assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);
@@ -664,6 +726,31 @@ fn checked_shr() {
         Some(INative::from(-2i8)),
     );
     assert_eq!(INative::from(8i8).checked_shr(INative::BITS), None);
+}
+
+#[test]
+fn checked_ilog() {
+    assert_eq!(
+        INative::from(100i8).checked_ilog(INative::from(10i8)),
+        Some(2),
+    );
+    assert_eq!(INative::ZERO.checked_ilog(INative::from(10i8)), None);
+    assert_eq!(INative::from(-1i8).checked_ilog(INative::from(10i8)), None,);
+    assert_eq!(INative::from(10i8).checked_ilog(INative::from(1i8)), None);
+}
+
+#[test]
+fn checked_ilog2() {
+    assert_eq!(INative::from(4i8).checked_ilog2(), Some(2));
+    assert_eq!(INative::ZERO.checked_ilog2(), None);
+    assert_eq!(INative::from(-1i8).checked_ilog2(), None);
+}
+
+#[test]
+fn checked_ilog10() {
+    assert_eq!(INative::from(100i8).checked_ilog10(), Some(2));
+    assert_eq!(INative::ZERO.checked_ilog10(), None);
+    assert_eq!(INative::from(-1i8).checked_ilog10(), None);
 }
 
 #[test]

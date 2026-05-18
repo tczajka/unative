@@ -93,6 +93,55 @@ fn midpoint() {
 }
 
 #[test]
+fn ilog() {
+    assert_eq!(UNative::from(100u8).ilog(UNative::from(10u8)), 2);
+    assert_eq!(UNative::from(99u8).ilog(UNative::from(10u8)), 1);
+    assert_eq!(UNative::from(1u8).ilog(UNative::from(10u8)), 0);
+}
+
+#[test]
+#[should_panic]
+fn ilog_of_zero() {
+    let _ = UNative::ZERO.ilog(UNative::from(10u8));
+}
+
+#[test]
+#[should_panic]
+fn ilog_with_base_1() {
+    let _ = UNative::from(10u8).ilog(UNative::from(1u8));
+}
+
+#[test]
+fn ilog2() {
+    assert_eq!(UNative::from(1u8).ilog2(), 0);
+    assert_eq!(UNative::from(2u8).ilog2(), 1);
+    assert_eq!(UNative::from(3u8).ilog2(), 1);
+    assert_eq!(UNative::from(4u8).ilog2(), 2);
+    assert_eq!(UNative::MAX.ilog2(), UNative::BITS - 1);
+}
+
+#[test]
+#[should_panic]
+fn ilog2_of_zero() {
+    let _ = UNative::ZERO.ilog2();
+}
+
+#[test]
+fn ilog10() {
+    assert_eq!(UNative::from(1u8).ilog10(), 0);
+    assert_eq!(UNative::from(9u8).ilog10(), 0);
+    assert_eq!(UNative::from(10u8).ilog10(), 1);
+    assert_eq!(UNative::from(99u8).ilog10(), 1);
+    assert_eq!(UNative::from(100u8).ilog10(), 2);
+}
+
+#[test]
+#[should_panic]
+fn ilog10_of_zero() {
+    let _ = UNative::ZERO.ilog10();
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(UNative::ZERO.count_ones(), 0);
     assert_eq!(UNative::MAX.count_ones(), UNative::BITS);
@@ -702,6 +751,30 @@ fn checked_shl() {
 fn checked_shr() {
     assert_eq!(UNative::from(8u8).checked_shr(3), Some(UNative::from(1u8)),);
     assert_eq!(UNative::from(8u8).checked_shr(UNative::BITS), None);
+}
+
+#[test]
+fn checked_ilog() {
+    assert_eq!(
+        UNative::from(100u8).checked_ilog(UNative::from(10u8)),
+        Some(2),
+    );
+    assert_eq!(UNative::ZERO.checked_ilog(UNative::from(10u8)), None);
+    assert_eq!(UNative::from(10u8).checked_ilog(UNative::from(1u8)), None);
+}
+
+#[test]
+fn checked_ilog2() {
+    assert_eq!(UNative::from(4u8).checked_ilog2(), Some(2));
+    assert_eq!(UNative::from(1u8).checked_ilog2(), Some(0));
+    assert_eq!(UNative::ZERO.checked_ilog2(), None);
+}
+
+#[test]
+fn checked_ilog10() {
+    assert_eq!(UNative::from(100u8).checked_ilog10(), Some(2));
+    assert_eq!(UNative::from(1u8).checked_ilog10(), Some(0));
+    assert_eq!(UNative::ZERO.checked_ilog10(), None);
 }
 
 #[test]
