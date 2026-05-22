@@ -2,6 +2,7 @@
 name = "unative"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.95"
 description = "Platform-native integer types."
 license = "MIT OR Apache-2.0"
 authors = ["Tomek Czajka <tczajka@gmail.com>"]
