@@ -1178,6 +1178,160 @@ fn overflowing_pow() {
 }
 
 #[test]
+fn saturating_add() {
+    assert_eq!(
+        INative::from(2i8).saturating_add(INative::from(3i8)),
+        INative::from(5i8),
+    );
+    assert_eq!(
+        INative::from(-1i8).saturating_add(INative::from(1i8)),
+        INative::ZERO,
+    );
+    assert_eq!(
+        INative::MAX.saturating_add(INative::from(1i8)),
+        INative::MAX
+    );
+    assert_eq!(
+        INative::MIN.saturating_add(INative::from(-1i8)),
+        INative::MIN
+    );
+}
+
+#[test]
+fn saturating_add_unsigned() {
+    assert_eq!(
+        INative::from(5i8).saturating_add_unsigned(UNative::from(3u8)),
+        INative::from(8i8),
+    );
+    assert_eq!(
+        INative::from(-5i8).saturating_add_unsigned(UNative::from(3u8)),
+        INative::from(-2i8),
+    );
+    assert_eq!(
+        INative::MAX.saturating_add_unsigned(UNative::from(1u8)),
+        INative::MAX,
+    );
+    assert_eq!(
+        INative::MIN.saturating_add_unsigned(UNative::MAX),
+        INative::MAX
+    );
+}
+
+#[test]
+fn saturating_sub() {
+    assert_eq!(
+        INative::from(5i8).saturating_sub(INative::from(3i8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(3i8).saturating_sub(INative::from(5i8)),
+        INative::from(-2i8),
+    );
+    assert_eq!(
+        INative::MIN.saturating_sub(INative::from(1i8)),
+        INative::MIN
+    );
+    assert_eq!(
+        INative::MAX.saturating_sub(INative::from(-1i8)),
+        INative::MAX
+    );
+}
+
+#[test]
+fn saturating_sub_unsigned() {
+    assert_eq!(
+        INative::from(5i8).saturating_sub_unsigned(UNative::from(3u8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(-5i8).saturating_sub_unsigned(UNative::from(3u8)),
+        INative::from(-8i8),
+    );
+    assert_eq!(
+        INative::MIN.saturating_sub_unsigned(UNative::from(1u8)),
+        INative::MIN,
+    );
+    assert_eq!(
+        INative::MAX.saturating_sub_unsigned(UNative::MAX),
+        INative::MIN
+    );
+}
+
+#[test]
+fn saturating_neg() {
+    assert_eq!(INative::ZERO.saturating_neg(), INative::ZERO);
+    assert_eq!(INative::from(5i8).saturating_neg(), INative::from(-5i8));
+    assert_eq!(INative::from(-5i8).saturating_neg(), INative::from(5i8));
+    assert_eq!(INative::MIN.saturating_neg(), INative::MAX);
+}
+
+#[test]
+fn saturating_abs() {
+    assert_eq!(INative::from(5i8).saturating_abs(), INative::from(5i8));
+    assert_eq!(INative::from(-5i8).saturating_abs(), INative::from(5i8));
+    assert_eq!(INative::ZERO.saturating_abs(), INative::ZERO);
+    assert_eq!(INative::MIN.saturating_abs(), INative::MAX);
+}
+
+#[test]
+fn saturating_mul() {
+    assert_eq!(
+        INative::from(4i8).saturating_mul(INative::from(3i8)),
+        INative::from(12i8),
+    );
+    assert_eq!(
+        INative::from(-4i8).saturating_mul(INative::from(3i8)),
+        INative::from(-12i8),
+    );
+    assert_eq!(
+        INative::MAX.saturating_mul(INative::from(2i8)),
+        INative::MAX
+    );
+    assert_eq!(
+        INative::MIN.saturating_mul(INative::from(2i8)),
+        INative::MIN
+    );
+    assert_eq!(
+        INative::MIN.saturating_mul(INative::from(-1i8)),
+        INative::MAX
+    );
+}
+
+#[test]
+fn saturating_div() {
+    assert_eq!(
+        INative::from(7i8).saturating_div(INative::from(2i8)),
+        INative::from(3i8),
+    );
+    assert_eq!(
+        INative::from(-7i8).saturating_div(INative::from(2i8)),
+        INative::from(-3i8),
+    );
+    // MIN / -1 saturates to MAX.
+    assert_eq!(
+        INative::MIN.saturating_div(INative::from(-1i8)),
+        INative::MAX
+    );
+}
+
+#[test]
+#[should_panic]
+fn saturating_div_by_zero() {
+    let _ = INative::from(5i8).saturating_div(INative::ZERO);
+}
+
+#[test]
+fn saturating_pow() {
+    assert_eq!(
+        INative::from(2i8).saturating_pow(10),
+        INative::from(1024i16),
+    );
+    assert_eq!(INative::from(-2i8).saturating_pow(3), INative::from(-8i8),);
+    assert_eq!(INative::MAX.saturating_pow(2), INative::MAX);
+    assert_eq!(INative::MIN.saturating_pow(3), INative::MIN);
+}
+
+#[test]
 fn strict_add() {
     assert_eq!(
         INative::from(2i8).strict_add(INative::from(3i8)),

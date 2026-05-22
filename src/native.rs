@@ -859,6 +859,45 @@ macro_rules! define_native {
                 (Self(x), overflow)
             }
 
+            /// Saturating integer addition. Computes `self + rhs`, saturating at the numeric
+            /// bounds instead of overflowing.
+            #[inline]
+            pub const fn saturating_add(self, rhs: Self) -> Self {
+                Self(self.0.saturating_add(rhs.0))
+            }
+
+            /// Saturating integer subtraction. Computes `self - rhs`, saturating at the
+            /// numeric bounds instead of overflowing.
+            #[inline]
+            pub const fn saturating_sub(self, rhs: Self) -> Self {
+                Self(self.0.saturating_sub(rhs.0))
+            }
+
+            /// Saturating integer multiplication. Computes `self * rhs`, saturating at the
+            /// numeric bounds instead of overflowing.
+            #[inline]
+            pub const fn saturating_mul(self, rhs: Self) -> Self {
+                Self(self.0.saturating_mul(rhs.0))
+            }
+
+            /// Saturating integer division. Computes `self / rhs`, saturating at the numeric
+            /// bounds instead of overflowing.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero.
+            #[inline]
+            pub const fn saturating_div(self, rhs: Self) -> Self {
+                Self(self.0.saturating_div(rhs.0))
+            }
+
+            /// Saturating exponentiation. Raises `self` to the power of `exp`, saturating at
+            /// the numeric bounds instead of overflowing.
+            #[inline]
+            pub const fn saturating_pow(self, exp: u32) -> Self {
+                Self(self.0.saturating_pow(exp))
+            }
+
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.
             ///
             /// # Panics

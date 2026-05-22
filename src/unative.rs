@@ -132,6 +132,20 @@ impl UNative {
         (Self(x), overflow)
     }
 
+    /// Saturating addition of a signed integer. Computes `self + rhs`, saturating at the
+    /// numeric bounds instead of overflowing.
+    #[inline]
+    pub const fn saturating_add_signed(self, rhs: INative) -> Self {
+        Self(self.0.saturating_add_signed(rhs.0))
+    }
+
+    /// Saturating subtraction of a signed integer. Computes `self - rhs`, saturating at the
+    /// numeric bounds instead of overflowing.
+    #[inline]
+    pub const fn saturating_sub_signed(self, rhs: INative) -> Self {
+        Self(self.0.saturating_sub_signed(rhs.0))
+    }
+
     /// Strict addition of a signed integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///

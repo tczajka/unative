@@ -859,6 +859,39 @@ fn checked_pow() {
 }
 
 #[test]
+fn checked_next_multiple_of() {
+    assert_eq!(
+        UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),
+        Some(UNative::from(9u8)),
+    );
+    assert_eq!(
+        UNative::from(6u8).checked_next_multiple_of(UNative::from(3u8)),
+        Some(UNative::from(6u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_next_multiple_of(UNative::ZERO),
+        None,
+    );
+    assert_eq!(
+        UNative::MAX.checked_next_multiple_of(UNative::from(2u8)),
+        None
+    );
+}
+
+#[test]
+fn checked_next_power_of_two() {
+    assert_eq!(
+        UNative::ZERO.checked_next_power_of_two(),
+        Some(UNative::from(1u8)),
+    );
+    assert_eq!(
+        UNative::from(5u8).checked_next_power_of_two(),
+        Some(UNative::from(8u8)),
+    );
+    assert_eq!(UNative::MAX.checked_next_power_of_two(), None);
+}
+
+#[test]
 fn overflowing_add() {
     assert_eq!(
         UNative::from(2u8).overflowing_add(UNative::from(3u8)),
@@ -1058,36 +1091,115 @@ fn overflowing_pow() {
 }
 
 #[test]
-fn checked_next_multiple_of() {
+fn saturating_add() {
     assert_eq!(
-        UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),
-        Some(UNative::from(9u8)),
+        UNative::from(2u8).saturating_add(UNative::from(3u8)),
+        UNative::from(5u8),
     );
     assert_eq!(
-        UNative::from(6u8).checked_next_multiple_of(UNative::from(3u8)),
-        Some(UNative::from(6u8)),
+        UNative::MAX.saturating_add(UNative::from(1u8)),
+        UNative::MAX
+    );
+    assert_eq!(UNative::MAX.saturating_add(UNative::MAX), UNative::MAX);
+}
+
+#[test]
+fn saturating_add_signed() {
+    assert_eq!(
+        UNative::from(5u8).saturating_add_signed(INative::from(3i8)),
+        UNative::from(8u8),
     );
     assert_eq!(
-        UNative::from(5u8).checked_next_multiple_of(UNative::ZERO),
-        None,
+        UNative::from(5u8).saturating_add_signed(INative::from(-3i8)),
+        UNative::from(2u8),
     );
     assert_eq!(
-        UNative::MAX.checked_next_multiple_of(UNative::from(2u8)),
-        None
+        UNative::from(5u8).saturating_add_signed(INative::from(-10i8)),
+        UNative::ZERO,
+    );
+    assert_eq!(
+        UNative::MAX.saturating_add_signed(INative::from(1i8)),
+        UNative::MAX,
     );
 }
 
 #[test]
-fn checked_next_power_of_two() {
+fn saturating_sub() {
     assert_eq!(
-        UNative::ZERO.checked_next_power_of_two(),
-        Some(UNative::from(1u8)),
+        UNative::from(5u8).saturating_sub(UNative::from(3u8)),
+        UNative::from(2u8),
     );
     assert_eq!(
-        UNative::from(5u8).checked_next_power_of_two(),
-        Some(UNative::from(8u8)),
+        UNative::ZERO.saturating_sub(UNative::from(1u8)),
+        UNative::ZERO
     );
-    assert_eq!(UNative::MAX.checked_next_power_of_two(), None);
+    assert_eq!(UNative::ZERO.saturating_sub(UNative::MAX), UNative::ZERO);
+}
+
+#[test]
+fn saturating_sub_signed() {
+    assert_eq!(
+        UNative::from(5u8).saturating_sub_signed(INative::from(3i8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).saturating_sub_signed(INative::from(-3i8)),
+        UNative::from(8u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).saturating_sub_signed(INative::from(10i8)),
+        UNative::ZERO,
+    );
+    assert_eq!(
+        UNative::MAX.saturating_sub_signed(INative::from(-1i8)),
+        UNative::MAX,
+    );
+}
+
+#[test]
+fn saturating_mul() {
+    assert_eq!(
+        UNative::from(4u8).saturating_mul(UNative::from(3u8)),
+        UNative::from(12u8),
+    );
+    assert_eq!(UNative::ZERO.saturating_mul(UNative::MAX), UNative::ZERO);
+    assert_eq!(
+        UNative::MAX.saturating_mul(UNative::from(2u8)),
+        UNative::MAX
+    );
+    assert_eq!(UNative::MAX.saturating_mul(UNative::MAX), UNative::MAX);
+}
+
+#[test]
+fn saturating_div() {
+    assert_eq!(
+        UNative::from(7u8).saturating_div(UNative::from(2u8)),
+        UNative::from(3u8),
+    );
+    assert_eq!(
+        UNative::ZERO.saturating_div(UNative::from(5u8)),
+        UNative::ZERO
+    );
+}
+
+#[test]
+#[should_panic]
+fn saturating_div_by_zero() {
+    let _ = UNative::from(5u8).saturating_div(UNative::ZERO);
+}
+
+#[test]
+fn saturating_pow() {
+    assert_eq!(
+        UNative::from(2u8).saturating_pow(10),
+        UNative::from(1024u16),
+    );
+    assert_eq!(UNative::from(3u8).saturating_pow(0), UNative::from(1u8));
+    assert_eq!(UNative::MAX.saturating_pow(2), UNative::MAX);
+    assert_eq!(
+        UNative::from(2u8).saturating_pow(UNative::BITS),
+        UNative::MAX
+    );
 }
 
 #[test]

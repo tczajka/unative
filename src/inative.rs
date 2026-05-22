@@ -122,6 +122,34 @@ impl INative {
         (Self(x), overflow)
     }
 
+    /// Saturating addition of an unsigned integer. Computes `self + rhs`, saturating at the
+    /// numeric bounds instead of overflowing.
+    #[inline]
+    pub const fn saturating_add_unsigned(self, rhs: UNative) -> Self {
+        Self(self.0.saturating_add_unsigned(rhs.0))
+    }
+
+    /// Saturating subtraction of an unsigned integer. Computes `self - rhs`, saturating at
+    /// the numeric bounds instead of overflowing.
+    #[inline]
+    pub const fn saturating_sub_unsigned(self, rhs: UNative) -> Self {
+        Self(self.0.saturating_sub_unsigned(rhs.0))
+    }
+
+    /// Saturating absolute value. Computes `self.abs()`, returning `INative::MAX` if
+    /// `self == INative::MIN` instead of overflowing.
+    #[inline]
+    pub const fn saturating_abs(self) -> Self {
+        Self(self.0.saturating_abs())
+    }
+
+    /// Saturating negation. Computes `-self`, returning `INative::MAX` if
+    /// `self == INative::MIN` instead of overflowing.
+    #[inline]
+    pub const fn saturating_neg(self) -> Self {
+        Self(self.0.saturating_neg())
+    }
+
     /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///
