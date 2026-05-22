@@ -160,6 +160,44 @@ fn isqrt() {
 }
 
 #[test]
+fn div_euclid() {
+    assert_eq!(
+        UNative::from(23u8).div_euclid(UNative::from(10u8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(
+        UNative::from(20u8).div_euclid(UNative::from(10u8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(UNative::ZERO.div_euclid(UNative::from(5u8)), UNative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn div_euclid_by_zero() {
+    let _ = UNative::from(5u8).div_euclid(UNative::ZERO);
+}
+
+#[test]
+fn rem_euclid() {
+    assert_eq!(
+        UNative::from(23u8).rem_euclid(UNative::from(10u8)),
+        UNative::from(3u8),
+    );
+    assert_eq!(
+        UNative::from(20u8).rem_euclid(UNative::from(10u8)),
+        UNative::ZERO,
+    );
+    assert_eq!(UNative::ZERO.rem_euclid(UNative::from(5u8)), UNative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn rem_euclid_by_zero() {
+    let _ = UNative::from(5u8).rem_euclid(UNative::ZERO);
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(UNative::ZERO.count_ones(), 0);
     assert_eq!(UNative::MAX.count_ones(), UNative::BITS);

@@ -193,6 +193,72 @@ fn isqrt_of_negative() {
 }
 
 #[test]
+fn div_euclid() {
+    assert_eq!(
+        INative::from(23i8).div_euclid(INative::from(10i8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(-23i8).div_euclid(INative::from(10i8)),
+        INative::from(-3i8),
+    );
+    assert_eq!(
+        INative::from(23i8).div_euclid(INative::from(-10i8)),
+        INative::from(-2i8),
+    );
+    assert_eq!(
+        INative::from(-23i8).div_euclid(INative::from(-10i8)),
+        INative::from(3i8),
+    );
+    assert_eq!(INative::ZERO.div_euclid(INative::from(5i8)), INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn div_euclid_by_zero() {
+    let _ = INative::from(5i8).div_euclid(INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn div_euclid_overflow() {
+    let _ = INative::MIN.div_euclid(INative::from(-1i8));
+}
+
+#[test]
+fn rem_euclid() {
+    assert_eq!(
+        INative::from(23i8).rem_euclid(INative::from(10i8)),
+        INative::from(3i8),
+    );
+    assert_eq!(
+        INative::from(-23i8).rem_euclid(INative::from(10i8)),
+        INative::from(7i8),
+    );
+    assert_eq!(
+        INative::from(23i8).rem_euclid(INative::from(-10i8)),
+        INative::from(3i8),
+    );
+    assert_eq!(
+        INative::from(-23i8).rem_euclid(INative::from(-10i8)),
+        INative::from(7i8),
+    );
+    assert_eq!(INative::ZERO.rem_euclid(INative::from(5i8)), INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn rem_euclid_by_zero() {
+    let _ = INative::from(5i8).rem_euclid(INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn rem_euclid_overflow() {
+    let _ = INative::MIN.rem_euclid(INative::from(-1i8));
+}
+
+#[test]
 fn count_ones() {
     assert_eq!(INative::ZERO.count_ones(), 0);
     assert_eq!(INative::MAX.count_ones(), INative::BITS - 1);

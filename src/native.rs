@@ -586,6 +586,32 @@ macro_rules! define_native {
                 Self(self.0.isqrt())
             }
 
+            /// Calculates the quotient of Euclidean division of `self` by `rhs`.
+            ///
+            /// For unsigned types, this is exactly equal to `self / rhs`. For signed types,
+            /// the result is rounded toward negative infinity.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows.
+            #[inline]
+            pub const fn div_euclid(self, rhs: Self) -> Self {
+                Self(self.0.div_euclid(rhs.0))
+            }
+
+            /// Calculates the least nonnegative remainder of `self (mod rhs)`.
+            ///
+            /// For unsigned types, this is exactly equal to `self % rhs`. For signed types,
+            /// the result is always nonnegative.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero, or if the division overflows.
+            #[inline]
+            pub const fn rem_euclid(self, rhs: Self) -> Self {
+                Self(self.0.rem_euclid(rhs.0))
+            }
+
             /// Checked integer addition. Computes `self + rhs`, returning `None` if overflow
             /// occurred.
             #[inline]
