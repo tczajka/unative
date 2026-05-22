@@ -137,6 +137,41 @@ impl UNative {
     pub const fn strict_sub_signed(self, rhs: INative) -> Self {
         Self(self.0.strict_sub_signed(rhs.0))
     }
+
+    /// Calculates `self - rhs - borrow` and returns a tuple containing the difference and the
+    /// output borrow.
+    #[inline]
+    pub fn borrowing_sub(self, rhs: Self, borrow: bool) -> (Self, bool) {
+        let (diff, borrow) = self.0.borrowing_sub(rhs.0, borrow);
+        (Self(diff), borrow)
+    }
+
+    /// Calculates `self + rhs + carry` and returns a tuple containing the sum and the output
+    /// carry.
+    #[inline]
+    pub fn carrying_add(self, rhs: Self, carry: bool) -> (Self, bool) {
+        let (sum, carry) = self.0.carrying_add(rhs.0, carry);
+        (Self(sum), carry)
+    }
+
+    /// Calculates the "full multiplication" `self * rhs + carry` without the possibility to
+    /// overflow.
+    ///
+    /// Returns a tuple containing the low and high bits of the result.
+    #[inline]
+    pub fn carrying_mul(self, rhs: Self, carry: Self) -> (Self, Self) {
+        let (low, high) = self.0.carrying_mul(rhs.0, carry.0);
+        (Self(low), Self(high))
+    }
+
+    /// Calculates `self * rhs + carry + add` without the possibility to overflow.
+    ///
+    /// Returns a tuple containing the low and high bits of the result.
+    #[inline]
+    pub fn carrying_mul_add(self, rhs: Self, carry: Self, add: Self) -> (Self, Self) {
+        let (low, high) = self.0.carrying_mul_add(rhs.0, carry.0, add.0);
+        (Self(low), Self(high))
+    }
 }
 
 delegate_from_native_prim!(UNative, bool);

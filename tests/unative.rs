@@ -1101,3 +1101,102 @@ fn unbounded_shr() {
         UNative::ZERO
     );
 }
+
+#[test]
+fn borrowing_sub() {
+    assert_eq!(
+        UNative::from(5u8).borrowing_sub(UNative::from(3u8), false),
+        (UNative::from(2u8), false),
+    );
+    assert_eq!(
+        UNative::from(5u8).borrowing_sub(UNative::from(3u8), true),
+        (UNative::from(1u8), false),
+    );
+    assert_eq!(
+        UNative::ZERO.borrowing_sub(UNative::ZERO, true),
+        (UNative::MAX, true),
+    );
+    assert_eq!(
+        UNative::ZERO.borrowing_sub(UNative::from(1u8), false),
+        (UNative::MAX, true),
+    );
+    assert_eq!(
+        UNative::ZERO.borrowing_sub(UNative::MAX, true),
+        (UNative::ZERO, true),
+    );
+}
+
+#[test]
+fn carrying_add() {
+    assert_eq!(
+        UNative::from(2u8).carrying_add(UNative::from(3u8), false),
+        (UNative::from(5u8), false),
+    );
+    assert_eq!(
+        UNative::from(2u8).carrying_add(UNative::from(3u8), true),
+        (UNative::from(6u8), false),
+    );
+    assert_eq!(
+        UNative::MAX.carrying_add(UNative::ZERO, false),
+        (UNative::MAX, false),
+    );
+    assert_eq!(
+        UNative::MAX.carrying_add(UNative::ZERO, true),
+        (UNative::ZERO, true),
+    );
+    assert_eq!(
+        UNative::MAX.carrying_add(UNative::from(1u8), false),
+        (UNative::ZERO, true),
+    );
+    assert_eq!(
+        UNative::MAX.carrying_add(UNative::MAX, true),
+        (UNative::MAX, true),
+    );
+}
+
+#[test]
+fn carrying_mul() {
+    assert_eq!(
+        UNative::from(2u8).carrying_mul(UNative::from(3u8), UNative::ZERO),
+        (UNative::from(6u8), UNative::ZERO),
+    );
+    assert_eq!(
+        UNative::from(2u8).carrying_mul(UNative::from(3u8), UNative::from(4u8)),
+        (UNative::from(10u8), UNative::ZERO),
+    );
+    assert_eq!(
+        UNative::ZERO.carrying_mul(UNative::MAX, UNative::from(5u8)),
+        (UNative::from(5u8), UNative::ZERO),
+    );
+    // MAX * MAX = (MAX - 1) * 2^BITS + 1
+    assert_eq!(
+        UNative::MAX.carrying_mul(UNative::MAX, UNative::ZERO),
+        (UNative::from(1u8), UNative::MAX - UNative::from(1u8)),
+    );
+    // MAX * MAX + MAX = MAX * (MAX + 1) = MAX * 2^BITS
+    assert_eq!(
+        UNative::MAX.carrying_mul(UNative::MAX, UNative::MAX),
+        (UNative::ZERO, UNative::MAX),
+    );
+}
+
+#[test]
+fn carrying_mul_add() {
+    assert_eq!(
+        UNative::from(2u8).carrying_mul_add(
+            UNative::from(3u8),
+            UNative::from(4u8),
+            UNative::from(5u8),
+        ),
+        (UNative::from(15u8), UNative::ZERO),
+    );
+    assert_eq!(
+        UNative::ZERO.carrying_mul_add(UNative::ZERO, UNative::ZERO, UNative::ZERO),
+        (UNative::ZERO, UNative::ZERO),
+    );
+    // MAX * MAX + MAX + MAX = MAX * (MAX + 2) = MAX * 2^BITS + MAX
+    assert_eq!(
+        UNative::MAX.carrying_mul_add(UNative::MAX, UNative::MAX, UNative::MAX),
+        (UNative::MAX, UNative::MAX),
+    );
+}
