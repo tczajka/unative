@@ -1465,7 +1465,10 @@ fn wrapping_rem() {
         INative::from(-1i8),
     );
     // MIN % -1 wraps to 0.
-    assert_eq!(INative::MIN.wrapping_rem(INative::from(-1i8)), INative::ZERO);
+    assert_eq!(
+        INative::MIN.wrapping_rem(INative::from(-1i8)),
+        INative::ZERO
+    );
 }
 
 #[test]
@@ -1512,10 +1515,7 @@ fn wrapping_shr() {
 
 #[test]
 fn wrapping_pow() {
-    assert_eq!(
-        INative::from(2i8).wrapping_pow(10),
-        INative::from(1024i16),
-    );
+    assert_eq!(INative::from(2i8).wrapping_pow(10), INative::from(1024i16),);
     assert_eq!(INative::from(-2i8).wrapping_pow(3), INative::from(-8i8));
     // MAX^2 wraps to 1; MIN^2 wraps to 0.
     assert_eq!(INative::MAX.wrapping_pow(2), INative::from(1i8));

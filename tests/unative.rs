@@ -1369,15 +1369,15 @@ fn wrapping_shr() {
 
 #[test]
 fn wrapping_pow() {
-    assert_eq!(
-        UNative::from(2u8).wrapping_pow(10),
-        UNative::from(1024u16),
-    );
+    assert_eq!(UNative::from(2u8).wrapping_pow(10), UNative::from(1024u16),);
     assert_eq!(UNative::from(3u8).wrapping_pow(0), UNative::from(1u8));
     // MAX^2 = 1 (mod 2^BITS).
     assert_eq!(UNative::MAX.wrapping_pow(2), UNative::from(1u8));
     // 2^BITS wraps to 0.
-    assert_eq!(UNative::from(2u8).wrapping_pow(UNative::BITS), UNative::ZERO);
+    assert_eq!(
+        UNative::from(2u8).wrapping_pow(UNative::BITS),
+        UNative::ZERO
+    );
 }
 
 #[test]
