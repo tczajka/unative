@@ -1247,3 +1247,42 @@ fn unbounded_shr() {
         INative::from(-1i8),
     );
 }
+
+#[test]
+fn from_str_radix() {
+    assert_eq!(INative::from_str_radix("42", 10), Ok(INative::from(42i8)));
+    assert_eq!(INative::from_str_radix("+42", 10), Ok(INative::from(42i8)));
+    assert_eq!(INative::from_str_radix("-42", 10), Ok(INative::from(-42i8)));
+    assert_eq!(INative::from_str_radix("0", 10), Ok(INative::ZERO));
+    assert_eq!(INative::from_str_radix("7f", 16), Ok(INative::from(127i8)));
+    assert_eq!(
+        INative::from_str_radix("-80", 16),
+        Ok(INative::from(-128i8))
+    );
+    assert_eq!(INative::from_str_radix("101", 2), Ok(INative::from(5i8)));
+    assert_eq!(INative::from_str_radix("z", 36), Ok(INative::from(35i8)));
+    assert_eq!(
+        INative::from_str_radix(&format!("{}", INative::MAX), 10),
+        Ok(INative::MAX),
+    );
+    assert_eq!(
+        INative::from_str_radix(&format!("{}", INative::MIN), 10),
+        Ok(INative::MIN),
+    );
+    assert!(INative::from_str_radix("abc", 10).is_err());
+    assert!(INative::from_str_radix("", 10).is_err());
+    assert!(INative::from_str_radix("g", 16).is_err());
+    assert!(INative::from_str_radix(" 1", 10).is_err());
+}
+
+#[test]
+#[should_panic]
+fn from_str_radix_invalid_radix_low() {
+    let _ = INative::from_str_radix("0", 1);
+}
+
+#[test]
+#[should_panic]
+fn from_str_radix_invalid_radix_high() {
+    let _ = INative::from_str_radix("0", 37);
+}

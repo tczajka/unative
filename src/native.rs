@@ -949,6 +949,29 @@ macro_rules! define_native {
             pub const fn unbounded_shr(self, rhs: u32) -> Self {
                 Self(self.0.unbounded_shr(rhs))
             }
+
+
+            /// Converts a string slice in a given base to an integer.
+            ///
+            /// The string is expected to be an optional sign followed by digits. For signed
+            /// types both `+` and `-` are accepted; for unsigned types only `+` is accepted.
+            /// Leading and trailing whitespace represent an error. Digits are a subset of
+            /// these characters, depending on `radix`: `0-9`, `a-z`, `A-Z`.
+            ///
+            /// # Panics
+            ///
+            /// This function panics if `radix` is not in the range from 2 to 36.
+            #[inline]
+            pub const fn from_str_radix(
+                src: &str,
+                radix: u32,
+            ) -> Result<Self, ::core::num::ParseIntError> {
+                match <$inner>::from_str_radix(src, radix) {
+                    Ok(x) => Ok(Self(x)),
+                    Err(e) => Err(e),
+                }
+            }
+
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

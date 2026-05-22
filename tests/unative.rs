@@ -1238,3 +1238,34 @@ fn carrying_mul_add() {
         (UNative::MAX, UNative::MAX),
     );
 }
+
+#[test]
+fn from_str_radix() {
+    assert_eq!(UNative::from_str_radix("42", 10), Ok(UNative::from(42u8)));
+    assert_eq!(UNative::from_str_radix("+42", 10), Ok(UNative::from(42u8)));
+    assert_eq!(UNative::from_str_radix("0", 10), Ok(UNative::ZERO));
+    assert_eq!(UNative::from_str_radix("ff", 16), Ok(UNative::from(255u8)));
+    assert_eq!(UNative::from_str_radix("FF", 16), Ok(UNative::from(255u8)));
+    assert_eq!(UNative::from_str_radix("101", 2), Ok(UNative::from(5u8)));
+    assert_eq!(UNative::from_str_radix("z", 36), Ok(UNative::from(35u8)));
+    assert_eq!(
+        UNative::from_str_radix(&format!("{}", UNative::MAX), 10),
+        Ok(UNative::MAX),
+    );
+    assert!(UNative::from_str_radix("-1", 10).is_err());
+    assert!(UNative::from_str_radix("", 10).is_err());
+    assert!(UNative::from_str_radix("g", 16).is_err());
+    assert!(UNative::from_str_radix(" 1", 10).is_err());
+}
+
+#[test]
+#[should_panic]
+fn from_str_radix_invalid_radix_low() {
+    let _ = UNative::from_str_radix("0", 1);
+}
+
+#[test]
+#[should_panic]
+fn from_str_radix_invalid_radix_high() {
+    let _ = UNative::from_str_radix("0", 37);
+}
