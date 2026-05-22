@@ -1332,6 +1332,197 @@ fn saturating_pow() {
 }
 
 #[test]
+fn wrapping_add() {
+    assert_eq!(
+        INative::from(2i8).wrapping_add(INative::from(3i8)),
+        INative::from(5i8),
+    );
+    assert_eq!(
+        INative::from(-1i8).wrapping_add(INative::from(1i8)),
+        INative::ZERO,
+    );
+    assert_eq!(INative::MAX.wrapping_add(INative::from(1i8)), INative::MIN);
+    assert_eq!(INative::MIN.wrapping_add(INative::from(-1i8)), INative::MAX);
+}
+
+#[test]
+fn wrapping_add_unsigned() {
+    assert_eq!(
+        INative::from(5i8).wrapping_add_unsigned(UNative::from(3u8)),
+        INative::from(8i8),
+    );
+    assert_eq!(
+        INative::from(-5i8).wrapping_add_unsigned(UNative::from(3u8)),
+        INative::from(-2i8),
+    );
+    assert_eq!(
+        INative::MAX.wrapping_add_unsigned(UNative::from(1u8)),
+        INative::MIN,
+    );
+}
+
+#[test]
+fn wrapping_sub() {
+    assert_eq!(
+        INative::from(5i8).wrapping_sub(INative::from(3i8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(3i8).wrapping_sub(INative::from(5i8)),
+        INative::from(-2i8),
+    );
+    assert_eq!(INative::MIN.wrapping_sub(INative::from(1i8)), INative::MAX);
+    assert_eq!(INative::MAX.wrapping_sub(INative::from(-1i8)), INative::MIN);
+}
+
+#[test]
+fn wrapping_sub_unsigned() {
+    assert_eq!(
+        INative::from(5i8).wrapping_sub_unsigned(UNative::from(3u8)),
+        INative::from(2i8),
+    );
+    assert_eq!(
+        INative::from(-5i8).wrapping_sub_unsigned(UNative::from(3u8)),
+        INative::from(-8i8),
+    );
+    assert_eq!(
+        INative::MIN.wrapping_sub_unsigned(UNative::from(1u8)),
+        INative::MAX,
+    );
+}
+
+#[test]
+fn wrapping_neg() {
+    assert_eq!(INative::ZERO.wrapping_neg(), INative::ZERO);
+    assert_eq!(INative::from(5i8).wrapping_neg(), INative::from(-5i8));
+    assert_eq!(INative::from(-5i8).wrapping_neg(), INative::from(5i8));
+    assert_eq!(INative::MIN.wrapping_neg(), INative::MIN);
+}
+
+#[test]
+fn wrapping_abs() {
+    assert_eq!(INative::from(5i8).wrapping_abs(), INative::from(5i8));
+    assert_eq!(INative::from(-5i8).wrapping_abs(), INative::from(5i8));
+    assert_eq!(INative::ZERO.wrapping_abs(), INative::ZERO);
+    assert_eq!(INative::MIN.wrapping_abs(), INative::MIN);
+}
+
+#[test]
+fn wrapping_mul() {
+    assert_eq!(
+        INative::from(4i8).wrapping_mul(INative::from(3i8)),
+        INative::from(12i8),
+    );
+    assert_eq!(
+        INative::from(-4i8).wrapping_mul(INative::from(3i8)),
+        INative::from(-12i8),
+    );
+    assert_eq!(INative::MIN.wrapping_mul(INative::from(-1i8)), INative::MIN);
+}
+
+#[test]
+fn wrapping_div() {
+    assert_eq!(
+        INative::from(7i8).wrapping_div(INative::from(2i8)),
+        INative::from(3i8),
+    );
+    assert_eq!(
+        INative::from(-7i8).wrapping_div(INative::from(2i8)),
+        INative::from(-3i8),
+    );
+    // MIN / -1 wraps to MIN.
+    assert_eq!(INative::MIN.wrapping_div(INative::from(-1i8)), INative::MIN);
+}
+
+#[test]
+#[should_panic]
+fn wrapping_div_by_zero() {
+    let _ = INative::from(5i8).wrapping_div(INative::ZERO);
+}
+
+#[test]
+fn wrapping_div_euclid() {
+    assert_eq!(
+        INative::from(-7i8).wrapping_div_euclid(INative::from(2i8)),
+        INative::from(-4i8),
+    );
+    assert_eq!(
+        INative::MIN.wrapping_div_euclid(INative::from(-1i8)),
+        INative::MIN,
+    );
+}
+
+#[test]
+#[should_panic]
+fn wrapping_div_euclid_by_zero() {
+    let _ = INative::from(5i8).wrapping_div_euclid(INative::ZERO);
+}
+
+#[test]
+fn wrapping_rem() {
+    assert_eq!(
+        INative::from(-7i8).wrapping_rem(INative::from(2i8)),
+        INative::from(-1i8),
+    );
+    // MIN % -1 wraps to 0.
+    assert_eq!(INative::MIN.wrapping_rem(INative::from(-1i8)), INative::ZERO);
+}
+
+#[test]
+#[should_panic]
+fn wrapping_rem_by_zero() {
+    let _ = INative::from(5i8).wrapping_rem(INative::ZERO);
+}
+
+#[test]
+fn wrapping_rem_euclid() {
+    assert_eq!(
+        INative::from(-7i8).wrapping_rem_euclid(INative::from(2i8)),
+        INative::from(1i8),
+    );
+    assert_eq!(
+        INative::MIN.wrapping_rem_euclid(INative::from(-1i8)),
+        INative::ZERO,
+    );
+}
+
+#[test]
+#[should_panic]
+fn wrapping_rem_euclid_by_zero() {
+    let _ = INative::from(5i8).wrapping_rem_euclid(INative::ZERO);
+}
+
+#[test]
+fn wrapping_shl() {
+    assert_eq!(INative::from(1i8).wrapping_shl(3), INative::from(8i8));
+    assert_eq!(
+        INative::from(1i8).wrapping_shl(INative::BITS),
+        INative::from(1i8),
+    );
+}
+
+#[test]
+fn wrapping_shr() {
+    assert_eq!(INative::from(-16i8).wrapping_shr(3), INative::from(-2i8));
+    assert_eq!(
+        INative::from(-16i8).wrapping_shr(INative::BITS),
+        INative::from(-16i8),
+    );
+}
+
+#[test]
+fn wrapping_pow() {
+    assert_eq!(
+        INative::from(2i8).wrapping_pow(10),
+        INative::from(1024i16),
+    );
+    assert_eq!(INative::from(-2i8).wrapping_pow(3), INative::from(-8i8));
+    // MAX^2 wraps to 1; MIN^2 wraps to 0.
+    assert_eq!(INative::MAX.wrapping_pow(2), INative::from(1i8));
+    assert_eq!(INative::MIN.wrapping_pow(2), INative::ZERO);
+}
+
+#[test]
 fn strict_add() {
     assert_eq!(
         INative::from(2i8).strict_add(INative::from(3i8)),

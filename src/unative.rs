@@ -146,6 +146,20 @@ impl UNative {
         Self(self.0.saturating_sub_signed(rhs.0))
     }
 
+    /// Wrapping (modular) addition of a signed integer. Computes `self + rhs`, wrapping
+    /// around at the boundary of the type.
+    #[inline]
+    pub const fn wrapping_add_signed(self, rhs: INative) -> Self {
+        Self(self.0.wrapping_add_signed(rhs.0))
+    }
+
+    /// Wrapping (modular) subtraction of a signed integer. Computes `self - rhs`, wrapping
+    /// around at the boundary of the type.
+    #[inline]
+    pub const fn wrapping_sub_signed(self, rhs: INative) -> Self {
+        Self(self.0.wrapping_sub_signed(rhs.0))
+    }
+
     /// Strict addition of a signed integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///

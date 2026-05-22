@@ -1203,6 +1203,184 @@ fn saturating_pow() {
 }
 
 #[test]
+fn wrapping_add() {
+    assert_eq!(
+        UNative::from(2u8).wrapping_add(UNative::from(3u8)),
+        UNative::from(5u8),
+    );
+    assert_eq!(UNative::MAX.wrapping_add(UNative::from(1u8)), UNative::ZERO);
+    assert_eq!(
+        UNative::MAX.wrapping_add(UNative::MAX),
+        UNative::MAX - UNative::from(1u8),
+    );
+}
+
+#[test]
+fn wrapping_add_signed() {
+    assert_eq!(
+        UNative::from(5u8).wrapping_add_signed(INative::from(3i8)),
+        UNative::from(8u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).wrapping_add_signed(INative::from(-3i8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).wrapping_add_signed(INative::from(-10i8)),
+        UNative::MAX - UNative::from(4u8),
+    );
+    assert_eq!(
+        UNative::MAX.wrapping_add_signed(INative::from(1i8)),
+        UNative::ZERO,
+    );
+}
+
+#[test]
+fn wrapping_sub() {
+    assert_eq!(
+        UNative::from(5u8).wrapping_sub(UNative::from(3u8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(UNative::ZERO.wrapping_sub(UNative::from(1u8)), UNative::MAX);
+    assert_eq!(UNative::ZERO.wrapping_sub(UNative::MAX), UNative::from(1u8));
+}
+
+#[test]
+fn wrapping_sub_signed() {
+    assert_eq!(
+        UNative::from(5u8).wrapping_sub_signed(INative::from(3i8)),
+        UNative::from(2u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).wrapping_sub_signed(INative::from(-3i8)),
+        UNative::from(8u8),
+    );
+    assert_eq!(
+        UNative::from(5u8).wrapping_sub_signed(INative::from(10i8)),
+        UNative::MAX - UNative::from(4u8),
+    );
+    assert_eq!(
+        UNative::MAX.wrapping_sub_signed(INative::from(-1i8)),
+        UNative::ZERO,
+    );
+}
+
+#[test]
+fn wrapping_neg() {
+    assert_eq!(UNative::ZERO.wrapping_neg(), UNative::ZERO);
+    assert_eq!(UNative::from(1u8).wrapping_neg(), UNative::MAX);
+    assert_eq!(UNative::MAX.wrapping_neg(), UNative::from(1u8));
+}
+
+#[test]
+fn wrapping_mul() {
+    assert_eq!(
+        UNative::from(4u8).wrapping_mul(UNative::from(3u8)),
+        UNative::from(12u8),
+    );
+    assert_eq!(UNative::ZERO.wrapping_mul(UNative::MAX), UNative::ZERO);
+    // MAX * 2 = -2 (mod 2^BITS) = MAX - 1.
+    assert_eq!(
+        UNative::MAX.wrapping_mul(UNative::from(2u8)),
+        UNative::MAX - UNative::from(1u8),
+    );
+    // MAX * MAX = 1 (mod 2^BITS).
+    assert_eq!(UNative::MAX.wrapping_mul(UNative::MAX), UNative::from(1u8));
+}
+
+#[test]
+fn wrapping_div() {
+    assert_eq!(
+        UNative::from(7u8).wrapping_div(UNative::from(2u8)),
+        UNative::from(3u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn wrapping_div_by_zero() {
+    let _ = UNative::from(5u8).wrapping_div(UNative::ZERO);
+}
+
+#[test]
+fn wrapping_div_euclid() {
+    assert_eq!(
+        UNative::from(7u8).wrapping_div_euclid(UNative::from(2u8)),
+        UNative::from(3u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn wrapping_div_euclid_by_zero() {
+    let _ = UNative::from(5u8).wrapping_div_euclid(UNative::ZERO);
+}
+
+#[test]
+fn wrapping_rem() {
+    assert_eq!(
+        UNative::from(7u8).wrapping_rem(UNative::from(2u8)),
+        UNative::from(1u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn wrapping_rem_by_zero() {
+    let _ = UNative::from(5u8).wrapping_rem(UNative::ZERO);
+}
+
+#[test]
+fn wrapping_rem_euclid() {
+    assert_eq!(
+        UNative::from(7u8).wrapping_rem_euclid(UNative::from(2u8)),
+        UNative::from(1u8),
+    );
+}
+
+#[test]
+#[should_panic]
+fn wrapping_rem_euclid_by_zero() {
+    let _ = UNative::from(5u8).wrapping_rem_euclid(UNative::ZERO);
+}
+
+#[test]
+fn wrapping_shl() {
+    assert_eq!(UNative::from(1u8).wrapping_shl(3), UNative::from(8u8));
+    // Shift amount is masked modulo BITS.
+    assert_eq!(
+        UNative::from(1u8).wrapping_shl(UNative::BITS),
+        UNative::from(1u8),
+    );
+    assert_eq!(
+        UNative::from(1u8).wrapping_shl(UNative::BITS + 3),
+        UNative::from(8u8),
+    );
+}
+
+#[test]
+fn wrapping_shr() {
+    assert_eq!(UNative::from(8u8).wrapping_shr(3), UNative::from(1u8));
+    assert_eq!(
+        UNative::from(8u8).wrapping_shr(UNative::BITS),
+        UNative::from(8u8),
+    );
+}
+
+#[test]
+fn wrapping_pow() {
+    assert_eq!(
+        UNative::from(2u8).wrapping_pow(10),
+        UNative::from(1024u16),
+    );
+    assert_eq!(UNative::from(3u8).wrapping_pow(0), UNative::from(1u8));
+    // MAX^2 = 1 (mod 2^BITS).
+    assert_eq!(UNative::MAX.wrapping_pow(2), UNative::from(1u8));
+    // 2^BITS wraps to 0.
+    assert_eq!(UNative::from(2u8).wrapping_pow(UNative::BITS), UNative::ZERO);
+}
+
+#[test]
 fn strict_add() {
     assert_eq!(
         UNative::from(2u8).strict_add(UNative::from(3u8)),

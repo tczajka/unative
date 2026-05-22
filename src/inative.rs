@@ -150,6 +150,28 @@ impl INative {
         Self(self.0.saturating_neg())
     }
 
+    /// Wrapping (modular) addition of an unsigned integer. Computes `self + rhs`, wrapping
+    /// around at the boundary of the type.
+    #[inline]
+    pub const fn wrapping_add_unsigned(self, rhs: UNative) -> Self {
+        Self(self.0.wrapping_add_unsigned(rhs.0))
+    }
+
+    /// Wrapping (modular) subtraction of an unsigned integer. Computes `self - rhs`,
+    /// wrapping around at the boundary of the type.
+    #[inline]
+    pub const fn wrapping_sub_unsigned(self, rhs: UNative) -> Self {
+        Self(self.0.wrapping_sub_unsigned(rhs.0))
+    }
+
+    /// Wrapping (modular) absolute value. Computes `self.abs()`, wrapping around at the
+    /// boundary of the type. The only case where this wraps is when `self == INative::MIN`,
+    /// in which case the result is `INative::MIN` itself.
+    #[inline]
+    pub const fn wrapping_abs(self) -> Self {
+        Self(self.0.wrapping_abs())
+    }
+
     /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///
