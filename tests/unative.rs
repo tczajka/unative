@@ -859,6 +859,205 @@ fn checked_pow() {
 }
 
 #[test]
+fn overflowing_add() {
+    assert_eq!(
+        UNative::from(2u8).overflowing_add(UNative::from(3u8)),
+        (UNative::from(5u8), false),
+    );
+    assert_eq!(
+        UNative::MAX.overflowing_add(UNative::from(1u8)),
+        (UNative::ZERO, true),
+    );
+    assert_eq!(
+        UNative::MAX.overflowing_add(UNative::MAX),
+        (UNative::MAX - UNative::from(1u8), true),
+    );
+}
+
+#[test]
+fn overflowing_add_signed() {
+    assert_eq!(
+        UNative::from(5u8).overflowing_add_signed(INative::from(3i8)),
+        (UNative::from(8u8), false),
+    );
+    assert_eq!(
+        UNative::from(5u8).overflowing_add_signed(INative::from(-3i8)),
+        (UNative::from(2u8), false),
+    );
+    assert_eq!(
+        UNative::from(5u8).overflowing_add_signed(INative::from(-10i8)),
+        (UNative::MAX - UNative::from(4u8), true),
+    );
+    assert_eq!(
+        UNative::MAX.overflowing_add_signed(INative::from(1i8)),
+        (UNative::ZERO, true),
+    );
+}
+
+#[test]
+fn overflowing_sub() {
+    assert_eq!(
+        UNative::from(5u8).overflowing_sub(UNative::from(3u8)),
+        (UNative::from(2u8), false),
+    );
+    assert_eq!(
+        UNative::ZERO.overflowing_sub(UNative::from(1u8)),
+        (UNative::MAX, true),
+    );
+}
+
+#[test]
+fn overflowing_sub_signed() {
+    assert_eq!(
+        UNative::from(5u8).overflowing_sub_signed(INative::from(3i8)),
+        (UNative::from(2u8), false),
+    );
+    assert_eq!(
+        UNative::from(5u8).overflowing_sub_signed(INative::from(-3i8)),
+        (UNative::from(8u8), false),
+    );
+    assert_eq!(
+        UNative::from(5u8).overflowing_sub_signed(INative::from(10i8)),
+        (UNative::MAX - UNative::from(4u8), true),
+    );
+    assert_eq!(
+        UNative::MAX.overflowing_sub_signed(INative::from(-1i8)),
+        (UNative::ZERO, true),
+    );
+}
+
+#[test]
+fn overflowing_neg() {
+    assert_eq!(UNative::ZERO.overflowing_neg(), (UNative::ZERO, false));
+    assert_eq!(UNative::from(1u8).overflowing_neg(), (UNative::MAX, true));
+    assert_eq!(UNative::MAX.overflowing_neg(), (UNative::from(1u8), true),);
+}
+
+#[test]
+fn overflowing_mul() {
+    assert_eq!(
+        UNative::from(4u8).overflowing_mul(UNative::from(3u8)),
+        (UNative::from(12u8), false),
+    );
+    assert_eq!(
+        UNative::ZERO.overflowing_mul(UNative::MAX),
+        (UNative::ZERO, false),
+    );
+    // MAX * 2 = MAX - 1 (mod 2^BITS), with overflow.
+    assert_eq!(
+        UNative::MAX.overflowing_mul(UNative::from(2u8)),
+        (UNative::MAX - UNative::from(1u8), true),
+    );
+}
+
+#[test]
+fn overflowing_div() {
+    assert_eq!(
+        UNative::from(7u8).overflowing_div(UNative::from(2u8)),
+        (UNative::from(3u8), false),
+    );
+    assert_eq!(
+        UNative::ZERO.overflowing_div(UNative::from(5u8)),
+        (UNative::ZERO, false),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_div_by_zero() {
+    let _ = UNative::from(5u8).overflowing_div(UNative::ZERO);
+}
+
+#[test]
+fn overflowing_div_euclid() {
+    assert_eq!(
+        UNative::from(7u8).overflowing_div_euclid(UNative::from(2u8)),
+        (UNative::from(3u8), false),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_div_euclid_by_zero() {
+    let _ = UNative::from(5u8).overflowing_div_euclid(UNative::ZERO);
+}
+
+#[test]
+fn overflowing_rem() {
+    assert_eq!(
+        UNative::from(7u8).overflowing_rem(UNative::from(2u8)),
+        (UNative::from(1u8), false),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_rem_by_zero() {
+    let _ = UNative::from(5u8).overflowing_rem(UNative::ZERO);
+}
+
+#[test]
+fn overflowing_rem_euclid() {
+    assert_eq!(
+        UNative::from(7u8).overflowing_rem_euclid(UNative::from(2u8)),
+        (UNative::from(1u8), false),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_rem_euclid_by_zero() {
+    let _ = UNative::from(5u8).overflowing_rem_euclid(UNative::ZERO);
+}
+
+#[test]
+fn overflowing_shl() {
+    assert_eq!(
+        UNative::from(1u8).overflowing_shl(3),
+        (UNative::from(8u8), false),
+    );
+    assert_eq!(
+        UNative::from(1u8).overflowing_shl(UNative::BITS),
+        (UNative::from(1u8), true),
+    );
+    assert_eq!(
+        UNative::from(1u8).overflowing_shl(UNative::BITS + 3),
+        (UNative::from(8u8), true),
+    );
+}
+
+#[test]
+fn overflowing_shr() {
+    assert_eq!(
+        UNative::from(8u8).overflowing_shr(3),
+        (UNative::from(1u8), false),
+    );
+    assert_eq!(
+        UNative::from(8u8).overflowing_shr(UNative::BITS),
+        (UNative::from(8u8), true),
+    );
+}
+
+#[test]
+fn overflowing_pow() {
+    assert_eq!(
+        UNative::from(2u8).overflowing_pow(10),
+        (UNative::from(1024u16), false),
+    );
+    assert_eq!(
+        UNative::from(3u8).overflowing_pow(0),
+        (UNative::from(1u8), false),
+    );
+    // MAX^2 = (2^BITS - 1)^2 = 2^(2*BITS) - 2^(BITS+1) + 1, which wraps to 1.
+    assert_eq!(UNative::MAX.overflowing_pow(2), (UNative::from(1u8), true),);
+    // 2^BITS wraps to 0.
+    assert_eq!(
+        UNative::from(2u8).overflowing_pow(UNative::BITS),
+        (UNative::ZERO, true),
+    );
+}
+
+#[test]
 fn checked_next_multiple_of() {
     assert_eq!(
         UNative::from(7u8).checked_next_multiple_of(UNative::from(3u8)),

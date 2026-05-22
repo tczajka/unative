@@ -945,6 +945,239 @@ fn checked_abs() {
 }
 
 #[test]
+fn overflowing_add() {
+    assert_eq!(
+        INative::from(2i8).overflowing_add(INative::from(3i8)),
+        (INative::from(5i8), false),
+    );
+    assert_eq!(
+        INative::from(-1i8).overflowing_add(INative::from(1i8)),
+        (INative::ZERO, false),
+    );
+    assert_eq!(
+        INative::MAX.overflowing_add(INative::from(1i8)),
+        (INative::MIN, true),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_add(INative::from(-1i8)),
+        (INative::MAX, true),
+    );
+}
+
+#[test]
+fn overflowing_add_unsigned() {
+    assert_eq!(
+        INative::from(5i8).overflowing_add_unsigned(UNative::from(3u8)),
+        (INative::from(8i8), false),
+    );
+    assert_eq!(
+        INative::from(-5i8).overflowing_add_unsigned(UNative::from(3u8)),
+        (INative::from(-2i8), false),
+    );
+    assert_eq!(
+        INative::MAX.overflowing_add_unsigned(UNative::from(1u8)),
+        (INative::MIN, true),
+    );
+}
+
+#[test]
+fn overflowing_sub() {
+    assert_eq!(
+        INative::from(5i8).overflowing_sub(INative::from(3i8)),
+        (INative::from(2i8), false),
+    );
+    assert_eq!(
+        INative::from(3i8).overflowing_sub(INative::from(5i8)),
+        (INative::from(-2i8), false),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_sub(INative::from(1i8)),
+        (INative::MAX, true),
+    );
+    assert_eq!(
+        INative::MAX.overflowing_sub(INative::from(-1i8)),
+        (INative::MIN, true),
+    );
+}
+
+#[test]
+fn overflowing_sub_unsigned() {
+    assert_eq!(
+        INative::from(5i8).overflowing_sub_unsigned(UNative::from(3u8)),
+        (INative::from(2i8), false),
+    );
+    assert_eq!(
+        INative::from(-5i8).overflowing_sub_unsigned(UNative::from(3u8)),
+        (INative::from(-8i8), false),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_sub_unsigned(UNative::from(1u8)),
+        (INative::MAX, true),
+    );
+}
+
+#[test]
+fn overflowing_neg() {
+    assert_eq!(INative::ZERO.overflowing_neg(), (INative::ZERO, false));
+    assert_eq!(
+        INative::from(5i8).overflowing_neg(),
+        (INative::from(-5i8), false),
+    );
+    assert_eq!(
+        INative::from(-5i8).overflowing_neg(),
+        (INative::from(5i8), false),
+    );
+    assert_eq!(INative::MIN.overflowing_neg(), (INative::MIN, true));
+}
+
+#[test]
+fn overflowing_abs() {
+    assert_eq!(
+        INative::from(5i8).overflowing_abs(),
+        (INative::from(5i8), false),
+    );
+    assert_eq!(
+        INative::from(-5i8).overflowing_abs(),
+        (INative::from(5i8), false),
+    );
+    assert_eq!(INative::ZERO.overflowing_abs(), (INative::ZERO, false));
+    assert_eq!(INative::MIN.overflowing_abs(), (INative::MIN, true));
+}
+
+#[test]
+fn overflowing_mul() {
+    assert_eq!(
+        INative::from(4i8).overflowing_mul(INative::from(3i8)),
+        (INative::from(12i8), false),
+    );
+    assert_eq!(
+        INative::from(-4i8).overflowing_mul(INative::from(3i8)),
+        (INative::from(-12i8), false),
+    );
+    assert!(INative::MAX.overflowing_mul(INative::from(2i8)).1);
+    assert_eq!(
+        INative::MIN.overflowing_mul(INative::from(-1i8)),
+        (INative::MIN, true),
+    );
+}
+
+#[test]
+fn overflowing_div() {
+    assert_eq!(
+        INative::from(7i8).overflowing_div(INative::from(2i8)),
+        (INative::from(3i8), false),
+    );
+    assert_eq!(
+        INative::from(-7i8).overflowing_div(INative::from(2i8)),
+        (INative::from(-3i8), false),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_div(INative::from(-1i8)),
+        (INative::MIN, true),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_div_by_zero() {
+    let _ = INative::from(5i8).overflowing_div(INative::ZERO);
+}
+
+#[test]
+fn overflowing_div_euclid() {
+    assert_eq!(
+        INative::from(-7i8).overflowing_div_euclid(INative::from(2i8)),
+        (INative::from(-4i8), false),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_div_euclid(INative::from(-1i8)),
+        (INative::MIN, true),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_div_euclid_by_zero() {
+    let _ = INative::from(5i8).overflowing_div_euclid(INative::ZERO);
+}
+
+#[test]
+fn overflowing_rem() {
+    assert_eq!(
+        INative::from(-7i8).overflowing_rem(INative::from(2i8)),
+        (INative::from(-1i8), false),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_rem(INative::from(-1i8)),
+        (INative::ZERO, true),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_rem_by_zero() {
+    let _ = INative::from(5i8).overflowing_rem(INative::ZERO);
+}
+
+#[test]
+fn overflowing_rem_euclid() {
+    assert_eq!(
+        INative::from(-7i8).overflowing_rem_euclid(INative::from(2i8)),
+        (INative::from(1i8), false),
+    );
+    assert_eq!(
+        INative::MIN.overflowing_rem_euclid(INative::from(-1i8)),
+        (INative::ZERO, true),
+    );
+}
+
+#[test]
+#[should_panic]
+fn overflowing_rem_euclid_by_zero() {
+    let _ = INative::from(5i8).overflowing_rem_euclid(INative::ZERO);
+}
+
+#[test]
+fn overflowing_shl() {
+    assert_eq!(
+        INative::from(1i8).overflowing_shl(3),
+        (INative::from(8i8), false),
+    );
+    assert_eq!(
+        INative::from(1i8).overflowing_shl(INative::BITS),
+        (INative::from(1i8), true),
+    );
+}
+
+#[test]
+fn overflowing_shr() {
+    assert_eq!(
+        INative::from(-16i8).overflowing_shr(3),
+        (INative::from(-2i8), false),
+    );
+    assert_eq!(
+        INative::from(-16i8).overflowing_shr(INative::BITS),
+        (INative::from(-16i8), true),
+    );
+}
+
+#[test]
+fn overflowing_pow() {
+    assert_eq!(
+        INative::from(2i8).overflowing_pow(10),
+        (INative::from(1024i16), false),
+    );
+    assert_eq!(
+        INative::from(-2i8).overflowing_pow(3),
+        (INative::from(-8i8), false),
+    );
+    // MAX^2 = (2^(BITS-1) - 1)^2 = 2^(2*BITS-2) - 2^BITS + 1, which wraps to 1.
+    assert_eq!(INative::MAX.overflowing_pow(2), (INative::from(1i8), true),);
+    // MIN^2 = 2^(2*BITS-2), which wraps to 0.
+    assert_eq!(INative::MIN.overflowing_pow(2), (INative::ZERO, true),);
+}
+
+#[test]
 fn strict_add() {
     assert_eq!(
         INative::from(2i8).strict_add(INative::from(3i8)),

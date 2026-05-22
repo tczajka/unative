@@ -742,6 +742,123 @@ macro_rules! define_native {
                 }
             }
 
+            /// Calculates `self + rhs`. Returns a tuple of the sum along with a boolean
+            /// indicating whether an arithmetic overflow occurred. If an overflow occurred
+            /// then the wrapped value is returned.
+            #[inline]
+            pub const fn overflowing_add(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_add(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Calculates `self - rhs`. Returns a tuple of the difference along with a
+            /// boolean indicating whether an arithmetic overflow occurred. If an overflow
+            /// occurred then the wrapped value is returned.
+            #[inline]
+            pub const fn overflowing_sub(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_sub(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Negates `self`. Returns a tuple of the negated value along with a boolean
+            /// indicating whether an arithmetic overflow occurred. If an overflow occurred
+            /// then the wrapped value is returned.
+            #[inline]
+            pub const fn overflowing_neg(self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_neg();
+                (Self(x), overflow)
+            }
+
+            /// Calculates `self * rhs`. Returns a tuple of the product along with a boolean
+            /// indicating whether an arithmetic overflow occurred. If an overflow occurred
+            /// then the wrapped value is returned.
+            #[inline]
+            pub const fn overflowing_mul(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_mul(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Calculates `self / rhs`. Returns a tuple of the quotient along with a boolean
+            /// indicating whether an arithmetic overflow occurred. If an overflow occurred
+            /// then the wrapped value is returned.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero.
+            #[inline]
+            pub const fn overflowing_div(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_div(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Calculates `self.div_euclid(rhs)`. Returns a tuple of the quotient along with
+            /// a boolean indicating whether an arithmetic overflow occurred. If an overflow
+            /// occurred then the wrapped value is returned.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero.
+            #[inline]
+            pub const fn overflowing_div_euclid(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_div_euclid(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Calculates `self % rhs`. Returns a tuple of the remainder along with a boolean
+            /// indicating whether an arithmetic overflow occurred. If an overflow occurred
+            /// then the wrapped value is returned.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero.
+            #[inline]
+            pub const fn overflowing_rem(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_rem(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Calculates `self.rem_euclid(rhs)`. Returns a tuple of the remainder along with
+            /// a boolean indicating whether an arithmetic overflow occurred. If an overflow
+            /// occurred then the wrapped value is returned.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `rhs` is zero.
+            #[inline]
+            pub const fn overflowing_rem_euclid(self, rhs: Self) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_rem_euclid(rhs.0);
+                (Self(x), overflow)
+            }
+
+            /// Shifts `self` left by `rhs` bits. Returns a tuple of the shifted value along
+            /// with a boolean indicating whether the shift amount was larger than or equal
+            /// to the number of bits. If the shift amount is too large, then it is wrapped
+            /// modulo the number of bits and the shift is performed with that value.
+            #[inline]
+            pub const fn overflowing_shl(self, rhs: u32) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_shl(rhs);
+                (Self(x), overflow)
+            }
+
+            /// Shifts `self` right by `rhs` bits. Returns a tuple of the shifted value along
+            /// with a boolean indicating whether the shift amount was larger than or equal
+            /// to the number of bits. If the shift amount is too large, then it is wrapped
+            /// modulo the number of bits and the shift is performed with that value.
+            #[inline]
+            pub const fn overflowing_shr(self, rhs: u32) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_shr(rhs);
+                (Self(x), overflow)
+            }
+
+            /// Raises `self` to the power of `exp`. Returns a tuple of the result along with
+            /// a boolean indicating whether an arithmetic overflow occurred. If an overflow
+            /// occurred then the wrapped value is returned.
+            #[inline]
+            pub const fn overflowing_pow(self, exp: u32) -> (Self, bool) {
+                let (x, overflow) = self.0.overflowing_pow(exp);
+                (Self(x), overflow)
+            }
+
             /// Strict integer addition. Computes `self + rhs`, panicking if overflow occurred.
             ///
             /// # Panics
@@ -950,7 +1067,6 @@ macro_rules! define_native {
                 Self(self.0.unbounded_shr(rhs))
             }
 
-
             /// Converts a string slice in a given base to an integer.
             ///
             /// The string is expected to be an optional sign followed by digits. For signed
@@ -971,7 +1087,6 @@ macro_rules! define_native {
                     Err(e) => Err(e),
                 }
             }
-
         }
 
         $crate::native::delegate_binop!($t, Add, add, +);

@@ -114,6 +114,24 @@ impl UNative {
         }
     }
 
+    /// Calculates `self + rhs` with a signed `rhs`. Returns a tuple of the sum along with a
+    /// boolean indicating whether an arithmetic overflow occurred. If an overflow occurred
+    /// then the wrapped value is returned.
+    #[inline]
+    pub const fn overflowing_add_signed(self, rhs: INative) -> (Self, bool) {
+        let (x, overflow) = self.0.overflowing_add_signed(rhs.0);
+        (Self(x), overflow)
+    }
+
+    /// Calculates `self - rhs` with a signed `rhs`. Returns a tuple of the difference along
+    /// with a boolean indicating whether an arithmetic overflow occurred. If an overflow
+    /// occurred then the wrapped value is returned.
+    #[inline]
+    pub const fn overflowing_sub_signed(self, rhs: INative) -> (Self, bool) {
+        let (x, overflow) = self.0.overflowing_sub_signed(rhs.0);
+        (Self(x), overflow)
+    }
+
     /// Strict addition of a signed integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///

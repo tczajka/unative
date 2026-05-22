@@ -95,6 +95,33 @@ impl INative {
         }
     }
 
+    /// Calculates `self + rhs` with an unsigned `rhs`. Returns a tuple of the sum along
+    /// with a boolean indicating whether an arithmetic overflow occurred. If an overflow
+    /// occurred then the wrapped value is returned.
+    #[inline]
+    pub const fn overflowing_add_unsigned(self, rhs: UNative) -> (Self, bool) {
+        let (x, overflow) = self.0.overflowing_add_unsigned(rhs.0);
+        (Self(x), overflow)
+    }
+
+    /// Calculates `self - rhs` with an unsigned `rhs`. Returns a tuple of the difference
+    /// along with a boolean indicating whether an arithmetic overflow occurred. If an
+    /// overflow occurred then the wrapped value is returned.
+    #[inline]
+    pub const fn overflowing_sub_unsigned(self, rhs: UNative) -> (Self, bool) {
+        let (x, overflow) = self.0.overflowing_sub_unsigned(rhs.0);
+        (Self(x), overflow)
+    }
+
+    /// Computes the absolute value of `self`. Returns a tuple of the absolute value along
+    /// with a boolean indicating whether an arithmetic overflow occurred. If an overflow
+    /// occurred (that is, `self == INative::MIN`) then the wrapped value is returned.
+    #[inline]
+    pub const fn overflowing_abs(self) -> (Self, bool) {
+        let (x, overflow) = self.0.overflowing_abs();
+        (Self(x), overflow)
+    }
+
     /// Strict addition of an unsigned integer. Computes `self + rhs`, panicking if overflow
     /// occurred.
     ///
