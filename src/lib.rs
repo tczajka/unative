@@ -13,6 +13,11 @@
 //! `x86_64-unknown-linux-gnux32`, `usize` is 32 bits and `UNative` is 64 bits.
 //!
 //! [`UNative`] and [`INative`] are always 16, 32, or 64 bits wide.
+//!
+//! # Features
+//!
+//! - `serde`: implements `Serialize`/`Deserialize` for [`UNative`] and [`INative`]. Values are
+//!   serialized portably as `u64`/`i64`, so data written on one target can be read on another.
 
 #![no_std]
 
@@ -23,3 +28,6 @@ mod inative;
 mod inner;
 mod native;
 mod unative;
+
+#[cfg(feature = "serde")]
+mod serde;

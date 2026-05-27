@@ -18,7 +18,7 @@ jobs:
         with:
           components: rustfmt, clippy
       - run: cargo fmt --check
-      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo clippy --all-targets --all-features -- -D warnings
 
   test-64bit:
     name: Test (x86_64-unknown-linux-gnu)
@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test
+      - run: cargo test --all-features
 
   test-32bit:
     name: Test (i686-unknown-linux-gnu)
@@ -38,7 +38,7 @@ jobs:
           targets: i686-unknown-linux-gnu
       - name: Install 32-bit libc
         run: sudo apt-get update && sudo apt-get install -y gcc-multilib
-      - run: cargo test --target i686-unknown-linux-gnu
+      - run: cargo test --all-features --target i686-unknown-linux-gnu
 
   check-16bit:
     name: Check (msp430-none-elf)
@@ -48,7 +48,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rust-src
-      - run: cargo build --lib --target msp430-none-elf -Z build-std=core
+      - run: cargo build --lib --all-features --target msp430-none-elf -Z build-std=core
 
   msrv:
     name: MSRV (1.95)
@@ -57,4 +57,4 @@ jobs:
       - uses: actions/checkout@v5
       # Must match `rust-version` in Cargo.toml.
       - uses: dtolnay/rust-toolchain@1.95.0
-      - run: cargo test
+      - run: cargo test --all-features
