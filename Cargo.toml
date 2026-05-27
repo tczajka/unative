@@ -19,7 +19,9 @@ include = [
 
 [dependencies]
 num-traits = { version = "0.2.19", default-features = false, optional = true }
+rand = { version = "0.10", default-features = false, optional = true }
 serde = { version = "1.0.60", default-features = false, optional = true }
 
 [dev-dependencies]
+rand = { version = "0.10", default-features = false, features = ["chacha"] }
 serde_test = "1.0.127"

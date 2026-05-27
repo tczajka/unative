@@ -48,7 +48,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rust-src
-      - run: cargo build --lib --all-features --target msp430-none-elf -Z build-std=core
+      # `rand` is omitted: upstream `rand` 0.10 does not compile on 16-bit
+      # pointer targets (it uses `Uniform<usize>` unconditionally, but its
+      # `UniformUsize` is gated to `target_pointer_width >= 32`).
+      - run: cargo build --lib --features num-traits,serde --target msp430-none-elf -Z build-std=core
 
   msrv:
     name: MSRV (1.95)

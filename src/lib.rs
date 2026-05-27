@@ -19,6 +19,8 @@
 //! - `num-traits`: implements the standard `num-traits` integer traits (`Num`, `PrimInt`,
 //!   `Bounded`, `Signed`/`Unsigned`, `CheckedAdd`/`WrappingAdd`/etc.) for [`UNative`] and
 //!   [`INative`], for use as generic numeric types.
+//! - `rand`: implements `rand::distr::Distribution<UNative>` / `Distribution<INative>` for
+//!   `StandardUniform`, and `SampleUniform` for use with `Uniform` and `random_range`.
 //! - `serde`: implements `Serialize`/`Deserialize` for [`UNative`] and [`INative`]. Values are
 //!   serialized portably as `u64`/`i64`, so data written on one target can be read on another.
 
@@ -34,6 +36,9 @@ mod unative;
 
 #[cfg(feature = "num-traits")]
 mod num_traits;
+
+#[cfg(feature = "rand")]
+mod rand;
 
 #[cfg(feature = "serde")]
 mod serde;
