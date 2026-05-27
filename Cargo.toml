@@ -18,6 +18,7 @@ include = [
 ]
 
 [dependencies]
+num-traits = { version = "0.2.19", default-features = false, optional = true }
 serde = { version = "1.0.60", default-features = false, optional = true }
 
 [dev-dependencies]

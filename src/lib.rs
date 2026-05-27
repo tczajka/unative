@@ -16,6 +16,9 @@
 //!
 //! # Features
 //!
+//! - `num-traits`: implements the standard `num-traits` integer traits (`Num`, `PrimInt`,
+//!   `Bounded`, `Signed`/`Unsigned`, `CheckedAdd`/`WrappingAdd`/etc.) for [`UNative`] and
+//!   [`INative`], for use as generic numeric types.
 //! - `serde`: implements `Serialize`/`Deserialize` for [`UNative`] and [`INative`]. Values are
 //!   serialized portably as `u64`/`i64`, so data written on one target can be read on another.
 
@@ -28,6 +31,9 @@ mod inative;
 mod inner;
 mod native;
 mod unative;
+
+#[cfg(feature = "num-traits")]
+mod num_traits;
 
 #[cfg(feature = "serde")]
 mod serde;
