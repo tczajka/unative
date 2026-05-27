@@ -12,6 +12,18 @@ fn from() {
     assert_eq!(i128::from(INative::from(i8::MAX)), i128::from(i8::MAX));
     assert_eq!(i128::from(INative::from(i16::MIN)), i128::from(i16::MIN));
     assert_eq!(i128::from(INative::from(i16::MAX)), i128::from(i16::MAX));
+
+    assert_eq!(i64::from(INative::ZERO), 0i64);
+    assert_eq!(i64::from(INative::from(42i8)), 42i64);
+    assert_eq!(i64::from(INative::from(-1i8)), -1i64);
+    assert_eq!(
+        i128::from(i64::from(INative::MAX)),
+        i128::from(INative::MAX)
+    );
+    assert_eq!(
+        i128::from(i64::from(INative::MIN)),
+        i128::from(INative::MIN)
+    );
 }
 
 #[test]

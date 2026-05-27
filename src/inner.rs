@@ -18,6 +18,9 @@ mod bits64 {
     pub(crate) type INativeInner = i64;
 }
 
+// `UNative`/`INative` are guaranteed to be 16, 32, or 64 bits wide. The catch-all
+// branch deliberately picks 64 bits even on hypothetical targets with wider native
+// arithmetic, in order to uphold this invariant.
 cfg_select! {
     // x86_64 and aarch64 always have 64-bit hardware arithmetic, including
     // on the 32-bit-pointer ABIs (x32, ILP32).

@@ -10,6 +10,17 @@ fn from() {
     assert_eq!(u128::from(UNative::from(0u8)), 0u128);
     assert_eq!(u128::from(UNative::from(u8::MAX)), u128::from(u8::MAX));
     assert_eq!(u128::from(UNative::from(u16::MAX)), u128::from(u16::MAX));
+
+    assert_eq!(u64::from(UNative::ZERO), 0u64);
+    assert_eq!(u64::from(UNative::from(42u8)), 42u64);
+    assert_eq!(
+        u128::from(u64::from(UNative::MAX)),
+        u128::from(UNative::MAX)
+    );
+
+    assert_eq!(i128::from(UNative::ZERO), 0i128);
+    assert_eq!(i128::from(UNative::from(42u8)), 42i128);
+    assert_eq!(i128::from(UNative::MAX), u128::from(UNative::MAX) as i128);
 }
 
 #[test]

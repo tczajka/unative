@@ -11,6 +11,8 @@
 //!
 //! Often this is the same width as `usize`, but not always. For example, on
 //! `x86_64-unknown-linux-gnux32`, `usize` is 32 bits and `UNative` is 64 bits.
+//!
+//! [`UNative`] and [`INative`] are always 16, 32, or 64 bits wide.
 
 #![no_std]
 

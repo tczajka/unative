@@ -227,6 +227,7 @@ delegate_from_native_prim!(INative, u8);
 delegate_from_native_prim!(INative, i8);
 delegate_from_native_prim!(INative, i16);
 
+delegate_from_prim_native!(i64, INative);
 delegate_from_prim_native!(i128, INative);
 
 delegate_try_from_native_prim!(INative, u16);
@@ -248,7 +249,6 @@ delegate_try_from_prim_native!(usize, INative);
 delegate_try_from_prim_native!(i8, INative);
 delegate_try_from_prim_native!(i16, INative);
 delegate_try_from_prim_native!(i32, INative);
-delegate_try_from_prim_native!(i64, INative);
 delegate_try_from_prim_native!(isize, INative);
 
 delegate_try_from_native_native!(INative, UNative);

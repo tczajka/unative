@@ -224,7 +224,9 @@ delegate_from_native_prim!(UNative, bool);
 delegate_from_native_prim!(UNative, u8);
 delegate_from_native_prim!(UNative, u16);
 
+delegate_from_prim_native!(u64, UNative);
 delegate_from_prim_native!(u128, UNative);
+delegate_from_prim_native!(i128, UNative);
 
 delegate_try_from_native_prim!(UNative, u32);
 delegate_try_from_native_prim!(UNative, u64);
@@ -240,13 +242,11 @@ delegate_try_from_native_prim!(UNative, isize);
 delegate_try_from_prim_native!(u8, UNative);
 delegate_try_from_prim_native!(u16, UNative);
 delegate_try_from_prim_native!(u32, UNative);
-delegate_try_from_prim_native!(u64, UNative);
 delegate_try_from_prim_native!(usize, UNative);
 delegate_try_from_prim_native!(i8, UNative);
 delegate_try_from_prim_native!(i16, UNative);
 delegate_try_from_prim_native!(i32, UNative);
 delegate_try_from_prim_native!(i64, UNative);
-delegate_try_from_prim_native!(i128, UNative);
 delegate_try_from_prim_native!(isize, UNative);
 
 delegate_try_from_native_native!(UNative, INative);
