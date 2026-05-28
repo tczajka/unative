@@ -24,6 +24,8 @@
 //! - `serde`: implements `Serialize`/`Deserialize` for [`UNative`] and [`INative`]. Values are
 //!   serialized portably as `u64`/`i64`, so data written on one target can be read on another.
 
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, doc(auto_cfg))]
 #![no_std]
 
 pub use inative::INative;

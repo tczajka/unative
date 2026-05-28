@@ -17,6 +17,10 @@ include = [
     "LICENSE-MIT",
 ]
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 num-traits = { version = "0.2.19", default-features = false, optional = true }
 rand = { version = "0.10", default-features = false, optional = true }
