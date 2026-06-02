@@ -1199,6 +1199,141 @@ macro_rules! define_native {
                 Self(self.0.unbounded_shr(rhs))
             }
 
+            /// Returns `true` if `self` and `other` are equal.
+            ///
+            /// This is a `const` equivalent of the `==` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_eq(self, other: Self) -> bool {
+                self.0 == other.0
+            }
+
+            /// Compares `self` and `other`, returning an
+            /// [`Ordering`](::core::cmp::Ordering).
+            ///
+            /// This is a `const` equivalent of the comparison provided by the `Ord`
+            /// implementation, which is not usable in `const` contexts on this type.
+            #[inline]
+            pub const fn const_cmp(self, other: Self) -> ::core::cmp::Ordering {
+                if self.0 < other.0 {
+                    ::core::cmp::Ordering::Less
+                } else if self.0 > other.0 {
+                    ::core::cmp::Ordering::Greater
+                } else {
+                    ::core::cmp::Ordering::Equal
+                }
+            }
+
+            /// Returns `true` if `self` is less than `other`.
+            ///
+            /// This is a `const` equivalent of the `<` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_lt(self, other: Self) -> bool {
+                self.0 < other.0
+            }
+
+            /// Returns `true` if `self` is less than or equal to `other`.
+            ///
+            /// This is a `const` equivalent of the `<=` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_le(self, other: Self) -> bool {
+                self.0 <= other.0
+            }
+
+            /// Returns `true` if `self` is greater than `other`.
+            ///
+            /// This is a `const` equivalent of the `>` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_gt(self, other: Self) -> bool {
+                self.0 > other.0
+            }
+
+            /// Returns `true` if `self` is greater than or equal to `other`.
+            ///
+            /// This is a `const` equivalent of the `>=` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_ge(self, other: Self) -> bool {
+                self.0 >= other.0
+            }
+
+            /// Returns the smaller of `self` and `other`.
+            ///
+            /// This is a `const` equivalent of [`Ord::min`], which is not usable in `const`
+            /// contexts on this type.
+            #[inline]
+            pub const fn const_min(self, other: Self) -> Self {
+                if self.0 <= other.0 { self } else { other }
+            }
+
+            /// Returns the larger of `self` and `other`.
+            ///
+            /// This is a `const` equivalent of [`Ord::max`], which is not usable in `const`
+            /// contexts on this type.
+            #[inline]
+            pub const fn const_max(self, other: Self) -> Self {
+                if self.0 >= other.0 { self } else { other }
+            }
+
+            /// Restricts `self` to the range `[min, max]`.
+            ///
+            /// This is a `const` equivalent of [`Ord::clamp`], which is not usable in
+            /// `const` contexts on this type.
+            ///
+            /// # Panics
+            ///
+            /// This function will panic if `min > max`.
+            #[inline]
+            pub const fn const_clamp(self, min: Self, max: Self) -> Self {
+                assert!(min.0 <= max.0, "min > max");
+                if self.0 < min.0 {
+                    min
+                } else if self.0 > max.0 {
+                    max
+                } else {
+                    self
+                }
+            }
+
+            /// Returns the bitwise AND of `self` and `rhs`.
+            ///
+            /// This is a `const` equivalent of the `&` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_bitand(self, rhs: Self) -> Self {
+                Self(self.0 & rhs.0)
+            }
+
+            /// Returns the bitwise OR of `self` and `rhs`.
+            ///
+            /// This is a `const` equivalent of the `|` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_bitor(self, rhs: Self) -> Self {
+                Self(self.0 | rhs.0)
+            }
+
+            /// Returns the bitwise XOR of `self` and `rhs`.
+            ///
+            /// This is a `const` equivalent of the `^` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_bitxor(self, rhs: Self) -> Self {
+                Self(self.0 ^ rhs.0)
+            }
+
+            /// Returns the bitwise NOT of `self`.
+            ///
+            /// This is a `const` equivalent of the `!` operator, which is not usable in
+            /// `const` contexts on this type.
+            #[inline]
+            pub const fn const_not(self) -> Self {
+                Self(!self.0)
+            }
+
             /// Converts a string slice in a given base to an integer.
             ///
             /// The string is expected to be an optional sign followed by digits. For signed

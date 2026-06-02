@@ -1900,6 +1900,83 @@ fn from_str_radix() {
 }
 
 #[test]
+fn const_eq() {
+    // Bind to locals so the `const` evaluation is exercised without tripping
+    // clippy's `assertions_on_constants` lint.
+    const A: bool = INative::ZERO.const_eq(INative::ZERO);
+    const B: bool = INative::ZERO.const_eq(INative::MAX);
+    let (a, b) = (A, B);
+    assert!(a);
+    assert!(!b);
+    assert!(INative::from(-7i8).const_eq(INative::from(-7i8)));
+    assert!(!INative::from(-7i8).const_eq(INative::from(7i8)));
+}
+
+#[test]
+fn const_cmp() {
+    const C: Ordering = INative::MIN.const_cmp(INative::MAX);
+    let c = C;
+    assert_eq!(c, Ordering::Less);
+    assert_eq!(
+        INative::from(-7i8).const_cmp(INative::from(-7i8)),
+        Ordering::Equal
+    );
+    assert_eq!(
+        INative::from(7i8).const_cmp(INative::from(-7i8)),
+        Ordering::Greater
+    );
+}
+
+#[test]
+fn const_ordering_predicates() {
+    let lo = INative::from(-7i8);
+    let hi = INative::from(3i8);
+    assert!(lo.const_lt(hi) && !hi.const_lt(lo) && !lo.const_lt(lo));
+    assert!(lo.const_le(hi) && lo.const_le(lo) && !hi.const_le(lo));
+    assert!(hi.const_gt(lo) && !lo.const_gt(hi) && !hi.const_gt(hi));
+    assert!(hi.const_ge(lo) && hi.const_ge(hi) && !lo.const_ge(hi));
+}
+
+#[test]
+fn const_min_max() {
+    const MIN: INative = INative::MIN.const_min(INative::MAX);
+    const MAX: INative = INative::MIN.const_max(INative::MAX);
+    assert_eq!(MIN, INative::MIN);
+    assert_eq!(MAX, INative::MAX);
+    let x = INative::from(-7i8);
+    assert_eq!(x.const_min(x), x);
+    assert_eq!(x.const_max(x), x);
+}
+
+#[test]
+fn const_clamp() {
+    const C: INative = INative::from_i8(-20).const_clamp(INative::from_i8(-5), INative::from_i8(5));
+    assert_eq!(C, INative::from(-5i8));
+    let lo = INative::from(-5i8);
+    let hi = INative::from(5i8);
+    assert_eq!(INative::from(-9i8).const_clamp(lo, hi), lo);
+    assert_eq!(INative::from(0i8).const_clamp(lo, hi), INative::ZERO);
+    assert_eq!(INative::from(9i8).const_clamp(lo, hi), hi);
+}
+
+#[test]
+#[should_panic]
+fn const_clamp_min_greater_than_max() {
+    let _ = INative::from(0i8).const_clamp(INative::from(5i8), INative::from(-5i8));
+}
+
+#[test]
+fn const_bit_ops() {
+    let a = INative::from(0b1100i8);
+    let b = INative::from(0b1010i8);
+    assert_eq!(a.const_bitand(b), INative::from(0b1000i8));
+    assert_eq!(a.const_bitor(b), INative::from(0b1110i8));
+    assert_eq!(a.const_bitxor(b), INative::from(0b0110i8));
+    assert_eq!(INative::ZERO.const_not(), INative::from(-1i8));
+    assert_eq!(INative::from(-1i8).const_not(), INative::ZERO);
+}
+
+#[test]
 #[should_panic]
 fn from_str_radix_invalid_radix_low() {
     let _ = INative::from_str_radix("0", 1);

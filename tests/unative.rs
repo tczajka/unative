@@ -1771,6 +1771,80 @@ fn carrying_mul_add() {
 }
 
 #[test]
+fn const_eq() {
+    // Bind to locals so the `const` evaluation is exercised without tripping
+    // clippy's `assertions_on_constants` lint.
+    const A: bool = UNative::ZERO.const_eq(UNative::ZERO);
+    const B: bool = UNative::ZERO.const_eq(UNative::MAX);
+    let (a, b) = (A, B);
+    assert!(a);
+    assert!(!b);
+    assert!(UNative::from(7u8).const_eq(UNative::from(7u8)));
+    assert!(!UNative::from(7u8).const_eq(UNative::from(8u8)));
+}
+
+#[test]
+fn const_cmp() {
+    const C: Ordering = UNative::ZERO.const_cmp(UNative::MAX);
+    let c = C;
+    assert_eq!(c, Ordering::Less);
+    assert_eq!(
+        UNative::from(7u8).const_cmp(UNative::from(7u8)),
+        Ordering::Equal
+    );
+    assert_eq!(UNative::MAX.const_cmp(UNative::ZERO), Ordering::Greater);
+}
+
+#[test]
+fn const_ordering_predicates() {
+    let lo = UNative::from(3u8);
+    let hi = UNative::from(7u8);
+    assert!(lo.const_lt(hi) && !hi.const_lt(lo) && !lo.const_lt(lo));
+    assert!(lo.const_le(hi) && lo.const_le(lo) && !hi.const_le(lo));
+    assert!(hi.const_gt(lo) && !lo.const_gt(hi) && !hi.const_gt(hi));
+    assert!(hi.const_ge(lo) && hi.const_ge(hi) && !lo.const_ge(hi));
+}
+
+#[test]
+fn const_min_max() {
+    const MIN: UNative = UNative::ZERO.const_min(UNative::MAX);
+    const MAX: UNative = UNative::ZERO.const_max(UNative::MAX);
+    assert_eq!(MIN, UNative::ZERO);
+    assert_eq!(MAX, UNative::MAX);
+    let x = UNative::from(7u8);
+    assert_eq!(x.const_min(x), x);
+    assert_eq!(x.const_max(x), x);
+}
+
+#[test]
+fn const_clamp() {
+    const C: UNative = UNative::from_u8(20).const_clamp(UNative::from_u8(5), UNative::from_u8(10));
+    assert_eq!(C, UNative::from(10u8));
+    let lo = UNative::from(5u8);
+    let hi = UNative::from(10u8);
+    assert_eq!(UNative::from(3u8).const_clamp(lo, hi), lo);
+    assert_eq!(UNative::from(7u8).const_clamp(lo, hi), UNative::from(7u8));
+    assert_eq!(UNative::from(15u8).const_clamp(lo, hi), hi);
+}
+
+#[test]
+#[should_panic]
+fn const_clamp_min_greater_than_max() {
+    let _ = UNative::from(7u8).const_clamp(UNative::from(10u8), UNative::from(5u8));
+}
+
+#[test]
+fn const_bit_ops() {
+    let a = UNative::from(0b1100u8);
+    let b = UNative::from(0b1010u8);
+    assert_eq!(a.const_bitand(b), UNative::from(0b1000u8));
+    assert_eq!(a.const_bitor(b), UNative::from(0b1110u8));
+    assert_eq!(a.const_bitxor(b), UNative::from(0b0110u8));
+    assert_eq!(UNative::ZERO.const_not(), UNative::MAX);
+    assert_eq!(UNative::MAX.const_not(), UNative::ZERO);
+}
+
+#[test]
 fn from_str_radix() {
     assert_eq!(UNative::from_str_radix("42", 10), Ok(UNative::from(42u8)));
     assert_eq!(UNative::from_str_radix("+42", 10), Ok(UNative::from(42u8)));

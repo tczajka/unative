@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `const` comparison, ordering, and bitwise methods on `UNative` and `INative`,
+  for use in `const` contexts where the corresponding operators and trait
+  methods are not available: `const_eq`, `const_cmp`, `const_lt`, `const_le`,
+  `const_gt`, `const_ge`, `const_min`, `const_max`, `const_clamp`,
+  `const_bitand`, `const_bitor`, `const_bitxor`, and `const_not`.
+
 ## [0.2.3] - 2026-06-01
 
 ### Added
