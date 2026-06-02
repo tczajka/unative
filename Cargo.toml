@@ -8,7 +8,7 @@ license = "MIT OR Apache-2.0"
 authors = ["Tomek Czajka <tczajka@gmail.com>"]
 repository = "https://github.com/tczajka/unative"
 keywords = ["integer", "native"]
-categories = ["hardware-support", "no-std"]
+categories = ["hardware-support", "no-std", "no-std::no-alloc"]
 include = [
     "src/**/*.rs",
     "tests/**/*.rs",
