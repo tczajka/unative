@@ -50,6 +50,40 @@ fn try_from() {
 }
 
 #[test]
+fn const_conversions() {
+    // Usable in const context.
+    const NEG_ONE: INative = INative::from_i8(-1);
+    assert_eq!(NEG_ONE, INative::from(-1i8));
+
+    // Infallible `from_*`.
+    assert_eq!(INative::from_i8(0), INative::ZERO);
+    assert_eq!(INative::from_i8(i8::MIN), INative::from(i8::MIN));
+    assert_eq!(INative::from_i16(i16::MAX), INative::from(i16::MAX));
+
+    // Fallible `from_*`.
+    let max = i128::from(INative::MAX);
+    let min = i128::from(INative::MIN);
+    assert_eq!(INative::try_from_i32(-42), Some(INative::from(-42i8)));
+    assert_eq!(INative::try_from_i64(-42), Some(INative::from(-42i8)));
+    assert_eq!(INative::try_from_i128(max), Some(INative::MAX));
+    assert_eq!(INative::try_from_i128(min), Some(INative::MIN));
+    assert_eq!(INative::try_from_i128(max + 1), None);
+    assert_eq!(INative::try_from_i128(min - 1), None);
+    assert_eq!(INative::try_from_isize(-42), Some(INative::from(-42i8)));
+
+    // Infallible `to_*`.
+    assert_eq!(INative::from(-42i8).to_i64(), -42i64);
+    assert_eq!(i128::from(INative::MAX), INative::MAX.to_i128());
+
+    // Fallible `to_*`.
+    assert_eq!(INative::from(-42i8).try_to_i8(), Some(-42i8));
+    assert_eq!(INative::from(i16::MIN).try_to_i8(), None);
+    assert_eq!(INative::from(-42i8).try_to_i16(), Some(-42i16));
+    assert_eq!(INative::from(-42i8).try_to_i32(), Some(-42i32));
+    assert_eq!(INative::from(-42i8).try_to_isize(), Some(-42isize));
+}
+
+#[test]
 fn default() {
     assert_eq!(INative::default(), INative::ZERO);
 }

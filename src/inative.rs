@@ -12,6 +12,124 @@ define_native! {
 }
 
 impl INative {
+    /// Converts an [`i8`] to an [`INative`].
+    #[inline]
+    pub const fn from_i8(value: i8) -> Self {
+        Self(value as INativeInner)
+    }
+
+    /// Converts an [`i16`] to an [`INative`].
+    #[inline]
+    #[allow(clippy::unnecessary_cast)]
+    pub const fn from_i16(value: i16) -> Self {
+        Self(value as INativeInner)
+    }
+
+    /// Converts an [`i32`] to an [`INative`], returning `None` if the value is out of range.
+    #[inline]
+    #[allow(clippy::unnecessary_cast)]
+    pub const fn try_from_i32(value: i32) -> Option<Self> {
+        let inner = value as INativeInner;
+        if inner as i32 == value {
+            Some(Self(inner))
+        } else {
+            None
+        }
+    }
+
+    /// Converts an [`i64`] to an [`INative`], returning `None` if the value is out of range.
+    #[inline]
+    #[allow(clippy::unnecessary_cast)]
+    pub const fn try_from_i64(value: i64) -> Option<Self> {
+        let inner = value as INativeInner;
+        if inner as i64 == value {
+            Some(Self(inner))
+        } else {
+            None
+        }
+    }
+
+    /// Converts an [`i128`] to an [`INative`], returning `None` if the value is out of range.
+    #[inline]
+    pub const fn try_from_i128(value: i128) -> Option<Self> {
+        let inner = value as INativeInner;
+        if inner as i128 == value {
+            Some(Self(inner))
+        } else {
+            None
+        }
+    }
+
+    /// Converts an [`isize`] to an [`INative`], returning `None` if the value is out of range.
+    #[inline]
+    pub const fn try_from_isize(value: isize) -> Option<Self> {
+        let inner = value as INativeInner;
+        if inner as isize == value {
+            Some(Self(inner))
+        } else {
+            None
+        }
+    }
+
+    /// Converts `self` to an [`i8`], returning `None` if the value is out of range.
+    #[inline]
+    pub const fn try_to_i8(self) -> Option<i8> {
+        let value = self.0 as i8;
+        if value as INativeInner == self.0 {
+            Some(value)
+        } else {
+            None
+        }
+    }
+
+    /// Converts `self` to an [`i16`], returning `None` if the value is out of range.
+    #[inline]
+    #[allow(clippy::unnecessary_cast)]
+    pub const fn try_to_i16(self) -> Option<i16> {
+        let value = self.0 as i16;
+        if value as INativeInner == self.0 {
+            Some(value)
+        } else {
+            None
+        }
+    }
+
+    /// Converts `self` to an [`i32`], returning `None` if the value is out of range.
+    #[inline]
+    #[allow(clippy::unnecessary_cast)]
+    pub const fn try_to_i32(self) -> Option<i32> {
+        let value = self.0 as i32;
+        if value as INativeInner == self.0 {
+            Some(value)
+        } else {
+            None
+        }
+    }
+
+    /// Converts `self` to an [`i64`].
+    #[inline]
+    #[allow(clippy::unnecessary_cast)]
+    pub const fn to_i64(self) -> i64 {
+        self.0 as i64
+    }
+
+    /// Converts `self` to an [`i128`].
+    #[inline]
+    pub const fn to_i128(self) -> i128 {
+        self.0 as i128
+    }
+
+    /// Converts `self` to an [`isize`], returning `None` if the value is out of range.
+    #[inline]
+    pub const fn try_to_isize(self) -> Option<isize> {
+        let value = self.0 as isize;
+        if value as INativeInner == self.0 {
+            Some(value)
+        } else {
+            None
+        }
+    }
+
     /// Returns the bit pattern of `self` reinterpreted as an unsigned integer of the same size.
     #[inline]
     pub const fn cast_unsigned(self) -> UNative {

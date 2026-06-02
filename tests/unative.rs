@@ -46,6 +46,37 @@ fn try_from() {
 }
 
 #[test]
+fn const_conversions() {
+    // Usable in const context.
+    const FORTY_TWO: UNative = UNative::from_u8(42);
+    assert_eq!(FORTY_TWO, UNative::from(42u8));
+
+    // Infallible `from_*`.
+    assert_eq!(UNative::from_u8(0), UNative::ZERO);
+    assert_eq!(UNative::from_u8(u8::MAX), UNative::from(u8::MAX));
+    assert_eq!(UNative::from_u16(u16::MAX), UNative::from(u16::MAX));
+
+    // Fallible `from_*`.
+    let max = u128::from(UNative::MAX);
+    assert_eq!(UNative::try_from_u32(42), Some(UNative::from(42u8)));
+    assert_eq!(UNative::try_from_u64(42), Some(UNative::from(42u8)));
+    assert_eq!(UNative::try_from_u128(max), Some(UNative::MAX));
+    assert_eq!(UNative::try_from_u128(max + 1), None);
+    assert_eq!(UNative::try_from_usize(42), Some(UNative::from(42u8)));
+
+    // Infallible `to_*`.
+    assert_eq!(UNative::from(42u8).to_u64(), 42u64);
+    assert_eq!(u128::from(UNative::MAX), UNative::MAX.to_u128());
+
+    // Fallible `to_*`.
+    assert_eq!(UNative::from(42u8).try_to_u8(), Some(42u8));
+    assert_eq!(UNative::from(u16::MAX).try_to_u8(), None);
+    assert_eq!(UNative::from(42u8).try_to_u16(), Some(42u16));
+    assert_eq!(UNative::from(42u8).try_to_u32(), Some(42u32));
+    assert_eq!(UNative::from(42u8).try_to_usize(), Some(42usize));
+}
+
+#[test]
 fn default() {
     assert_eq!(UNative::default(), UNative::ZERO);
 }
