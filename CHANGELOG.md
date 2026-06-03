@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-06-02
+
 ### Added
 
 - `TryFrom<UNative> for bool` and `TryFrom<INative> for bool`
@@ -68,7 +70,8 @@ Initial release.
   implementations.
 - Minimum supported Rust version of 1.95 (edition 2024), enforced in CI.
 
-[Unreleased]: https://github.com/tczajka/unative/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/tczajka/unative/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/tczajka/unative/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/tczajka/unative/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/tczajka/unative/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/tczajka/unative/compare/v0.2.1...v0.2.2
