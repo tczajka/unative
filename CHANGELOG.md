@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `TryFrom<UNative> for bool` and `TryFrom<INative> for bool`
+
 ## [0.2.4] - 2026-06-02
 
 ### Added
@@ -47,7 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Documented that `UNative` and `INative` are at most 64 bits wide.
-- Restricted the published package contents to an explicit `include` list.
 
 ## [0.2.0] - 2026-05-22
 

@@ -358,6 +358,7 @@ delegate_try_from_native_prim!(INative, i64);
 delegate_try_from_native_prim!(INative, i128);
 delegate_try_from_native_prim!(INative, isize);
 
+delegate_try_from_prim_native!(bool, INative);
 delegate_try_from_prim_native!(u8, INative);
 delegate_try_from_prim_native!(u16, INative);
 delegate_try_from_prim_native!(u32, INative);

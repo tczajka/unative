@@ -43,6 +43,12 @@ fn try_from() {
         Ok(UNative::from(42u8))
     );
     assert!(UNative::try_from(INative::from(-1i8)).is_err());
+
+    // Conversion to `bool`.
+    assert_eq!(bool::try_from(UNative::ZERO), Ok(false));
+    assert_eq!(bool::try_from(UNative::from(1u8)), Ok(true));
+    assert!(bool::try_from(UNative::from(2u8)).is_err());
+    assert!(bool::try_from(UNative::MAX).is_err());
 }
 
 #[test]
