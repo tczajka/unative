@@ -465,7 +465,7 @@ checksum = "eaea85b334db583fe3274d12b4cd1880032beab409c0d774be044d4480ab9a94"
 
 [[package]]
 name = "unative"
-version = "0.2.5"
+version = "0.2.6"
 dependencies = [
  "num-traits",
  "proptest",
