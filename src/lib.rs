@@ -16,13 +16,10 @@
 //!
 //! # Features
 //!
-//! - `num-traits`: implements the standard `num-traits` integer traits (`Num`, `PrimInt`,
-//!   `Bounded`, `Signed`/`Unsigned`, `CheckedAdd`/`WrappingAdd`/etc.) for [`UNative`] and
-//!   [`INative`], for use as generic numeric types.
-//! - `rand`: implements `rand::distr::Distribution<UNative>` / `Distribution<INative>` for
-//!   `StandardUniform`, and `SampleUniform` for use with `Uniform` and `random_range`.
-//! - `serde`: implements `Serialize`/`Deserialize` for [`UNative`] and [`INative`]. Values are
-//!   serialized portably as `u64`/`i64`, so data written on one target can be read on another.
+//! - `num-traits`: [`num-traits`](https://crates.io/crates/num-traits) integer-trait impls.
+//! - `proptest`: [`proptest`](https://crates.io/crates/proptest) support.
+//! - `rand`: [`rand`](https://crates.io/crates/rand) sampling.
+//! - `serde`: [`serde`](https://crates.io/crates/serde) portable serialization.
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(docsrs, doc(auto_cfg))]
@@ -38,6 +35,9 @@ mod unative;
 
 #[cfg(feature = "num-traits")]
 mod num_traits;
+
+#[cfg(feature = "proptest")]
+pub mod proptest;
 
 #[cfg(feature = "rand")]
 mod rand;

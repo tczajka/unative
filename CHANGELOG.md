@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Optional [`proptest`](https://crates.io/crates/proptest) support:
+  - `UNative` and `INative` implement [`Arbitrary`](https://docs.rs/proptest/latest/proptest/arbitrary/trait.Arbitrary.html)
+  - `unative_in_range`, `inative_in_range`
+
 ## [0.2.5] - 2026-06-02
 
 ### Added
