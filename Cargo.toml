@@ -23,6 +23,12 @@ include = [
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
+[features]
+num-traits = ["dep:num-traits"]
+proptest = ["dep:proptest"]
+rand = ["dep:rand"]
+serde = ["dep:serde"]
+
 [dependencies]
 num-traits = { version = "0.2.19", default-features = false, optional = true }
 proptest = { version = "1.6", default-features = false, features = ["alloc", "no_std"], optional = true }
