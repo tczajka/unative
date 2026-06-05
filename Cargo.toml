@@ -30,6 +30,7 @@ rand = { version = "0.10", default-features = false, optional = true }
 serde = { version = "1.0.60", default-features = false, optional = true }
 
 [dev-dependencies]
+unative = { path = ".", features = ["proptest"] }
 proptest = { version = "1.6" }
 rand = { version = "0.10", default-features = false, features = ["chacha"] }
 serde_test = "1.0.127"

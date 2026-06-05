@@ -1,26 +1,29 @@
 #![allow(clippy::op_ref)]
 
 use core::cmp::Ordering;
+use proptest::prelude::*;
 use unative::{INative, UNative};
 
-#[test]
-fn from() {
-    assert_eq!(u128::from(UNative::from(false)), 0u128);
-    assert_eq!(u128::from(UNative::from(true)), 1u128);
-    assert_eq!(u128::from(UNative::from(0u8)), 0u128);
-    assert_eq!(u128::from(UNative::from(u8::MAX)), u128::from(u8::MAX));
-    assert_eq!(u128::from(UNative::from(u16::MAX)), u128::from(u16::MAX));
+proptest! {
+    // `u8 -> UNative -> u128` agrees with `u8 -> u128`, and `from_u8` agrees with `From`.
+    #[test]
+    fn from_u8_unative_u128(x: u8) {
+        prop_assert_eq!(u128::from(UNative::from(x)), u128::from(x));
+        prop_assert_eq!(UNative::from_u8(x), UNative::from(x));
+    }
 
-    assert_eq!(u64::from(UNative::ZERO), 0u64);
-    assert_eq!(u64::from(UNative::from(42u8)), 42u64);
-    assert_eq!(
-        u128::from(u64::from(UNative::MAX)),
-        u128::from(UNative::MAX)
-    );
+    // `u16 -> UNative -> u64` agrees with `u16 -> u64`, and `from_u16` agrees with `From`.
+    #[test]
+    fn from_u16_unative_u64(x: u16) {
+        prop_assert_eq!(u64::from(UNative::from(x)), u64::from(x));
+        prop_assert_eq!(UNative::from_u16(x), UNative::from(x));
+    }
 
-    assert_eq!(i128::from(UNative::ZERO), 0i128);
-    assert_eq!(i128::from(UNative::from(42u8)), 42i128);
-    assert_eq!(i128::from(UNative::MAX), u128::from(UNative::MAX) as i128);
+    // `bool -> UNative -> u64` agrees with `bool -> u64`.
+    #[test]
+    fn from_bool_unative_u64(b: bool) {
+        prop_assert_eq!(u64::from(UNative::from(b)), u64::from(b));
+    }
 }
 
 #[test]
@@ -99,30 +102,29 @@ fn bytes() {
     assert_eq!(UNative::BYTES, INative::BYTES);
 }
 
-#[test]
-fn be_bytes() {
-    let x = UNative::from(42u8);
-    assert_eq!(UNative::from_be_bytes(x.to_be_bytes()), x);
-    let zero_bytes = UNative::ZERO.to_be_bytes();
-    assert!(zero_bytes.iter().all(|&b| b == 0));
-    let one_bytes = UNative::from(1u8).to_be_bytes();
-    assert_eq!(one_bytes[UNative::BYTES - 1], 1);
-    assert!(one_bytes[..UNative::BYTES - 1].iter().all(|&b| b == 0));
+proptest! {
+    // `from_*_bytes` round-trips `to_*_bytes` for every value, in all three byte orders.
+    #[test]
+    fn bytes_round_trip(x: UNative) {
+        prop_assert_eq!(UNative::from_be_bytes(x.to_be_bytes()), x);
+        prop_assert_eq!(UNative::from_le_bytes(x.to_le_bytes()), x);
+        prop_assert_eq!(UNative::from_ne_bytes(x.to_ne_bytes()), x);
+    }
 }
 
 #[test]
-fn le_bytes() {
+fn bytes_byte_order() {
+    // A small value occupies the least-significant byte: the highest-index byte in big-endian
+    // and the lowest-index byte in little-endian.
     let x = UNative::from(42u8);
-    assert_eq!(UNative::from_le_bytes(x.to_le_bytes()), x);
-    let one_bytes = UNative::from(1u8).to_le_bytes();
-    assert_eq!(one_bytes[0], 1);
-    assert!(one_bytes[1..].iter().all(|&b| b == 0));
-}
 
-#[test]
-fn ne_bytes() {
-    let x = UNative::from(42u8);
-    assert_eq!(UNative::from_ne_bytes(x.to_ne_bytes()), x);
+    let be = x.to_be_bytes();
+    assert_eq!(be[UNative::BYTES - 1], 42);
+    assert!(be[..UNative::BYTES - 1].iter().all(|&b| b == 0));
+
+    let le = x.to_le_bytes();
+    assert_eq!(le[0], 42);
+    assert!(le[1..].iter().all(|&b| b == 0));
 }
 
 #[test]
