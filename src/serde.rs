@@ -6,7 +6,6 @@ use crate::inner::{INativeInner, UNativeInner};
 use crate::{INative, UNative};
 
 impl Serialize for UNative {
-    #[inline]
     #[allow(clippy::useless_conversion)] // `u64::from` is a no-op when the inner is already u64.
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         serializer.serialize_u64(u64::from(self.0))
@@ -14,7 +13,6 @@ impl Serialize for UNative {
 }
 
 impl Serialize for INative {
-    #[inline]
     #[allow(clippy::useless_conversion)] // `i64::from` is a no-op when the inner is already i64.
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         serializer.serialize_i64(i64::from(self.0))
@@ -56,7 +54,6 @@ impl<'de> Visitor<'de> for UNativeVisitor {
 }
 
 impl<'de> Deserialize<'de> for UNative {
-    #[inline]
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<UNative, D::Error> {
         deserializer.deserialize_u64(UNativeVisitor)
     }
@@ -97,7 +94,6 @@ impl<'de> Visitor<'de> for INativeVisitor {
 }
 
 impl<'de> Deserialize<'de> for INative {
-    #[inline]
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<INative, D::Error> {
         deserializer.deserialize_i64(INativeVisitor)
     }

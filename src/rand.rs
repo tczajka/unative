@@ -6,14 +6,12 @@ use crate::inner::{INativeInner, UNativeInner};
 use crate::{INative, UNative};
 
 impl Distribution<UNative> for StandardUniform {
-    #[inline]
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> UNative {
         UNative(StandardUniform::sample(self, rng))
     }
 }
 
 impl Distribution<INative> for StandardUniform {
-    #[inline]
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> INative {
         INative(StandardUniform::sample(self, rng))
     }
@@ -31,7 +29,6 @@ pub struct UniformUNative(UniformInt<u64>);
 impl UniformSampler for UniformUNative {
     type X = UNative;
 
-    #[inline]
     #[allow(clippy::useless_conversion)] // `u64::from` is a no-op when the inner is already u64.
     fn new<B1, B2>(low: B1, high: B2) -> Result<Self, Error>
     where
@@ -42,7 +39,6 @@ impl UniformSampler for UniformUNative {
             .map(UniformUNative)
     }
 
-    #[inline]
     #[allow(clippy::useless_conversion)] // `u64::from` is a no-op when the inner is already u64.
     fn new_inclusive<B1, B2>(low: B1, high: B2) -> Result<Self, Error>
     where
@@ -53,7 +49,6 @@ impl UniformSampler for UniformUNative {
             .map(UniformUNative)
     }
 
-    #[inline]
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> UNative {
         // The sampled u64 lies in the same range the caller specified via
         // `UNative` bounds, so it always fits in `UNativeInner`.
@@ -77,7 +72,6 @@ pub struct UniformINative(UniformInt<i64>);
 impl UniformSampler for UniformINative {
     type X = INative;
 
-    #[inline]
     #[allow(clippy::useless_conversion)] // `i64::from` is a no-op when the inner is already i64.
     fn new<B1, B2>(low: B1, high: B2) -> Result<Self, Error>
     where
@@ -88,7 +82,6 @@ impl UniformSampler for UniformINative {
             .map(UniformINative)
     }
 
-    #[inline]
     #[allow(clippy::useless_conversion)] // `i64::from` is a no-op when the inner is already i64.
     fn new_inclusive<B1, B2>(low: B1, high: B2) -> Result<Self, Error>
     where
@@ -99,7 +92,6 @@ impl UniformSampler for UniformINative {
             .map(UniformINative)
     }
 
-    #[inline]
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> INative {
         INative(self.0.sample(rng) as INativeInner)
     }

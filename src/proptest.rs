@@ -15,7 +15,6 @@ impl Arbitrary for UNative {
     type Parameters = ();
     type Strategy = BoxedStrategy<UNative>;
 
-    #[inline]
     fn arbitrary_with((): ()) -> Self::Strategy {
         any::<UNativeInner>().prop_map(UNative).boxed()
     }
@@ -25,7 +24,6 @@ impl Arbitrary for INative {
     type Parameters = ();
     type Strategy = BoxedStrategy<INative>;
 
-    #[inline]
     fn arbitrary_with((): ()) -> Self::Strategy {
         any::<INativeInner>().prop_map(INative).boxed()
     }
