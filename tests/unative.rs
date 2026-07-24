@@ -1,3 +1,5 @@
+//! Tests for [`UNative`](unative::UNative).
+
 #![allow(clippy::op_ref)]
 
 use core::cmp::Ordering;

@@ -35,6 +35,18 @@ proptest = { version = "1.6", default-features = false, features = ["alloc", "no
 rand = { version = "0.10", default-features = false, optional = true }
 serde = { version = "1.0.60", default-features = false, optional = true }
 
+[lints.rust]
+meta_variable_misuse = "deny"
+missing_debug_implementations = "deny"
+missing_docs = "deny"
+trivial_casts = "deny"
+unnameable_types = "deny"
+unreachable_pub = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+unused_lifetimes = "deny"
+unused_qualifications = "deny"
+unused_results = "deny"
+
 [dev-dependencies]
 unative = { path = ".", features = ["proptest"] }
 proptest = { version = "1.6" }

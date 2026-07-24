@@ -40,7 +40,7 @@ mod num_traits;
 pub mod proptest;
 
 #[cfg(feature = "rand")]
-mod rand;
+pub mod rand;
 
 #[cfg(feature = "serde")]
 mod serde;

@@ -348,6 +348,7 @@ impl Signed for INative {
 }
 
 impl ToPrimitive for UNative {
+    #[allow(clippy::unnecessary_fallible_conversions)] // Infallible when the inner is below u64.
     fn to_i64(&self) -> Option<i64> {
         i64::try_from(self.0).ok()
     }

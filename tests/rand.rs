@@ -1,3 +1,5 @@
+//! Tests for the `rand` integration.
+
 #![cfg(feature = "rand")]
 
 use rand::Rng;

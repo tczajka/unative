@@ -1,3 +1,5 @@
+//! Tests for the `serde` integration.
+
 #![cfg(feature = "serde")]
 
 use serde_test::{Token, assert_de_tokens, assert_de_tokens_error, assert_tokens};

@@ -1,3 +1,7 @@
+//! `rand` integration.
+//!
+//! Implements sampling of [`UNative`] and [`INative`] via `StandardUniform` and uniform ranges.
+
 use rand::Rng;
 use rand::distr::uniform::{Error, SampleBorrow, SampleUniform, UniformInt, UniformSampler};
 use rand::distr::{Distribution, StandardUniform};
@@ -23,6 +27,7 @@ impl Distribution<INative> for StandardUniform {
 // `UniformInt::sample` reads a number of bytes proportional to its type's
 // width, so using `UNativeInner` directly would make a value sampled from
 // `0..100` differ between a 16-bit and a 64-bit build.
+/// Uniform-range sampler for [`UNative`].
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct UniformUNative(UniformInt<u64>);
 
@@ -66,6 +71,7 @@ impl SampleUniform for UNative {
 // `UniformInt::sample` reads a number of bytes proportional to its type's
 // width, so using `INativeInner` directly would make a value sampled from
 // `-50..50` differ between a 16-bit and a 64-bit build.
+/// Uniform-range sampler for [`INative`].
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct UniformINative(UniformInt<i64>);
 

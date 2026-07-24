@@ -1,3 +1,5 @@
+//! Tests for the `num-traits` integration.
+
 #![cfg(feature = "num-traits")]
 
 use num_traits::{

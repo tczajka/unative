@@ -1,3 +1,5 @@
+//! Tests for the `proptest` integration.
+
 #![cfg(feature = "proptest")]
 
 use proptest::prelude::*;
